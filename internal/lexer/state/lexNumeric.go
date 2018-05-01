@@ -7,13 +7,6 @@ import (
 	"github.com/radding/ArborGo/internal/tokens"
 )
 
-func lexError(msg string) State {
-	return func(lex *internal.Lexer) State {
-		lex.Errorf(msg)
-		return nil
-	}
-}
-
 func lexNumeric(lex *internal.Lexer) State {
 	isNotArithmetic := func() bool {
 		return (lex.Peek() != '+' && lex.Peek() != '-' && lex.Peek() != '*' && lex.Peek() != '/')
@@ -46,42 +39,4 @@ func lexNumeric(lex *internal.Lexer) State {
 	}
 	lex.Emit(tokens.NUMBER)
 	return lexText
-}
-
-// func lexFloat(lex *lexer.Lexer) State {
-// 	acceptNumbers(lex)
-// 	if !isWhitespace(lex.Peek()) {
-// 		return lexError(fmt.Sprintf("float mismatch: %s", lex.CurrentGroup()))
-// 	}
-// 	return lexText
-// }
-
-func lexAlphaNumeric(lex *internal.Lexer) State {
-	for isAlphaNumeric(lex.Next()) {
-	}
-	lex.Backup()
-	if isReserved(lex.CurrentGroup()) >= 0 {
-		return lexReserved
-	}
-	lex.Emit(tokens.VARNAME)
-	return lexText
-
-}
-
-func lexReserved(lex *internal.Lexer) State {
-	lex.Emit(isReserved(lex.CurrentGroup()))
-	return lexText
-}
-
-func lexWhiteSpace(lex *internal.Lexer) State {
-	lex.AcceptWhile(" \t")
-	lex.Ignore()
-	next := lex.Next()
-	if next == '\n' {
-		lex.Emit(tokens.NEWLINE)
-	} else {
-		lex.Backup()
-	}
-	return lexText
-
 }
