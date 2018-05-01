@@ -5,7 +5,7 @@ import (
 	"github.com/radding/ArborGo/internal/tokens"
 )
 
-//lex start is the first state
+//lexTextis the first state
 func lexText(lex *internal.Lexer) State {
 	for {
 		next := lex.Next()

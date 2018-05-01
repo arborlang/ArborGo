@@ -1,19 +1,19 @@
+//Package lexer is the lexer for the arbor project. The lexer can either be run asyncrounously or syncrounously
 package lexer
 
 import (
 	"io"
 
-	"github.com/radding/ArborGo/internal/lexer/state"
-
 	"github.com/radding/ArborGo/internal/lexer/internal"
+	"github.com/radding/ArborGo/internal/lexer/state"
 )
 
-//NewLexer returns a new lexer instance
+//NewLexer creates and returns a new lexer instance
 func NewLexer(in io.Reader) *internal.Lexer {
 	return internal.NewLexer(in)
 }
 
-//RunMachine runs the lexer
+//RunMachine runs the lexer state machine
 func RunMachine(lex *internal.Lexer) {
 	state.Machine(lex)
 }
