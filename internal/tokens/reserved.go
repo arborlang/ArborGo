@@ -3,7 +3,7 @@ package tokens
 //ReservedWords is the reserved words in arbor
 var ReservedWords = []string{
 	"let",
-	"function",
+	"func",
 	"string",
 	"char",
 	"done",

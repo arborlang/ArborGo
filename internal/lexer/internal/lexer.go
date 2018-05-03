@@ -2,6 +2,7 @@ package internal
 
 import (
 	"bytes"
+	"fmt"
 	"io"
 	"strings"
 	"unicode/utf8"
@@ -16,6 +17,8 @@ type Lexer struct {
 	start    int
 	input    string
 	width    int
+	col      int
+	line     int
 	Lexemes  chan Lexeme
 }
 
@@ -26,14 +29,21 @@ func NewLexer(in io.Reader) *Lexer {
 	return &Lexer{
 		Lexemes: make(chan Lexeme, 4),
 		input:   buf.String(),
+		line:    1,
+		col:     1,
 	}
+}
+
+//SetName sets the name for the lexer (it should be the file name)
+func (lexer *Lexer) SetName(name string) {
+	lexer.name = name
 }
 
 //Errorf emits an error token on the stream
 func (lexer *Lexer) Errorf(msg string) {
 	lexer.Lexemes <- Lexeme{
 		Token: tokens.ERROR,
-		Value: msg,
+		Value: fmt.Sprintf("%s:%d:%d: %s", lexer.name, lexer.line, lexer.col, msg),
 	}
 }
 
@@ -44,6 +54,10 @@ func (lexer *Lexer) Emit(tok tokens.Token) {
 		Value: lexer.CurrentGroup(),
 	}
 	lexer.start = lexer.position
+	if tok == tokens.NEWLINE {
+		lexer.col = 1
+		lexer.line++
+	}
 }
 
 //EmitEOF emits the EOF lexeme
@@ -63,6 +77,7 @@ func (lexer *Lexer) Next() (ch rune) {
 	}
 	ch, lexer.width = utf8.DecodeRuneInString(lexer.input[lexer.position:])
 	lexer.position += lexer.width
+	lexer.col++
 	return ch
 }
 

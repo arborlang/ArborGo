@@ -8,8 +8,8 @@ import (
 )
 
 func lexNumeric(lex *internal.Lexer) State {
-	isNotArithmetic := func() bool {
-		return (lex.Peek() != '+' && lex.Peek() != '-' && lex.Peek() != '*' && lex.Peek() != '/')
+	isArithmetic := func(ch rune) bool {
+		return ch == '+' || ch == '-' || ch == '*' || ch == '/'
 	}
 	acceptNumbers := func() {
 		lex.Accept("+-")
@@ -28,15 +28,21 @@ func lexNumeric(lex *internal.Lexer) State {
 	acceptNumbers()
 	if lex.Accept(".") {
 		acceptNumbers()
-		if !isWhitespace(lex.Peek()) && isNotArithmetic() {
+		if !isWhitespace(lex.Peek()) && !isArithmetic(lex.Peek()) {
 			return lexError(fmt.Sprintf("float mismatch: %s", lex.CurrentGroup()+string(lex.Peek())))
 		}
 		lex.Emit(tokens.FLOAT)
+		if lex.Accept("+-/*") {
+			lex.Emit(tokens.ARTHOP)
+		}
 		return lexText
 	}
-	if !isWhitespace(lex.Peek()) && isNotArithmetic() {
+	if !isWhitespace(lex.Peek()) && !isArithmetic(lex.Peek()) {
 		return lexError(fmt.Sprintf("number mismatch: %s", lex.CurrentGroup()+string(lex.Peek())))
 	}
 	lex.Emit(tokens.NUMBER)
+	if lex.Accept("+-/*") {
+		lex.Emit(tokens.ARTHOP)
+	}
 	return lexText
 }

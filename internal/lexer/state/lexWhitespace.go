@@ -11,6 +11,8 @@ func lexWhiteSpace(lex *internal.Lexer) State {
 	next := lex.Next()
 	if next == '\n' {
 		lex.Emit(tokens.NEWLINE)
+		lex.AcceptWhile("\n")
+		lex.Ignore()
 	} else {
 		lex.Backup()
 	}

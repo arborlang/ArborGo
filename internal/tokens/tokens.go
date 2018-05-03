@@ -32,6 +32,18 @@ const (
 	ERROR
 	//NEWLINE is the newline character
 	NEWLINE
+	//ARTHOP is an arithmetic operator
+	ARTHOP
+	//LOGICAL is a logical operator
+	LOGICAL
+	//NOT is the not operator
+	NOT
+	//BOOLEAN is a boolean operator
+	BOOLEAN
+	//EQUAL is an equal operator
+	EQUAL
+	//COMMA is the comma
+	COMMA
 
 	//LET is the 'let' key word
 	LET
@@ -91,6 +103,18 @@ func (tok Token) String() string {
 		return "DONE"
 	case RETURN:
 		return "RETURN"
+	case ARTHOP:
+		return "ARTHOP"
+	case LOGICAL:
+		return "LOGICAL"
+	case NOT:
+		return "NOT"
+	case BOOLEAN:
+		return "BOOLEAN"
+	case EQUAL:
+		return "EQUAL"
+	case COMMA:
+		return "COMMA"
 	default:
 		return "NOTFOUND"
 	}
