@@ -77,6 +77,8 @@ func lexText(lex *internal.Lexer) State {
 			return lexChar
 		case next == '"':
 			return lexString
+		case next == ':':
+			lex.Emit(tokens.COLON)
 		case next == ',':
 			lex.Emit(tokens.COMMA)
 		}

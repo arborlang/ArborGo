@@ -14,8 +14,8 @@ const (
 	VARNAME
 	//ARROW is the -> symbol
 	ARROW
-	//SEMICOLON is ;
-	SEMICOLON
+	//COLON is :
+	COLON
 	//NUMBER is [0-9]+
 	NUMBER
 	//FLOAT is [0-9]+\.[0-9]+
@@ -73,8 +73,8 @@ func (tok Token) String() string {
 		return "VARNAME"
 	case ARROW:
 		return "ARROW"
-	case SEMICOLON:
-		return "SEMICOLON"
+	case COLON:
+		return "COLON"
 	case NUMBER:
 		return "NUMBER"
 	case FLOAT:

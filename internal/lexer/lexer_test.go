@@ -16,7 +16,7 @@ done
 x = a + b
 value = 'a'
 str = "abc dea"
-func test = (a, b, c) ->
+test = (a, b, c) ->
 	return a
 done
 `
