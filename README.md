@@ -1,4 +1,4 @@
-# The Arbor programming language (Now in Go!)
+# The Arbor programming language (Now in Go!) [![Build Status](https://travis-ci.org/radding/ArborGo.svg?branch=master)](https://travis-ci.org/radding/ArborGo)
 
 Arbor is meant to be a pure functional language.
 
