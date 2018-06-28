@@ -8,6 +8,9 @@ import (
 	"github.com/radding/ArborGo/internal/lexer/state"
 )
 
+//Lexeme is the public lexeme for everyone
+type Lexeme internal.Lexeme
+
 //NewLexer creates and returns a new lexer instance
 func NewLexer(in io.Reader) *internal.Lexer {
 	return internal.NewLexer(in)

@@ -44,6 +44,8 @@ const (
 	EQUAL
 	//COMMA is the comma
 	COMMA
+	//PIPE is the pipe operator (|>)
+	PIPE
 
 	//LET is the 'let' key word
 	LET
@@ -115,6 +117,8 @@ func (tok Token) String() string {
 		return "EQUAL"
 	case COMMA:
 		return "COMMA"
+	case PIPE:
+		return "PIPE"
 	default:
 		return "NOTFOUND"
 	}

@@ -49,6 +49,8 @@ func lexText(lex *internal.Lexer) State {
 					}
 				}
 			}
+		case next == '|' && lex.Peek() == '>':
+			lex.Emit(tokens.PIPE)
 		case next == '*' || next == '/':
 			lex.Emit(tokens.ARTHOP)
 		case next >= '0' && next <= '9':
