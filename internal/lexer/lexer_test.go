@@ -6,7 +6,10 @@ import (
 
 	"github.com/radding/ArborGo/internal/lexer/internal"
 	"github.com/radding/ArborGo/internal/tokens"
+	"github.com/stretchr/testify/assert"
 )
+
+// TODO: Rewrite these tests using testify
 
 var test = `
 func name = () ->
@@ -119,4 +122,77 @@ func TestLexSync(t *testing.T) {
 		lexeme = getNext()
 		index++
 	}
+}
+
+func TestBufferedReaderPerformsTheSame(t *testing.T) {
+	getNext := Lex(bytes.NewReader([]byte(test)))
+	index := 0
+	bufferedReader := NewBufferedReader(getNext)
+	for lexeme := bufferedReader.Next(); lexeme.Token != tokens.EOF && lexeme.Token != tokens.ERROR; {
+		if index >= len(expectedTokenStream) {
+			t.Fatal("Received token stream is longer than expected")
+		}
+		correctLexeme := expectedTokenStream[index]
+		if correctLexeme.Token != lexeme.Token || correctLexeme.Value != lexeme.Value {
+			t.Errorf("Lexemes don't match at position %v: expected %s, got %s", index, correctLexeme, lexeme)
+		}
+		lexeme = bufferedReader.Next()
+		index++
+	}
+}
+
+func TestBufferedReadersPeekDoesntBreak(t *testing.T) {
+	assert := assert.New(t)
+	getNext := Lex(bytes.NewReader([]byte(test)))
+	bufferedReader := NewBufferedReader(getNext)
+
+	letsTakeAPeak := bufferedReader.Peek()
+	whatNow := bufferedReader.Next()
+	realToken := expectedTokenStream[0]
+
+	assert.Equal(realToken.Token, letsTakeAPeak.Token)
+	assert.Equal(realToken.Value, letsTakeAPeak.Value)
+	assert.Equal(whatNow.Token, letsTakeAPeak.Token)
+	assert.Equal(whatNow.Value, letsTakeAPeak.Value)
+
+	letsTakeAPeak = bufferedReader.Peek()
+	whatNow = bufferedReader.Next()
+	realToken = expectedTokenStream[1]
+
+	assert.Equal(realToken.Token, letsTakeAPeak.Token)
+	assert.Equal(realToken.Value, letsTakeAPeak.Value)
+	assert.Equal(whatNow.Token, letsTakeAPeak.Token)
+	assert.Equal(whatNow.Value, letsTakeAPeak.Value)
+
+	whatNow = bufferedReader.Next()
+	letsTakeAPeak = bufferedReader.Peek()
+
+	assert.NotEqual(whatNow.Token, letsTakeAPeak.Token)
+	assert.NotEqual(whatNow.Value, letsTakeAPeak.Value)
+}
+
+func TestBufferedReaderLookWorks(t *testing.T) {
+	assert := assert.New(t)
+	getNext := Lex(bytes.NewReader([]byte(test)))
+	bufferedReader := NewBufferedReader(getNext)
+
+	letsTakeAPeak := bufferedReader.Look(1)
+	realToken := expectedTokenStream[0]
+
+	assert.Equal(realToken.Token, letsTakeAPeak.Token)
+	assert.Equal(realToken.Value, letsTakeAPeak.Value)
+
+	letsTakeAPeak = bufferedReader.Look(4)
+	realToken = expectedTokenStream[3]
+	assert.Equal(realToken.Token, letsTakeAPeak.Token)
+	assert.Equal(realToken.Value, letsTakeAPeak.Value)
+
+	letsTakeAPeak = bufferedReader.Look(1)
+	realToken = expectedTokenStream[0]
+	assert.Equal(realToken.Token, letsTakeAPeak.Token)
+	assert.Equal(realToken.Value, letsTakeAPeak.Value)
+
+	letsTakeAPeak = bufferedReader.Next()
+	assert.Equal(realToken.Token, letsTakeAPeak.Token)
+	assert.Equal(realToken.Value, letsTakeAPeak.Value)
 }
