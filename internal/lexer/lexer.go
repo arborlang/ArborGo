@@ -4,6 +4,8 @@ package lexer
 import (
 	"io"
 
+	"github.com/radding/ArborGo/internal/tokens"
+
 	"github.com/radding/ArborGo/internal/lexer/internal"
 	"github.com/radding/ArborGo/internal/lexer/state"
 )
@@ -43,6 +45,12 @@ func Lex(in io.Reader) Reader {
 			case lexeme := <-lex.Lexemes:
 				return lexeme
 			default:
+				if stateFunc == nil {
+					return internal.Lexeme{
+						Token: tokens.EOF,
+						Value: string(tokens.EOFChar),
+					}
+				}
 				stateFunc = stateFunc(lex)
 			}
 		}
@@ -76,7 +84,8 @@ func (b *BufferedReader) Look(n int) Lexeme {
 	leftOver := n - len(b.buffer)
 	if leftOver > 0 {
 		for i := 0; i < leftOver+1; i++ {
-			b.buffer = append(b.buffer, Lexeme(b.reader()))
+			lex := b.reader()
+			b.buffer = append(b.buffer, Lexeme(lex))
 		}
 	}
 	return b.buffer[n-1]

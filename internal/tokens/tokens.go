@@ -59,6 +59,9 @@ const (
 	DONE
 	//RETURN is the 'return' key word
 	RETURN
+	//CONST is the const keyword
+	CONST
+
 	//NOTFOUND if the symbol is not found
 	NOTFOUND = -1
 )
@@ -119,6 +122,8 @@ func (tok Token) String() string {
 		return "COMMA"
 	case PIPE:
 		return "PIPE"
+	case CONST:
+		return "CONST"
 	default:
 		return "NOTFOUND"
 	}

@@ -8,6 +8,7 @@ var ReservedWords = []string{
 	"char",
 	"done",
 	"return",
+	"const",
 }
 
 //FindKeyword finds and returns a token associated with that key word, if that isn't a key word, it returns the NOTFOUND token
@@ -18,4 +19,9 @@ func FindKeyword(str string) Token {
 		}
 	}
 	return NOTFOUND
+}
+
+//IsType Returns if the token is a type or not
+func IsType(tok Token) bool {
+	return tok == STRING || tok == CHAR
 }
