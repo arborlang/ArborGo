@@ -1,10 +1,9 @@
 #!/usr/bin/env bash
 set -e 
 
-ZIP=false
 BUILDLAMBDA=build
 ENVNAME=
-APPNAME="rtbp-data-importers-rpmi"
+APPNAME="Arbor"
 DIR=$(pwd)
 
 HELPMSG="A script for building the lambdas
@@ -15,8 +14,6 @@ flags:
         Builds the lambdas with the names in the (comma seperated) list NAMES and put the output in the build directory as a zip file. 
     -h | --help:
         Dispaly this message
-    -z | --zip:
-        Bundle the executable into a zip file
 "
 
 POSITIONAL=()
