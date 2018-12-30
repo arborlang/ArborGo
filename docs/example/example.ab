@@ -1,0 +1,19 @@
+let add = (a: int, b: int) -> {
+    return a + b;
+}
+
+let sum = (a: []int) -> 
+    : len(a) > 0 -> a[0] + sum(a[1:]);
+    : -> 0;
+
+const minus = (a: int, b: int): int -> a - b;
+
+const mult = (a: int, b: int): int -> a * b;
+
+const div = (a: int, b: int): int -> 
+    : b != 0 -> a / b
+    : -> NaN
+
+const someOperation = (a: int) -> a |> sum(a+1) |> minus(2) |> div(4) |> mult(4)
+
+someOperation(10) |> print

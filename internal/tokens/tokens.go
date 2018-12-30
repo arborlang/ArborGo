@@ -6,9 +6,9 @@ type Token int
 const (
 	//EOF is the eof char
 	EOF Token = iota
-	//RPAREN is the right parenthesis
+	//RPAREN is the right parenthesis `(`
 	RPAREN
-	//LPAREN is the right parenthesis
+	//LPAREN is the right parenthesis `)`
 	LPAREN
 	//VARNAME is the name
 	VARNAME
@@ -46,6 +46,14 @@ const (
 	COMMA
 	//PIPE is the pipe operator (|>)
 	PIPE
+	//SEMI is the semicolon
+	SEMI
+	//RCURLY is the '{' symbol
+	RCURLY
+	//LCURLY is the '}' symbol
+	LCURLY
+	// COMPARISON is a comparrisonOerator
+	COMPARISON
 
 	//LET is the 'let' key word
 	LET
@@ -59,12 +67,30 @@ const (
 	DONE
 	//RETURN is the 'return' key word
 	RETURN
+	// CONST is the 'const keyword
+	CONST
+	// IF is the 'if' keyword
+	IF
+	// ELSE is the 'else' keyword
+	ELSE
+	// FLOATWORD is the 'float' Keyword
+	FLOATWORD
+	// NUMBERWORD is the 'number' keyword
+	NUMBERWORD
+	// IMPORT is the 'import' keyword
+	IMPORT
+	// AS is the 'as' keyword
+	AS
 	//NOTFOUND if the symbol is not found
 	NOTFOUND = -1
 )
 
 func (tok Token) String() string {
 	switch tok {
+	case IF:
+		return "IF"
+	case ELSE:
+		return "ELSE"
 	case EOF:
 		return "EOF"
 	case RPAREN:
@@ -119,6 +145,18 @@ func (tok Token) String() string {
 		return "COMMA"
 	case PIPE:
 		return "PIPE"
+	case SEMI:
+		return "SEMI"
+	case CONST:
+		return "CONST"
+	case RCURLY:
+		return "RCURLY"
+	case LCURLY:
+		return "LCURLY"
+	case COMPARISON:
+		return "COMPARISON"
+	case IMPORT:
+		return "IMPORT"
 	default:
 		return "NOTFOUND"
 	}

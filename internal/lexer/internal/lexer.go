@@ -42,16 +42,20 @@ func (lexer *Lexer) SetName(name string) {
 //Errorf emits an error token on the stream
 func (lexer *Lexer) Errorf(msg string) {
 	lexer.Lexemes <- Lexeme{
-		Token: tokens.ERROR,
-		Value: fmt.Sprintf("%s:%d:%d: %s", lexer.name, lexer.line, lexer.col, msg),
+		Token:  tokens.ERROR,
+		Value:  fmt.Sprintf("%s:%d:%d: %s", lexer.name, lexer.line, lexer.col, msg),
+		Column: lexer.col,
+		Line:   lexer.line,
 	}
 }
 
 //Emit puts a lexeme on the lexemes channel
 func (lexer *Lexer) Emit(tok tokens.Token) {
 	lexer.Lexemes <- Lexeme{
-		Token: tok,
-		Value: lexer.CurrentGroup(),
+		Token:  tok,
+		Value:  lexer.CurrentGroup(),
+		Column: lexer.col,
+		Line:   lexer.line,
 	}
 	lexer.start = lexer.position
 	if tok == tokens.NEWLINE {
@@ -79,6 +83,12 @@ func (lexer *Lexer) Next() (ch rune) {
 	lexer.position += lexer.width
 	lexer.col++
 	return ch
+}
+
+//NewLine makes a new Line
+func (lexer *Lexer) NewLine() {
+	lexer.line++
+	lexer.col = 1
 }
 
 //Ignore skips over the next rune

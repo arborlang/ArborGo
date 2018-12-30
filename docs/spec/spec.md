@@ -20,9 +20,9 @@ I also liked the [JavaScript arrow function](https://developer.mozilla.org/en-US
 
 or
 
-    let foo = (a, b, c) ->
+    let foo = (a, b, c) -> {
         return a + b + c;
-    done;
+    }
 
 Another thing I like about python is the way you can implement default parameters. In arbor it will be done similarly:
 
@@ -83,25 +83,27 @@ In true functional programming fasion, I decided to do away with loops. Instead 
 
 Additionally, as well as having traditional control flow, `if`, `else`, `else if` statements, I will also have haskell like predicates. These could be similar enough to case statements in Elm. These would look like this:
 
-    (a, b) ->
+    (a, b) -> {
         : a > b ->
             if (a != b)
                 return "greater than"
         : a < b -> "less than";
         : true -> "equal to";
-    done;
+    }
 
 This should be functionally equivalent to
 
-    (a, b) ->
-        if (a > b):
+    (a, b) -> {
+        if (a > b) {
             return "greater than";
-        else if (a < b):
+        }
+        else if (a < b) {
             return "less than";
-        else:
+        }
+        else {
             return "equal to";
-        done;
-    done;
+        }
+    }
 
 And finally, ternary operators. I really like ternary operators. They are elegant and makes code easier to read for small stuff. However, I think JavaScript's and C/C++'s ternary operator leaves something to be desired. I really like Python's ternary operator and that is exactly how ternaries in Arbor should work: `value if <condition> else other value`.
 

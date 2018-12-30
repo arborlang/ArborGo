@@ -7,6 +7,18 @@ import (
 	"github.com/radding/ArborGo/internal/tokens"
 )
 
+func isComparison(lex *internal.Lexer, next rune) bool {
+	isLT := next == '<'
+	isLTE := next == '<' && lex.Peek() == '='
+	isGT := next == '>'
+	isGTE := next == '>' && lex.Peek() == '='
+	isEq := next == '=' && lex.Peek() == '='
+	if isLTE || isGTE || isEq {
+		lex.Next()
+	}
+	return isLT || isLTE || isGT || isGTE || isEq
+}
+
 //lexTextis the first state
 func lexText(lex *internal.Lexer) State {
 	for {
@@ -49,7 +61,10 @@ func lexText(lex *internal.Lexer) State {
 					}
 				}
 			}
+		case isComparison(lex, next):
+			lex.Emit(tokens.COMPARISON)
 		case next == '|' && lex.Peek() == '>':
+			lex.Next()
 			lex.Emit(tokens.PIPE)
 		case next == '*' || next == '/':
 			lex.Emit(tokens.ARTHOP)
@@ -83,6 +98,13 @@ func lexText(lex *internal.Lexer) State {
 			lex.Emit(tokens.COLON)
 		case next == ',':
 			lex.Emit(tokens.COMMA)
+		case next == ';':
+			lex.Emit(tokens.SEMI)
+		case next == '{':
+			lex.Emit(tokens.RCURLY)
+		case next == '}':
+			lex.Emit(tokens.LCURLY)
+
 		}
 	}
 	lex.EmitEOF()

@@ -45,47 +45,27 @@ func LoadPlugins() []plugins.Command {
 	return plugs
 }
 
+// Version is the the toolchain version
+var Version = "0.0.0-rc0"
+
 func main() {
 	plugs := LoadPlugins()
-	cli.AppHelpTemplate = `The Arbor programming language tool chain!
-
-Usage:
-	arbor [--version] [--help] <subcommand> [<args>]
-
-Subcommands:
-	build:
-		Usage:
-			arbor build [files] [--o|--output outputname]
-		Flags:
-			-o | --output 		The output of the file
-`
 	app := cli.NewApp()
 	app.Flags = []cli.Flag{}
-
+	app.Author = "Yoseph Radding"
+	app.Description = "The Arbor Language Tool Chain"
+	app.Name = "The Tool chain to manage Arbor code"
+	app.Version = Version
 	cmds := []cli.Command{}
 	for _, plug := range plugs {
 		cmds = append(cmds, cli.Command{
-			Name:   plug.GetName(),
-			Usage:  plug.Help(),
-			Action: plug.Action,
+			Name:        plug.GetName(),
+			Action:      plug.Action,
+			Description: plug.Help()["description"],
+			UsageText:   plug.Help()["usage"],
 		})
 	}
 	app.Commands = cmds
-	// app.Action = func(c *cli.Context) error {
-	// 	subCmd := "help"
-	// 	if c.NArg() > 0 {
-	// 		subCmd = c.Args().Get(0)
-	// 	}
-	// 	slice := os.Args[1:]
-	// 	if subCmd == "help" {
-	// 		return nil
-	// 	}
-	// 	if len(slice) > 1 {
-	// 		slice = slice[1:]
-	// 	}
-	// 	return commands.Exec(subCmd, slice)
-	// }
-
 	err := app.Run(os.Args)
 	if err != nil {
 		log.Fatal(err)

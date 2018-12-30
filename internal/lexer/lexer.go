@@ -2,7 +2,11 @@
 package lexer
 
 import (
+	"fmt"
+	"github.com/radding/ArborGo/internal/tokens"
 	"io"
+	"log"
+	"runtime/debug"
 
 	"github.com/radding/ArborGo/internal/lexer/internal"
 	"github.com/radding/ArborGo/internal/lexer/state"
@@ -10,6 +14,10 @@ import (
 
 //Lexeme is the public lexeme for everyone
 type Lexeme internal.Lexeme
+
+func (lexeme Lexeme) String() string {
+	return fmt.Sprintf("{ Token: %s, Value: %q, Line: %d, Column: %d }", lexeme.Token, lexeme.Value, lexeme.Line, lexeme.Column)
+}
 
 //NewLexer creates and returns a new lexer instance
 func NewLexer(in io.Reader) *internal.Lexer {
@@ -30,15 +38,28 @@ func LexAsync(in io.Reader) chan internal.Lexeme {
 
 // Lex lexes the input syncrounously by returning a function that will listen for input on the channel else it will call the state function.
 // 	This function returns a function that can be used to get the next lexeme
-func Lex(in io.Reader) func() internal.Lexeme {
+func Lex(in io.Reader) func() Lexeme {
 	lex := NewLexer(in)
 	stateFunc := state.LexText
-	return func() internal.Lexeme {
+	return func() (l Lexeme) {
 		for {
 			select {
 			case lexeme := <-lex.Lexemes:
-				return lexeme
+				return Lexeme(lexeme)
 			default:
+				defer func() {
+					if r := recover(); r != nil {
+						// log.Println("lex recovered ")
+						log.Println("recovered in Lex. Something went wrong, outputting EOF and logging stack trace")
+						log.Println(string(debug.Stack()))
+						l = Lexeme{
+							Token:  tokens.EOF,
+							Value:  string(tokens.EOFChar),
+							Column: -1,
+							Line:   -1,
+						}
+					}
+				}()
 				stateFunc = stateFunc(lex)
 			}
 		}
