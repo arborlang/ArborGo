@@ -157,6 +157,10 @@ func (tok Token) String() string {
 		return "COMPARISON"
 	case IMPORT:
 		return "IMPORT"
+	case FLOATWORD:
+		return "FLOATWORD"
+	case NUMBERWORD:
+		return "NUMBERWORD"
 	default:
 		return "NOTFOUND"
 	}

@@ -91,3 +91,8 @@ func (c *Compiler) VisitIfNode(node *ast.IfNode) (ast.VisitorMetaData, error) {
 func (c *Compiler) VisitImportNode(node *ast.ImportNode) (ast.VisitorMetaData, error) {
 	return ast.VisitorMetaData{}, nil
 }
+
+// VisitTypeNode visits a type node
+func (c *Compiler) VisitTypeNode(node *ast.TypeNode) (ast.VisitorMetaData, error) {
+	return ast.VisitorMetaData{}, nil
+}

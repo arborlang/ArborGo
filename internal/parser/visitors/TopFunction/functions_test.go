@@ -39,7 +39,7 @@ func TestCanGetAllFucntionsInClass(t *testing.T) {
 	assert.NotContains(visitor.functions, "z")
 	assert.Equal(visitor.functions["x"].IsConstant, false)
 	assert.Equal(visitor.functions["x"].Arguments[0].Name, "a")
-	assert.Equal(visitor.functions["x"].Arguments[0].Type, "number")
+	assert.Equal(visitor.functions["x"].Arguments[0].Types[0], "number")
 	assert.Equal(visitor.functions["x"].Arguments[1].Name, "b")
-	assert.Equal(visitor.functions["x"].Arguments[1].Type, "number")
+	assert.Equal(visitor.functions["x"].Arguments[1].Types[0], "number")
 }

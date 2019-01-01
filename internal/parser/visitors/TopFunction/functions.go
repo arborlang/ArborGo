@@ -8,8 +8,8 @@ import (
 
 // Argument defines the arguments for a function
 type Argument struct {
-	Name string // Name is the name of the argument
-	Type string // Type is the type of argument
+	Name  string   // Name is the name of the argument
+	Types []string // Type is the type of argument
 }
 
 // Symbol is the function definition its self
@@ -63,8 +63,8 @@ func (f *FunctionAnalyzer) VisitAssignment(block *ast.AssignmentNode) (ast.Visit
 	args := []Argument{}
 	for _, arg := range funcNode.Arguments {
 		args = append(args, Argument{
-			Name: arg.Name,
-			Type: arg.Type,
+			Name:  arg.Name,
+			Types: arg.Type.Types,
 		})
 	}
 	switch assignTo := block.AssignTo.(type) {
