@@ -7,9 +7,11 @@ import (
 
 // NewCompiler instantiates a brand new compiler
 func NewCompiler(w io.Writer, filename string) *compiler.Compiler {
-	w.Write([]byte(`(module`))
-	return &compiler.Compiler{
+	comp := &compiler.Compiler{
 		Writer:      w,
 		SymbolTable: compiler.SymbolTable{},
 	}
+
+	comp.StartModule()
+	return comp
 }
