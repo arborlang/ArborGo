@@ -9,3 +9,13 @@ type TypeNode struct {
 func (t *TypeNode) Accept(v Visitor) (VisitorMetaData, error) {
 	return v.VisitTypeNode(t)
 }
+
+// IsValidType Makes sure that a given type stisifies the gaurd
+func (t *TypeNode) IsValidType(tp string) bool {
+	for _, typ := range t.Types {
+		if typ == tp {
+			return true
+		}
+	}
+	return false
+}

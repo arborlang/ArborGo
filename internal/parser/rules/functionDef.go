@@ -29,6 +29,14 @@ func functionDefinitionRule(p *Parser) (ast.Node, error) {
 		}
 	}
 	p.Next()
+	if next := p.Next(); next.Token != tokens.COLON {
+		return nil, fmt.Errorf("expected ':' got %s instead", next)
+	}
+	node, err := typeRules(p)
+	if err != nil {
+		return nil, err
+	}
+	funcDefNode.Returns = node.(*ast.TypeNode)
 	if next := p.Next(); next.Token != tokens.ARROW {
 		return nil, fmt.Errorf("expected '->', got %s instead", next)
 	}

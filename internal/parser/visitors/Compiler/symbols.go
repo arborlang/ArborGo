@@ -38,7 +38,9 @@ func (s *SymbolTable) PushScope() error {
 func (s *SymbolTable) PopScope() error {
 	if len(s.scopeStack) == 1 {
 		s.useGlobal = true
-		s.scopeStack = s.scopeStack[:len(s.scopeStack)-1]
+		s.currentScope = s.scopeStack[0]
+		s.scopeStack = []Scope{}
+		return nil
 	} else if len(s.scopeStack) == 0 {
 		return fmt.Errorf("can not pop non exsistent scope")
 	}

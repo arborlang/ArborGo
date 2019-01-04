@@ -4,6 +4,7 @@ package ast
 type FunctionDefinitionNode struct {
 	Arguments []*VarName
 	Body      Node
+	Returns   *TypeNode
 }
 
 // FunctionCallNode represents a function call

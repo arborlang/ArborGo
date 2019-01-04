@@ -24,6 +24,8 @@ func comparisonRule(leftSide ast.Node, p *Parser) (ast.Node, error) {
 		comp.Operation = "gte"
 	case "==":
 		comp.Operation = "eq"
+	case "!=":
+		comp.Operation = "neq"
 	}
 	rightSide, err := ExpressionRule(p)
 	if err != nil {
