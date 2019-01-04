@@ -1,8 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"github.com/radding/ArborGo/internal/environment"
 	"github.com/urfave/cli"
+	"log"
 	"os"
 )
 
@@ -17,28 +19,32 @@ func (b Run) Category() string { return "Run" }
 
 // Action builds the project
 func (b Run) Action(c *cli.Context) {
+	if len(c.Args()) != 1 {
+		log.Println("Failed to get file: ", c.Args())
+		os.Exit(-1)
+	}
 	file := c.Args()[0]
 	var content []byte
 	entryPoint := c.String("entrypoint")
-	content, err := environment.LoadFile(file, c.Bool("wasm"))
+	content, isWasm, err := environment.LoadFile(file, c.Bool("wasm"))
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
 	}
-	if c.Bool("wasm") {
+	if isWasm {
 		ret, err := environment.RunWasm(content, entryPoint)
 		if err != nil {
 			fmt.Println(err)
 			ret = -1
 		}
-		os.Exit(ret)
+		os.Exit(int(ret))
 	}
 	ret, err := environment.RunArbor(content, entryPoint)
 	if err != nil {
 		fmt.Println(err)
 		ret = -1
 	}
-	os.Exit(ret)
+	os.Exit(int(ret))
 }
 
 // Flags returns the Flags for the command
