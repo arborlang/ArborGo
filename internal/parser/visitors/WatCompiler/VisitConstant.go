@@ -29,7 +29,7 @@ func (c *Compiler) VisitConstant(node *ast.Constant) (ast.VisitorMetaData, error
 		if err != nil {
 			return ast.VisitorMetaData{}, err
 		}
-		c.Emit("(f64.const %d)", number)
+		c.Emit("(f64.const %f)", number)
 	default:
 		return ast.VisitorMetaData{}, fmt.Errorf("encountered unknown constant")
 	}

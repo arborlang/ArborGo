@@ -1,20 +1,41 @@
 package compiler
 
 import (
+	// "bufio"
+	// "bytes"
+	"fmt"
 	"github.com/radding/ArborGo/internal/parser/ast"
 )
 
 // VisitBlock visits a compiler block
 func (c *Compiler) VisitBlock(block *ast.Program) (ast.VisitorMetaData, error) {
-	c.Level++
-	defer func() { c.Level-- }()
+	c.level++
+	defer func() { c.level-- }()
+	defer c.Flush()
 	c.SymbolTable.PushScope()
 	defer c.SymbolTable.PopScope()
+	// var b bytes.Buffer
 	for _, stmt := range block.Nodes {
 		if _, err := stmt.Accept(c); err != nil {
 			return ast.VisitorMetaData{}, err
 		}
-
+	}
+	if !c.IsTopScope() {
+		locals := []byte{}
+		for _, sym := range c.SymbolTable.currentScope {
+			var tp string
+			switch sym.Type {
+			case "char":
+				tp = "i32"
+			case "float":
+				tp = "f64"
+			default:
+				tp = "i64"
+			}
+			msg := fmt.Sprintf("(local %s %s)\n", sym.Location, tp)
+			locals = append(locals, []byte(msg)...)
+		}
+		c.PrependAndFlush(locals)
 	}
 	return ast.VisitorMetaData{}, nil
 }
@@ -31,11 +52,6 @@ func (c *Compiler) VisitFunctionCallNode(node *ast.FunctionCallNode) (ast.Visito
 
 // VisitMathOpNode Visits a math op node
 func (c *Compiler) VisitMathOpNode(node *ast.MathOpNode) (ast.VisitorMetaData, error) {
-	return ast.VisitorMetaData{}, nil
-}
-
-// VisitReturnNode visits a return node
-func (c *Compiler) VisitReturnNode(node *ast.ReturnNode) (ast.VisitorMetaData, error) {
 	return ast.VisitorMetaData{}, nil
 }
 

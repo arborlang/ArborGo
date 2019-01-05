@@ -11,15 +11,15 @@ func (c *Compiler) VisitVarName(node *ast.VarName) (ast.VisitorMetaData, error) 
 	if sym == nil {
 		return ast.VisitorMetaData{}, fmt.Errorf("symbol %s not defined", node.Name)
 	}
-	tp := sym.Type
-	cmd := "i64.load"
-	switch tp {
-	case "char":
-		cmd = "i32.load"
-	case "float":
-		cmd = "f64.load"
-	}
-	c.Emit("(%s %s)", cmd, sym.Location)
+	// tp := sym.Type
+	// cmd := "i64.load"
+	// switch tp {
+	// case "char":
+	// 	cmd = "i32.load"
+	// case "float":
+	// 	cmd = "f64.load"
+	// }
+	c.Emit("(get_local %s)", sym.Location)
 	return ast.VisitorMetaData{
 		Location: sym.Location,
 		SymbolData: &ast.SymbolData{

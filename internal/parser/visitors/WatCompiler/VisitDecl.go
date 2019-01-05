@@ -16,7 +16,7 @@ func (c *Compiler) VisitDeclNode(node *ast.DeclNode) (ast.VisitorMetaData, error
 	if loc != nil {
 		return ast.VisitorMetaData{}, fmt.Errorf("redefined symbol %s", node.Varname.Name)
 	}
-	c.SymbolTable.AddToScope(Symbol{
+	c.SymbolTable.AddToScope(&Symbol{
 		Name:       node.Varname.Name,
 		Location:   "undefined",
 		IsConstant: node.IsConstant,

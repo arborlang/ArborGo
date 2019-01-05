@@ -13,7 +13,7 @@ type Symbol struct {
 }
 
 // Scope defines a scope
-type Scope map[string]Symbol
+type Scope map[string]*Symbol
 
 // SymbolTable defines a way to look up symbols in a given file
 type SymbolTable struct {
@@ -51,10 +51,11 @@ func (s *SymbolTable) PopScope() error {
 }
 
 // AddToScope adds a symbol to the current scope
-func (s *SymbolTable) AddToScope(sy Symbol) error {
+func (s *SymbolTable) AddToScope(sy *Symbol) error {
 	// if s.useGlobal {
 	// 	s.GlobalScope[sy.Name] = sy
 	// } else {
+	// if sy,Name =
 	s.currentScope[sy.Name] = sy
 	// }
 	return nil
@@ -74,10 +75,10 @@ func (s *SymbolTable) GetSymbol(name string) *Symbol {
 		for i := len(s.scopeStack) - 1; i >= 0; i-- {
 			sym, ok := s.scopeStack[i][name]
 			if ok {
-				return &sym
+				return sym
 			}
 		}
 		return nil
 	}
-	return &sym
+	return sym
 }

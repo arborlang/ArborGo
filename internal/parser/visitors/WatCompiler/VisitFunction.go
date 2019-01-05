@@ -27,11 +27,18 @@ func (c *Compiler) VisitFunctionDefinitionNode(node *ast.FunctionDefinitionNode)
 		c.Emit("(param %s i64)", name)
 	}
 	c.Emit("(result i64)")
-	for _, arg := range args {
-		c.Emit("(local %s i64)", arg)
-	}
+	c.Flush()
+
+	// for _, arg := range args {
+	// 	c.Emit("(local %s i64)", arg)
+	// }
 	node.Body.Accept(c)
+	// locals := []byte{}
+	// for _, sym := range c.SymbolTable.currentScope {
+	// 	fmt.Println("{", sym.Location, sym.Type, sym.IsConstant, sym.Name, "}")
+	// }
 	c.Emit(")")
+	// c.PrependAndFlush(locals)
 
 	return ast.VisitorMetaData{
 		Location:   name,
