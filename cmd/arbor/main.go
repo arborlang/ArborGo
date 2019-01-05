@@ -63,6 +63,7 @@ func main() {
 			Action:      plug.Action,
 			Description: plug.Help()["description"],
 			UsageText:   plug.Help()["usage"],
+			Flags:       plug.Flags(),
 		})
 	}
 	app.Commands = cmds
