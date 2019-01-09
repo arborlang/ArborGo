@@ -1,4 +1,4 @@
-package compiler
+package wast
 
 import (
 	"fmt"
@@ -27,6 +27,7 @@ func (c *Compiler) VisitAssignment(assignment *ast.AssignmentNode) (ast.VisitorM
 	}
 	if location.SymbolData.IsNew {
 		sym.Location = c.getUniqueID(location.Types, location.SymbolData.Name)
+		c.locals = append(c.locals, locals{sym.Location, c.getType(result.Types)})
 		location.Location = sym.Location
 		if sym.Type == "" {
 			sym.Type = result.Types
@@ -40,7 +41,7 @@ func (c *Compiler) VisitAssignment(assignment *ast.AssignmentNode) (ast.VisitorM
 	// }
 	if result.Location == "STACK" { // If the result is stored on the stack, emit the store command
 		// c.Emit("(%s %s)", cmd, location.Location)
-		c.Emit("(set_local %s)", location.Location)
+		c.Emit("set_local %s", location.Location)
 		return ast.VisitorMetaData{}, nil
 	}
 	sym.Location = result.Location // If the result is not on the stack, why load it and then store it? just change the location

@@ -8,10 +8,11 @@ import (
 
 //Lexeme is the value of the string
 type Lexeme struct {
-	Token  tokens.Token
-	Value  string
-	Column int
-	Line   int
+	Token   tokens.Token
+	Value   string
+	Column  int
+	Line    int
+	RuneVal []byte
 }
 
 func (lexeme Lexeme) String() string {

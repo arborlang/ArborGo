@@ -1,4 +1,4 @@
-package compiler
+package wast
 
 import (
 	"fmt"
@@ -19,9 +19,10 @@ func (c *Compiler) VisitVarName(node *ast.VarName) (ast.VisitorMetaData, error) 
 	// case "float":
 	// 	cmd = "f64.load"
 	// }
-	c.Emit("(get_local %s)", sym.Location)
+	c.Emit("get_local %s", sym.Location)
 	return ast.VisitorMetaData{
 		Location: sym.Location,
+		Types:    sym.Type,
 		SymbolData: &ast.SymbolData{
 			Name:       node.Name,
 			IsNew:      false,

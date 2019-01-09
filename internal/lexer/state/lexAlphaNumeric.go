@@ -12,7 +12,7 @@ func lexAlphaNumeric(lex *internal.Lexer) State {
 	if isReserved(lex.CurrentGroup()) >= 0 {
 		return lexReserved
 	}
-	lex.Emit(tokens.VARNAME)
+	lex.Emit(tokens.VARNAME, nil)
 	return lexText
 
 }

@@ -1,4 +1,4 @@
-package compiler
+package wast
 
 import (
 	"fmt"
@@ -19,17 +19,19 @@ func (c *Compiler) VisitConstant(node *ast.Constant) (ast.VisitorMetaData, error
 		if err != nil {
 			return ast.VisitorMetaData{}, err
 		}
-		c.Emit("(i64.const %d)", number)
+		c.Emit("i64.const %d", number)
 	case "CHARVAL":
 		tp = "char"
-		c.Emit("(i32.const %d)", rune(node.Value[0]))
+
+		fmt.Println(node.Raw)
+		c.Emit("i32.const %d", rune(node.Raw[1]))
 	case "FLOAT":
 		tp = "float"
 		number, err := strconv.ParseFloat(node.Value, 64)
 		if err != nil {
 			return ast.VisitorMetaData{}, err
 		}
-		c.Emit("(f64.const %f)", number)
+		c.Emit("f64.const %f", number)
 	default:
 		return ast.VisitorMetaData{}, fmt.Errorf("encountered unknown constant")
 	}

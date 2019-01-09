@@ -21,4 +21,5 @@ type VisitorMetaData struct {
 	Exportable string
 	Types      string
 	SymbolData *SymbolData
+	Returns    []string
 }

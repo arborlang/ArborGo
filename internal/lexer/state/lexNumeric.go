@@ -31,18 +31,18 @@ func lexNumeric(lex *internal.Lexer) State {
 		if !isWhitespace(lex.Peek()) && !isArithmetic(lex.Peek()) && lex.Peek() != ';' {
 			return lexError(fmt.Sprintf("float mismatch: %s", lex.CurrentGroup()+string(lex.Peek())))
 		}
-		lex.Emit(tokens.FLOAT)
+		lex.Emit(tokens.FLOAT, nil)
 		if lex.Accept("+-/*") {
-			lex.Emit(tokens.ARTHOP)
+			lex.Emit(tokens.ARTHOP, nil)
 		}
 		return lexText
 	}
 	if !isWhitespace(lex.Peek()) && !isArithmetic(lex.Peek()) && lex.Peek() != ';' && lex.Peek() != ',' && lex.Peek() != ')' {
 		return lexError(fmt.Sprintf("number mismatch: %s", lex.CurrentGroup()+string(lex.Peek())))
 	}
-	lex.Emit(tokens.NUMBER)
+	lex.Emit(tokens.NUMBER, nil)
 	if lex.Accept("+-/*") {
-		lex.Emit(tokens.ARTHOP)
+		lex.Emit(tokens.ARTHOP, nil)
 	}
 	return lexText
 }

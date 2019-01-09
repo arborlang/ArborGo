@@ -7,7 +7,7 @@ import (
 
 // RunWasm runs a Wasm file
 func RunWasm(wasmCode []byte, entrypoint string) (int64, error) {
-	vm, err := exec.NewVirtualMachine(wasmCode, exec.VMConfig{}, &exec.NopResolver{}, nil)
+	vm, err := exec.NewVirtualMachine(wasmCode, exec.VMConfig{}, new(SysResolver), nil)
 	if err != nil {
 		return int64(-1), err
 	}

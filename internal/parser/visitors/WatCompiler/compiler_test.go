@@ -1,4 +1,4 @@
-package compiler
+package wast
 
 import (
 	"github.com/radding/ArborGo/internal/parser/ast"

@@ -5,7 +5,7 @@ type IfNode struct {
 	Condition Node
 	Body      Node
 	ElseIfs   []*IfNode
-	Else      *Node
+	Else      Node
 	ReturnTo  string
 }
 

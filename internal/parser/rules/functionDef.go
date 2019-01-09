@@ -8,7 +8,8 @@ import (
 
 func functionDefinitionRule(p *Parser) (ast.Node, error) {
 	funcDefNode := &ast.FunctionDefinitionNode{}
-	lexeme := p.Next()
+	topLexeme := p.Next()
+	lexeme := topLexeme
 	if lexeme.Token != tokens.RPAREN {
 		return nil, fmt.Errorf("expected '(', got %s instead", lexeme)
 	}
@@ -45,6 +46,24 @@ func functionDefinitionRule(p *Parser) (ast.Node, error) {
 		p.Next()
 		var err error
 		body, err = ProgramRule(p, tokens.LCURLY)
+		if err != nil {
+			return nil, err
+		}
+		bodyNode := body.(*ast.Program)
+		nodes := []ast.Node{}
+		found := false
+		for _, node := range bodyNode.Nodes {
+			_, ok := node.(*ast.ReturnNode)
+			nodes = append(nodes, node)
+			if ok {
+				found = true
+				break
+			}
+		}
+		bodyNode.Nodes = nodes
+		if !found {
+			return nil, fmt.Errorf("expected a return for all paths on line: %d", topLexeme.Line)
+		}
 		if err != nil {
 			return nil, err
 		}

@@ -12,7 +12,7 @@ func lexString(lex *internal.Lexer) State {
 			lex.Next()
 		}
 		if next == '"' {
-			lex.Emit(tokens.STRINGVAL)
+			lex.Emit(tokens.STRINGVAL, nil)
 			return lexText
 		}
 		if next == tokens.EOFChar {

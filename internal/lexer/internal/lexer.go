@@ -50,12 +50,19 @@ func (lexer *Lexer) Errorf(msg string) {
 }
 
 //Emit puts a lexeme on the lexemes channel
-func (lexer *Lexer) Emit(tok tokens.Token) {
+func (lexer *Lexer) Emit(tok tokens.Token, encode func(tokens.Token, string) []byte) {
+	if encode == nil {
+		encode = func(tok tokens.Token, value string) []byte {
+			return []byte(value)
+		}
+	}
+	value := lexer.CurrentGroup()
 	lexer.Lexemes <- Lexeme{
-		Token:  tok,
-		Value:  lexer.CurrentGroup(),
-		Column: lexer.col,
-		Line:   lexer.line,
+		Token:   tok,
+		Value:   value,
+		Column:  lexer.col,
+		Line:    lexer.line,
+		RuneVal: encode(tok, value),
 	}
 	lexer.start = lexer.position
 	if tok == tokens.NEWLINE {

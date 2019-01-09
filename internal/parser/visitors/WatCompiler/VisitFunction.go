@@ -1,4 +1,4 @@
-package compiler
+package wast
 
 import (
 	"fmt"
@@ -8,6 +8,7 @@ import (
 
 // VisitFunctionDefinitionNode visits a function definition ndde
 func (c *Compiler) VisitFunctionDefinitionNode(node *ast.FunctionDefinitionNode) (ast.VisitorMetaData, error) {
+	c.locals = []locals{}
 	tempName := []string{}
 	for _, varName := range node.Arguments {
 		tempName = append(
@@ -29,16 +30,23 @@ func (c *Compiler) VisitFunctionDefinitionNode(node *ast.FunctionDefinitionNode)
 	c.Emit("(result i64)")
 	c.Flush()
 
-	// for _, arg := range args {
-	// 	c.Emit("(local %s i64)", arg)
-	// }
-	node.Body.Accept(c)
-	// locals := []byte{}
-	// for _, sym := range c.SymbolTable.currentScope {
-	// 	fmt.Println("{", sym.Location, sym.Type, sym.IsConstant, sym.Name, "}")
-	// }
+	metadata, err := node.Body.Accept(c)
+	if err != nil {
+		return ast.VisitorMetaData{}, err
+	}
+	locals := []byte{}
+	for _, local := range c.locals {
+		lc := fmt.Sprintf("(local %s %s)\n", local.name, local.tp)
+		locals = append(locals, []byte(lc)...)
+	}
+	c.PrependAndFlush(locals)
+	for _, retType := range metadata.Returns {
+		if !node.Returns.IsValidType(retType) {
+			fmt.Println("return type:", retType, "want:", node.Returns)
+			return ast.VisitorMetaData{}, fmt.Errorf("function does not return a valid type")
+		}
+	}
 	c.Emit(")")
-	// c.PrependAndFlush(locals)
 
 	return ast.VisitorMetaData{
 		Location:   name,

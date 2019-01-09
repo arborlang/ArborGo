@@ -4,6 +4,7 @@ package ast
 type Constant struct {
 	Value string
 	Type  string
+	Raw   []byte
 }
 
 // Accept visits the node

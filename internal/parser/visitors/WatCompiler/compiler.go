@@ -1,4 +1,4 @@
-package compiler
+package wast
 
 import (
 	"bytes"
@@ -8,6 +8,11 @@ import (
 	"strings"
 )
 
+type locals struct {
+	name string
+	tp   string
+}
+
 // Compiler traverses the AST and converts it to WASM
 type Compiler struct {
 	Writer       io.Writer
@@ -15,6 +20,7 @@ type Compiler struct {
 	DeclLocation int
 	level        int
 	buffer       bytes.Buffer
+	locals       []locals
 }
 
 // IsTopScope indicates if we are at the top level scope
@@ -28,10 +34,16 @@ func (c *Compiler) getUniqueID(tp, name string) string {
 	return strings.Join([]string{"$" + tp, name, strconv.Itoa(c.DeclLocation)}, "_")
 }
 
+func (c *Compiler) getLabelUniqueID(tp string) string {
+	loc := c.getUniqueID("label", tp)
+	return fmt.Sprintf("$label%s", loc)
+}
+
 //StartModule starts the wat module
 func (c *Compiler) StartModule() {
 	c.level = 0
 	c.Emit("(module")
+	c.Emit(`(import "env" "__putch__" (func $__putch__ (param i32)))`)
 }
 
 //CloseModule ends the wat module
@@ -72,5 +84,16 @@ func (c *Compiler) Clone(w io.Writer) *Compiler {
 		DeclLocation: c.DeclLocation,
 		level:        c.level,
 		buffer:       c.buffer,
+	}
+}
+
+func (c *Compiler) getType(tp string) string {
+	switch tp {
+	case "char", "bool":
+		return "i32"
+	case "float":
+		return "f64"
+	default:
+		return "i64"
 	}
 }

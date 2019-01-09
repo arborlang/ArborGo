@@ -11,6 +11,7 @@ func ConstantsRule(p *Parser) (ast.Node, error) {
 	constant := &ast.Constant{}
 	constant.Value = lexeme.Value
 	constant.Type = lexeme.Token.String()
+	constant.Raw = lexeme.RuneVal
 	switch p.Peek().Token {
 	case tokens.ARTHOP:
 		return MathOpRule(constant, p)

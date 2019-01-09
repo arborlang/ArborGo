@@ -40,7 +40,7 @@ func ifNodeRule(p *Parser) (ast.Node, error) {
 			if err != nil {
 				return nil, err
 			}
-			ifNode.Body = elseBlock
+			ifNode.Else = elseBlock
 			break
 		}
 	}

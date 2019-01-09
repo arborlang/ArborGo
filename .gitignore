@@ -16,5 +16,8 @@
 vendor/
 
 arbor
+*.ab
+*.wast
+*.wasm
 
 /plugins
