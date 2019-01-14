@@ -3,34 +3,52 @@ package environment
 import (
 	"fmt"
 	"github.com/perlin-network/life/exec"
+	"github.com/radding/arbor-dev"
+	"plugin"
 )
 
 //ResolverManager handles all of the resolvers
 type ResolverManager struct {
-	resolvers map[string]func(vm *exec.VirtualMachine) int64
+	resolvers map[string]arbor.Module
 }
 
-type SysResolver struct{}
+//NewResolver makes a resolver
+func NewResolver() *ResolverManager {
+	manager := new(ResolverManager)
+	manager.resolvers = map[string]arbor.Module{}
+	return manager
+}
 
-func (r *SysResolver) ResolveFunc(module, field string) exec.FunctionImport {
-	switch module {
-	case "env":
-		switch field {
-		case "__putch__":
-			return func(vm *exec.VirtualMachine) int64 {
-				ptr := rune(vm.GetCurrentFrame().Locals[0])
-				fmt.Print(string(ptr))
-				return 0
-			}
-
-		default:
-			panic(fmt.Errorf("unknown import resolved: %s", field))
-		}
-	default:
-		panic(fmt.Errorf("unknown module: %s", module))
+// Load loads a module
+func (r *ResolverManager) Load(name string) error {
+	plug, err := plugin.Open(name)
+	if err != nil {
+		return err
 	}
+	resolver, err := plug.Lookup("Env")
+	if err != nil {
+		return err
+	}
+	if module, ok := resolver.(arbor.Module); ok {
+		r.resolvers[module.Name()] = module
+	}
+	return nil
 }
 
-func (r *SysResolver) ResolveGlobal(module, field string) int64 {
+//ResolveFunc finds the function you are looking for
+func (r *ResolverManager) ResolveFunc(module, field string) exec.FunctionImport {
+	mod, ok := r.resolvers[module]
+	if !ok {
+		panic(fmt.Errorf("unknown import resolved: %s", module))
+	}
+	ext := mod.Resolve(field)
+	if ext == nil {
+		panic(fmt.Errorf("%s has no function %s", module, field))
+	}
+	return ext.Run
+}
+
+//ResolveGlobal just dies
+func (r *ResolverManager) ResolveGlobal(module, field string) int64 {
 	panic("we're not resolving global variables for now")
 }

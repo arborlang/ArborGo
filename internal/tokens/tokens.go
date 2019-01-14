@@ -54,6 +54,10 @@ const (
 	LCURLY
 	// COMPARISON is a comparrisonOerator
 	COMPARISON
+	//LSQUARE is the '[' operator
+	LSQUARE
+	//RSQUARE is the ']' character
+	RSQUARE
 
 	//LET is the 'let' key word
 	LET

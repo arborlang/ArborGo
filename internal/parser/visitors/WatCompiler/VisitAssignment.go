@@ -27,21 +27,19 @@ func (c *Compiler) VisitAssignment(assignment *ast.AssignmentNode) (ast.VisitorM
 	}
 	if location.SymbolData.IsNew {
 		sym.Location = c.getUniqueID(location.Types, location.SymbolData.Name)
-		c.locals = append(c.locals, locals{sym.Location, c.getType(result.Types)})
+		c.AddLocal(sym.Location, c.getType(result.Types))
+		// c.locals = append(c.locals, locals{sym.Location, c.getType(result.Types)})
 		location.Location = sym.Location
 		if sym.Type == "" {
 			sym.Type = result.Types
 		}
 		// c.SymbolTable.AddToScope(sym)
-		// c.Emit("ß(local %s i64)", sym.Location)
 	}
 	// _, isConstant := assignment.Value.(*ast.Constant)
 	// if c.IsTopScope() && location.SymbolData.IsConstant && isConstant {
-	// 	c.Emit("(export ")
 	// }
 	if result.Location == "STACK" { // If the result is stored on the stack, emit the store command
-		// c.Emit("(%s %s)", cmd, location.Location)
-		c.Emit("set_local %s", location.Location)
+		c.EmitFunc("set_local %s", location.Location)
 		return ast.VisitorMetaData{}, nil
 	}
 	sym.Location = result.Location // If the result is not on the stack, why load it and then store it? just change the location
@@ -82,7 +80,9 @@ func visitFunctionDefinitionNode(c *Compiler, assignment *ast.AssignmentNode) (a
 	sym.Location = result.Location
 	// _, isFunc := assignment.Value.(*ast.FunctionDefinitionNode)
 	if c.IsTopScope() {
-		c.Emit("(export \"%s\" %s)", sym.Name, result.Exportable)
+		c.currentFunc.export = true
+		c.currentFunc.name = sym.Name
+		c.currentFunc.mangle = sym.Location
 	}
 	return ast.VisitorMetaData{}, nil
 

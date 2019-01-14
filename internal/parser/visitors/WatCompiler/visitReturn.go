@@ -9,7 +9,7 @@ import (
 func (c *Compiler) VisitReturnNode(node *ast.ReturnNode) (ast.VisitorMetaData, error) {
 	metadata, err := node.Expression.Accept(c)
 	metadata.Returns = []string{metadata.Types}
-	c.Emit("return")
+	c.EmitFunc("return")
 	// fmt.Println(metadata.Types)
 	if err != nil {
 		return ast.VisitorMetaData{}, err

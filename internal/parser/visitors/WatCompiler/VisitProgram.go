@@ -28,11 +28,6 @@ func (c *Compiler) VisitBlock(block *ast.Program) (ast.VisitorMetaData, error) {
 	return metadata, nil
 }
 
-// VisitMathOpNode Visits a math op node
-func (c *Compiler) VisitMathOpNode(node *ast.MathOpNode) (ast.VisitorMetaData, error) {
-	return ast.VisitorMetaData{}, nil
-}
-
 // VisitPipeNode visits the pipe node
 func (c *Compiler) VisitPipeNode(node *ast.PipeNode) (ast.VisitorMetaData, error) {
 	return ast.VisitorMetaData{}, nil
@@ -45,5 +40,13 @@ func (c *Compiler) VisitImportNode(node *ast.ImportNode) (ast.VisitorMetaData, e
 
 // VisitTypeNode visits a type node
 func (c *Compiler) VisitTypeNode(node *ast.TypeNode) (ast.VisitorMetaData, error) {
+	return ast.VisitorMetaData{}, nil
+}
+
+func (c *Compiler) VisitIndexNode(node *ast.IndexNode) (ast.VisitorMetaData, error) {
+	return ast.VisitorMetaData{}, nil
+}
+
+func (c *Compiler) VisitSliceNode(node *ast.SliceNode) (ast.VisitorMetaData, error) {
 	return ast.VisitorMetaData{}, nil
 }

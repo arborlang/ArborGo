@@ -92,7 +92,7 @@ func TestMathWorksWithMoreComplexAdditions(t *testing.T) {
 	assert.NotNil(rightSide)
 
 	//should be 3 * <AST 4 / 5>
-	assert.Equal("mult", rightSide.Operation)
+	assert.Equal("mul_s", rightSide.Operation)
 	leftSide, ok = rightSide.LeftSide.(*ast.Constant)
 	if !ok {
 		assert.FailNow("could not convert left side to a constant")
@@ -105,7 +105,7 @@ func TestMathWorksWithMoreComplexAdditions(t *testing.T) {
 	assert.NotNil(rightSide)
 
 	//should 4 / 5
-	assert.Equal("div", rightSide.Operation)
+	assert.Equal("div_s", rightSide.Operation)
 	leftSide, ok = rightSide.LeftSide.(*ast.Constant)
 	if !ok {
 		assert.FailNow("could not convert left side to a constant")

@@ -19,6 +19,8 @@ func (b Run) Category() string { return "Run" }
 
 // Action builds the project
 func (b Run) Action(c *cli.Context) {
+	manager := environment.NewResolver()
+	manager.Load("stdlib.so")
 	if len(c.Args()) != 1 {
 		log.Println("Failed to get file: ", c.Args())
 		os.Exit(-1)
@@ -32,7 +34,7 @@ func (b Run) Action(c *cli.Context) {
 		os.Exit(-1)
 	}
 	if isWasm {
-		ret, err := environment.RunWasm(content, entryPoint)
+		ret, err := environment.RunWasm(content, entryPoint, manager)
 		if err != nil {
 			fmt.Println(err)
 			ret = -1

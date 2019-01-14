@@ -8,19 +8,42 @@ import (
 	"strings"
 )
 
-type locals struct {
-	name string
-	tp   string
+type data struct {
+	name   string
+	data   []byte
+	len    int
+	offSet int
+}
+
+func (d data) writeTo(w io.Writer) {
+	str := []string{}
+	for _, byt := range d.data {
+		str = append(str, fmt.Sprintf("\\%X", byt))
+	}
+	out := fmt.Sprintf("(data (i32.const %d) \"%s\")\n", d.offSet, strings.Join(str, ""))
+
+	w.Write([]byte(out))
 }
 
 // Compiler traverses the AST and converts it to WASM
 type Compiler struct {
-	Writer       io.Writer
-	SymbolTable  SymbolTable
-	DeclLocation int
-	level        int
-	buffer       bytes.Buffer
-	locals       []locals
+	Writer         io.Writer
+	SymbolTable    SymbolTable
+	DeclLocation   int
+	level          int
+	buffer         bytes.Buffer
+	funcCount      int
+	functions      []function
+	nameToFunction map[string]function
+	data           []data
+	currentFunc    *function
+	dataSize       int
+}
+
+// AddData to the module
+func (c *Compiler) AddData(name string, byteArr []byte) {
+	c.data = append(c.data, data{name: name, data: byteArr, len: len(byteArr), offSet: c.dataSize})
+	c.dataSize += len(byteArr)
 }
 
 // IsTopScope indicates if we are at the top level scope
@@ -42,8 +65,10 @@ func (c *Compiler) getLabelUniqueID(tp string) string {
 //StartModule starts the wat module
 func (c *Compiler) StartModule() {
 	c.level = 0
-	c.Emit("(module")
-	c.Emit(`(import "env" "__putch__" (func $__putch__ (param i32)))`)
+	c.EmitFirst("(module")
+	c.EmitFirst(`(import "env" "__putch__" (func $__putch__ (param i32)))`)
+	c.EmitFirst(`(import "env" "__alloc__" (func $__alloc__ (param i64) (param i32) (result i64)))`)
+	c.EmitFirst("(memory 1)")
 }
 
 //CloseModule ends the wat module
@@ -52,15 +77,68 @@ func (c *Compiler) StartModule() {
 //		ast.Accept(compiler)
 //		compiler.EndModule()
 func (c *Compiler) CloseModule() {
-	c.Emit(")")
+
+	c.EmitFirst("(table %d anyfunc)", c.funcCount)
+	for _, dat := range c.data {
+		dat.writeTo(c.Writer)
+	}
+	for _, fun := range c.functions {
+		fun.writeTo(c.Writer)
+	}
+	c.currentFunc.writeTo(c.Writer)
+	c.EmitFirst(")")
 	c.Flush()
 }
 
-// Emit emits the compiled instructions
-func (c *Compiler) Emit(msg string, data ...interface{}) {
+// EmitFirst emits the compiled instructions
+func (c *Compiler) EmitFirst(msg string, data ...interface{}) {
 	instr := fmt.Sprintf(msg, data...)
-	c.buffer.Write([]byte(fmt.Sprintf("%s\n", instr)))
+	c.Writer.Write([]byte(fmt.Sprintf("%s\n", instr)))
 	// c.Writer.Write([]byte(fmt.Sprintf("%s\n", instr)))
+}
+
+// EmitFunc emits the compiled instructions
+func (c *Compiler) EmitFunc(msg string, data ...interface{}) {
+	instr := fmt.Sprintf(msg, data...)
+	c.currentFunc.code.Write([]byte(fmt.Sprintf("%s\n", instr)))
+}
+
+//New constructs a new compiler
+func New(w io.Writer) *Compiler {
+	comp := &Compiler{
+		Writer:         w,
+		SymbolTable:    SymbolTable{},
+		nameToFunction: map[string]function{},
+	}
+
+	comp.StartModule()
+	return comp
+}
+
+// StartFunc is a function
+func (c *Compiler) StartFunc() {
+	if c.currentFunc == nil {
+		c.currentFunc = &function{
+			code:     bytes.NewBuffer([]byte{}),
+			locals:   []locals{},
+			tblIndex: c.funcCount,
+		}
+		c.funcCount++
+		return
+	}
+	c.funcCount++
+	c.functions = append(c.functions, *c.currentFunc)
+	c.nameToFunction[c.currentFunc.mangle] = *c.currentFunc
+	c.currentFunc = &function{
+		code:     bytes.NewBuffer([]byte{}),
+		locals:   []locals{},
+		tblIndex: c.funcCount,
+	}
+}
+
+// AddLocal adds a local variable
+func (c *Compiler) AddLocal(name string, tp string) {
+	c.currentFunc.locals = append(c.currentFunc.locals, locals{name: name, tp: tp})
 }
 
 // Flush flushes the buffer

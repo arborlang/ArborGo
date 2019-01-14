@@ -19,19 +19,17 @@ func (c *Compiler) VisitConstant(node *ast.Constant) (ast.VisitorMetaData, error
 		if err != nil {
 			return ast.VisitorMetaData{}, err
 		}
-		c.Emit("i64.const %d", number)
+		c.EmitFunc("i64.const %d", number)
 	case "CHARVAL":
 		tp = "char"
-
-		fmt.Println(node.Raw)
-		c.Emit("i32.const %d", rune(node.Raw[1]))
+		c.EmitFunc("i32.const %d", rune(node.Raw[1]))
 	case "FLOAT":
 		tp = "float"
 		number, err := strconv.ParseFloat(node.Value, 64)
 		if err != nil {
 			return ast.VisitorMetaData{}, err
 		}
-		c.Emit("f64.const %f", number)
+		c.EmitFunc("f64.const %f", number)
 	default:
 		return ast.VisitorMetaData{}, fmt.Errorf("encountered unknown constant")
 	}
@@ -42,6 +40,26 @@ func (c *Compiler) VisitConstant(node *ast.Constant) (ast.VisitorMetaData, error
 }
 
 func visitString(c *Compiler, node *ast.Constant) (ast.VisitorMetaData, error) {
-
-	return ast.VisitorMetaData{}, nil
+	place := c.getUniqueID("string", "begin")
+	val := node.Value[1 : len(node.Value)-1]
+	data := []byte(val)
+	data = append(data, 0x00)
+	c.AddData(place, data)
+	// c.locals = append(c.locals, locals{name: place, tp: "i64"})
+	// val := node.Value[1 : len(node.Value)-1]
+	// c.Emit("i64.const %d", len(val))
+	// c.Emit("i32.const %d", 1)
+	// c.Emit("call $__alloc__")
+	// c.Emit("set_local %s", place)
+	// for index, char := range node.Value {
+	// 	c.Emit("get_local %s", place)
+	// 	c.Emit("i64.const %d", index)
+	// 	c.Emit("i64.add")
+	// 	c.Emit("i32.const %d", char)
+	// 	c.Emit("i32.store")
+	// }
+	return ast.VisitorMetaData{
+		Location: strconv.Itoa(c.dataSize),
+		Types:    "string",
+	}, nil
 }

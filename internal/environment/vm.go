@@ -6,8 +6,8 @@ import (
 )
 
 // RunWasm runs a Wasm file
-func RunWasm(wasmCode []byte, entrypoint string) (int64, error) {
-	vm, err := exec.NewVirtualMachine(wasmCode, exec.VMConfig{}, new(SysResolver), nil)
+func RunWasm(wasmCode []byte, entrypoint string, resolver *ResolverManager) (int64, error) {
+	vm, err := exec.NewVirtualMachine(wasmCode, exec.VMConfig{}, resolver, nil)
 	if err != nil {
 		return int64(-1), err
 	}

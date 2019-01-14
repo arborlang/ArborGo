@@ -79,6 +79,16 @@ type TypeVisitor interface {
 	VisitTypeNode(*TypeNode) (VisitorMetaData, error)
 }
 
+// IndexVisitor is the index visitor of the
+type IndexVisitor interface {
+	VisitIndexNode(*IndexNode) (VisitorMetaData, error)
+}
+
+//SliceVisitor visits a slice node
+type SliceVisitor interface {
+	VisitSliceNode(*SliceNode) (VisitorMetaData, error)
+}
+
 // Visitor can visit every type of node. The Visitor will be responsible for walking into the children
 type Visitor interface {
 	AssignmentVisitor
@@ -96,4 +106,6 @@ type Visitor interface {
 	IfVisitor
 	ImportVisitor
 	TypeVisitor
+	IndexVisitor
+	SliceVisitor
 }

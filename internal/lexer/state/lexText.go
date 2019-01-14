@@ -101,6 +101,10 @@ func lexText(lex *internal.Lexer) State {
 			lex.Emit(tokens.RCURLY, nil)
 		case next == '}':
 			lex.Emit(tokens.LCURLY, nil)
+		case next == '[':
+			lex.Emit(tokens.LSQUARE, nil)
+		case next == ']':
+			lex.Emit(tokens.RSQUARE, nil)
 
 		}
 	}

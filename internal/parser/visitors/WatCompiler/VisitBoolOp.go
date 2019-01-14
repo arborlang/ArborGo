@@ -28,8 +28,8 @@ func (c *Compiler) VisitBoolOp(node *ast.BoolOp) (ast.VisitorMetaData, error) {
 	default:
 		tp = "i64"
 	}
-	c.Emit("%s.const 0", tp)
-	c.Emit("%s.ne", tp)
+	c.EmitFunc("%s.const 0", tp)
+	c.EmitFunc("%s.ne", tp)
 	rightSide, err := node.RightSide.Accept(c)
 	if err != nil {
 		return ast.VisitorMetaData{}, err
@@ -37,14 +37,14 @@ func (c *Compiler) VisitBoolOp(node *ast.BoolOp) (ast.VisitorMetaData, error) {
 	if rightSide.Types != leftSide.Types {
 		return ast.VisitorMetaData{}, fmt.Errorf("can't compare two different types: %s %s %s", leftSide.Types, node.Condition, rightSide.Types)
 	}
-	c.Emit("%s.const 0", tp)
-	c.Emit("%s.ne", tp)
+	c.EmitFunc("%s.const 0", tp)
+	c.EmitFunc("%s.ne", tp)
 
 	switch node.Condition {
 	case "and":
-		c.Emit("i32.and")
+		c.EmitFunc("i32.and")
 	case "or":
-		c.Emit("i32.or")
+		c.EmitFunc("i32.or")
 	}
 	return ast.VisitorMetaData{
 		Types: "bool",

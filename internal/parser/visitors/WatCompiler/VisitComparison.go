@@ -43,7 +43,7 @@ func (c *Compiler) VisitComparison(node *ast.Comparison) (ast.VisitorMetaData, e
 	case "neq":
 		op = "ne"
 	}
-	c.Emit("%s.%s", tp, op)
+	c.EmitFunc("%s.%s", tp, op)
 	return ast.VisitorMetaData{
 		Types: "bool",
 	}, nil

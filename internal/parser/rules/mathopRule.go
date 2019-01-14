@@ -20,9 +20,9 @@ func MathOpRule(left ast.Node, p *Parser) (ast.Node, error) {
 	case "-":
 		mathNode.Operation = "sub"
 	case "*":
-		mathNode.Operation = "mult"
+		mathNode.Operation = "mul_s"
 	case "/":
-		mathNode.Operation = "div"
+		mathNode.Operation = "div_s"
 	}
 	node, err := ExpressionRule(p)
 	if err != nil {

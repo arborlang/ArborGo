@@ -37,15 +37,15 @@ func (b Build) Action(c *cli.Context) {
 		fmt.Println(err)
 		os.Exit(-1)
 	}
-	comp := &wast.Compiler{
-		Writer: fout,
-	}
+	// comp := &wast.Compiler{
+	// 	Writer: fout,
+	// }
+	comp := wast.New(fout)
 	fin, err := os.Open(build)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
 	}
-	comp.StartModule()
 	defer comp.CloseModule()
 	if err = parser.Compile(fin, comp); err != nil {
 		fmt.Println(err)
