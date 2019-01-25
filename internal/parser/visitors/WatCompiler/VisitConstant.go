@@ -1,6 +1,7 @@
 package wast
 
 import (
+	// "encoding/binary"
 	"fmt"
 	"github.com/radding/ArborGo/internal/parser/ast"
 	"strconv"
@@ -39,25 +40,33 @@ func (c *Compiler) VisitConstant(node *ast.Constant) (ast.VisitorMetaData, error
 	}, nil
 }
 
+// Converts a number to a little endian
+func littleEndian(number int32) uint32 {
+	// LE := binary.LittleEndian
+	// BE := binary.BigEndian
+	// b := make([]byte, 4)
+	// LE.PutUint32(b, uint32(number))
+	// fmt.Printf("Value: %X", BE.Uint32(b))
+	return uint32(number)
+	// return BE.Uint32(b)
+}
+
 func visitString(c *Compiler, node *ast.Constant) (ast.VisitorMetaData, error) {
 	place := c.getUniqueID("string", "begin")
 	val := node.Value[1 : len(node.Value)-1]
-	data := []byte(val)
-	data = append(data, 0x00)
-	c.AddData(place, data)
-	// c.locals = append(c.locals, locals{name: place, tp: "i64"})
-	// val := node.Value[1 : len(node.Value)-1]
-	// c.Emit("i64.const %d", len(val))
-	// c.Emit("i32.const %d", 1)
-	// c.Emit("call $__alloc__")
-	// c.Emit("set_local %s", place)
-	// for index, char := range node.Value {
-	// 	c.Emit("get_local %s", place)
-	// 	c.Emit("i64.const %d", index)
-	// 	c.Emit("i64.add")
-	// 	c.Emit("i32.const %d", char)
-	// 	c.Emit("i32.store")
-	// }
+	c.AddLocal(place, "i32")
+	c.EmitFunc("i32.const %d", c.stackPointer)
+	c.EmitFunc("set_local %s", place)
+	c.EmitFunc("i32.const %d", c.stackPointer)
+	c.EmitFunc("i32.const %d", littleEndian(int32(len(val))))
+	c.EmitFunc("i32.store")
+	for _, char := range val {
+		c.stackPointer += 4
+		c.EmitFunc("i32.const %d", c.stackPointer)
+		c.EmitFunc("i32.const %d", littleEndian(int32(char)))
+
+		c.EmitFunc("i32.store")
+	}
 	return ast.VisitorMetaData{
 		Location: strconv.Itoa(c.dataSize),
 		Types:    "string",

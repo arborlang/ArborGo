@@ -20,7 +20,11 @@ func (b Run) Category() string { return "Run" }
 // Action builds the project
 func (b Run) Action(c *cli.Context) {
 	manager := environment.NewResolver()
-	manager.Load("stdlib.so")
+	err := manager.Load("stdlib.so")
+	if err != nil {
+		log.Println("Failed to find standard lib:", err)
+		os.Exit(-1)
+	}
 	if len(c.Args()) != 1 {
 		log.Println("Failed to get file: ", c.Args())
 		os.Exit(-1)

@@ -1,6 +1,7 @@
 package wast
 
 import (
+	"fmt"
 	"github.com/radding/ArborGo/internal/parser/ast"
 )
 
@@ -14,11 +15,26 @@ func (c *Compiler) VisitFunctionCallNode(node *ast.FunctionCallNode) (ast.Visito
 	}
 	varName, ok := node.Definition.(*ast.VarName)
 	if ok {
-		if varName.Name == "__putch__" {
+		switch varName.Name {
+		case "__putch__":
 			c.EmitFunc("call $__putch__")
-		}
-		if varName.Name == "__alloc__" {
+		case "__alloc__":
 			c.EmitFunc("call $__alloc__")
+		case "len":
+			c.EmitFunc("call $__len__")
+			return ast.VisitorMetaData{
+				Location: "$__len__",
+				Types:    "number",
+			}, nil
+		case "pause":
+			c.EmitFunc("call $__break__")
+		default:
+			sym := c.SymbolTable.GetSymbol(varName.Name)
+			if sym == nil {
+				return ast.VisitorMetaData{}, fmt.Errorf("no function named %s", varName.Name)
+			}
+			c.EmitFunc(";;calling %s", varName.Name)
+			c.EmitFunc("call %s", sym.Location)
 		}
 	}
 	return ast.VisitorMetaData{}, nil

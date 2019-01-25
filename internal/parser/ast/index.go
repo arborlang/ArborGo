@@ -3,7 +3,7 @@ package ast
 // IndexNode is the index node
 type IndexNode struct {
 	Varname *VarName
-	index   int
+	Index   int
 }
 
 // Accept a visitor

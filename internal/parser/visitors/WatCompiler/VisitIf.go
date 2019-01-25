@@ -7,7 +7,7 @@ import (
 
 // VisitIfNode visits an if node
 func (c *Compiler) VisitIfNode(node *ast.IfNode) (ast.VisitorMetaData, error) {
-	c.EmitFunc("drop")
+	// c.EmitFunc("drop")
 	if len(node.ElseIfs) > 0 {
 		return visitIfElseIf(node, c)
 	}
@@ -32,7 +32,7 @@ func visitIf(node *ast.IfNode, c *Compiler, breakTo string) (ast.VisitorMetaData
 	if breakTo != "" {
 		c.EmitFunc("br %s", breakTo)
 	}
-	c.EmitFunc("drop")
+	// c.EmitFunc("drop")
 	c.EmitFunc("end %s", label1)
 	return ast.VisitorMetaData{}, nil
 }
@@ -52,10 +52,10 @@ func visitIfElse(node *ast.IfNode, c *Compiler) (ast.VisitorMetaData, error) {
 	// c.Emit("(block")
 	metadata, err = node.Body.Accept(c)
 	c.EmitFunc("br %s", label1)
-	c.EmitFunc("drop")
+	// c.EmitFunc("drop")
 	c.EmitFunc("end %s", label2)
 	node.Else.Accept(c)
-	c.EmitFunc("drop")
+	// c.EmitFunc("drop")
 	c.EmitFunc("end %s", label1)
 	return ast.VisitorMetaData{}, nil
 }

@@ -18,6 +18,9 @@ func (c *Compiler) VisitAssignment(assignment *ast.AssignmentNode) (ast.VisitorM
 		return ast.VisitorMetaData{}, err
 	}
 	sym := c.SymbolTable.GetSymbol(location.SymbolData.Name)
+	c.currentAssignment = location.SymbolData.Name
+	defer func() { c.currentAssignment = "" }()
+
 	result, err := assignment.Value.Accept(c)
 	if err != nil {
 		return ast.VisitorMetaData{}, err
@@ -53,6 +56,7 @@ func visitFunctionDefinitionNode(c *Compiler, assignment *ast.AssignmentNode) (a
 		return ast.VisitorMetaData{}, err
 	}
 	sym := c.SymbolTable.GetSymbol(location.SymbolData.Name)
+	c.currentAssignment = location.SymbolData.Name
 	if sym == nil && !isDeclNode {
 		return ast.VisitorMetaData{}, fmt.Errorf("symbol %s not defined", location.Location)
 	}

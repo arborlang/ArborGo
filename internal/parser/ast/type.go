@@ -19,3 +19,8 @@ func (t *TypeNode) IsValidType(tp string) bool {
 	}
 	return false
 }
+
+// IsPointer denotes whether a type is a pointer or not
+func (t *TypeNode) IsPointer() bool {
+	return t.IsValidType("string") || t.IsValidType("array")
+}

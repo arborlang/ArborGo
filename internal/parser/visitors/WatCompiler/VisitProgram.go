@@ -42,13 +42,3 @@ func (c *Compiler) VisitImportNode(node *ast.ImportNode) (ast.VisitorMetaData, e
 func (c *Compiler) VisitTypeNode(node *ast.TypeNode) (ast.VisitorMetaData, error) {
 	return ast.VisitorMetaData{}, nil
 }
-
-// VisitIndexNode visists a node that gets the index of an element in an array
-func (c *Compiler) VisitIndexNode(node *ast.IndexNode) (ast.VisitorMetaData, error) {
-	return ast.VisitorMetaData{}, nil
-}
-
-//VisitSliceNode visits a node as a slice
-func (c *Compiler) VisitSliceNode(node *ast.SliceNode) (ast.VisitorMetaData, error) {
-	return ast.VisitorMetaData{}, nil
-}

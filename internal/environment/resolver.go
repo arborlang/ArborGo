@@ -31,8 +31,9 @@ func (r *ResolverManager) Load(name string) error {
 	}
 	if module, ok := resolver.(arbor.Module); ok {
 		r.resolvers[module.Name()] = module
+		return nil
 	}
-	return nil
+	return fmt.Errorf("Could not open extentions")
 }
 
 //ResolveFunc finds the function you are looking for

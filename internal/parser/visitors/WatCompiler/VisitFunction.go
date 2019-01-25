@@ -20,13 +20,31 @@ func (c *Compiler) VisitFunctionDefinitionNode(node *ast.FunctionDefinitionNode)
 	tempName = append(tempName, strings.Join(node.Returns.Types, "|"))
 	name := strings.Join(tempName, "_")
 	name = c.getUniqueID("func", name)
+	sym := c.SymbolTable.GetSymbol(c.currentAssignment)
+	if sym == nil {
+		panic("WHY AM I NIL?!?!")
+	}
+	// c.SymbolTable.AddToScope(&Symbol{
+	// 	Name:     c.currentAssignment,
+	// 	Location: name,
+	// })
+	sym.Location = name
 	signature := &bytes.Buffer{}
 	signature.Write([]byte(fmt.Sprintf("func %s", name)))
 	args := []string{}
 	for _, arg := range node.Arguments {
 		name := c.getUniqueID(strings.Join(arg.Type.Types, ""), arg.Name)
+		c.SymbolTable.AddToScope(&Symbol{
+			Location: name,
+			Name:     arg.Name,
+			Type:     strings.Join(arg.Type.Types, ""),
+		})
 		args = append(args, name)
-		signature.Write([]byte(fmt.Sprintf("(param %s i64)", name)))
+		tp := "i64"
+		if arg.Type.IsPointer() {
+			tp = "i32"
+		}
+		signature.Write([]byte(fmt.Sprintf("(param %s %s)", name, tp)))
 	}
 	signature.Write([]byte("(result i64)"))
 	c.currentFunc.signature = signature.String()

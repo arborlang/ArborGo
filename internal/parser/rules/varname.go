@@ -36,6 +36,9 @@ func varNameRule(shouldEnforceTypes bool, p *Parser) (ast.Node, error) {
 		return boolOperation(varname, p)
 	case tokens.COMPARISON:
 		return comparisonRule(varname, p)
+	case tokens.LSQUARE:
+		p.Next() // Fuck consitency ammiright?
+		return indexRule(varname, p)
 	case tokens.PIPE:
 		return pipeRule(varname, p)
 	}

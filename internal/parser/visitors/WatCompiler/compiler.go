@@ -27,17 +27,19 @@ func (d data) writeTo(w io.Writer) {
 
 // Compiler traverses the AST and converts it to WASM
 type Compiler struct {
-	Writer         io.Writer
-	SymbolTable    SymbolTable
-	DeclLocation   int
-	level          int
-	buffer         bytes.Buffer
-	funcCount      int
-	functions      []function
-	nameToFunction map[string]function
-	data           []data
-	currentFunc    *function
-	dataSize       int
+	Writer            io.Writer
+	SymbolTable       SymbolTable
+	DeclLocation      int
+	level             int
+	buffer            bytes.Buffer
+	funcCount         int
+	functions         []function
+	nameToFunction    map[string]function
+	data              []data
+	currentFunc       *function
+	dataSize          int
+	stackPointer      int
+	currentAssignment string
 }
 
 // AddData to the module
@@ -68,7 +70,19 @@ func (c *Compiler) StartModule() {
 	c.EmitFirst("(module")
 	c.EmitFirst(`(import "env" "__putch__" (func $__putch__ (param i32)))`)
 	c.EmitFirst(`(import "env" "__alloc__" (func $__alloc__ (param i64) (param i32) (result i64)))`)
+	c.EmitFirst(`(import "env" "__break__" (func $__break__ (result i64)))`)
 	c.EmitFirst("(memory 1)")
+	c.EmitFirst(`(func $__len__ (param $pointer i32) (result i64)
+		get_local $pointer
+		i32.load
+		i64.extend_u/i32
+	)`)
+	c.SymbolTable.PushScope()
+	c.SymbolTable.AddToScope(&Symbol{
+		Name:     "len",
+		Location: "$__len__",
+		Type:     "number",
+	})
 }
 
 //CloseModule ends the wat module

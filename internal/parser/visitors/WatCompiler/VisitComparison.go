@@ -16,6 +16,7 @@ func (c *Compiler) VisitComparison(node *ast.Comparison) (ast.VisitorMetaData, e
 		return ast.VisitorMetaData{}, err
 	}
 
+	fmt.Println(leftSide.Types, "!=", rightSide.Types)
 	if leftSide.Types != rightSide.Types {
 		return ast.VisitorMetaData{}, fmt.Errorf("can't compare object: types don't match")
 	}
