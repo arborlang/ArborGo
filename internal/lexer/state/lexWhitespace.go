@@ -1,8 +1,8 @@
 package state
 
 import (
-	"github.com/radding/ArborGo/internal/lexer/internal"
-	// "github.com/radding/ArborGo/internal/tokens"
+	"github.com/arborlang/ArborGo/internal/lexer/internal"
+	// "github.com/arborlang/ArborGo/internal/tokens"
 )
 
 func lexWhiteSpace(lex *internal.Lexer) State {

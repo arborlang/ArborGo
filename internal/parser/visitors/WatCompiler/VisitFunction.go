@@ -3,8 +3,9 @@ package wast
 import (
 	"bytes"
 	"fmt"
-	"github.com/radding/ArborGo/internal/parser/ast"
 	"strings"
+
+	"github.com/arborlang/ArborGo/internal/parser/ast"
 )
 
 // VisitFunctionDefinitionNode visits a function definition ndde

@@ -1,9 +1,10 @@
 package rules
 
 import (
-	"github.com/radding/ArborGo/internal/tokens"
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/arborlang/ArborGo/internal/tokens"
+	"github.com/stretchr/testify/assert"
 )
 
 var ifStmt = `

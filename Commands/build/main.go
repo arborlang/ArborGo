@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"github.com/radding/ArborGo/internal/parser"
-	"github.com/radding/ArborGo/internal/parser/visitors/WatCompiler"
+	"github.com/arborlang/ArborGo/internal/parser"
+	"github.com/arborlang/ArborGo/internal/parser/visitors/WatCompiler"
 	"github.com/urfave/cli"
 	"os"
 	"path"

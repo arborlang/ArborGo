@@ -4,7 +4,7 @@ import (
 	// "bufio"
 	// "bytes"
 	// "fmt"
-	"github.com/radding/ArborGo/internal/parser/ast"
+	"github.com/arborlang/ArborGo/internal/parser/ast"
 )
 
 // VisitBlock visits a compiler block

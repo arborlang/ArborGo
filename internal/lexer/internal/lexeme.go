@@ -3,7 +3,7 @@ package internal
 import (
 	"fmt"
 
-	"github.com/radding/ArborGo/internal/tokens"
+	"github.com/arborlang/ArborGo/internal/tokens"
 )
 
 //Lexeme is the value of the string

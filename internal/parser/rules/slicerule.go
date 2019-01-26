@@ -2,9 +2,10 @@ package rules
 
 import (
 	"fmt"
-	"github.com/radding/ArborGo/internal/parser/ast"
-	"github.com/radding/ArborGo/internal/tokens"
 	"strconv"
+
+	"github.com/arborlang/ArborGo/internal/parser/ast"
+	"github.com/arborlang/ArborGo/internal/tokens"
 )
 
 func sliceRule(ndxNode *ast.IndexNode, p *Parser) (ast.Node, error) {

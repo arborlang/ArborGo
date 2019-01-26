@@ -2,11 +2,12 @@ package wast
 
 import (
 	"bytes"
-	"github.com/radding/ArborGo/internal/lexer"
-	"github.com/radding/ArborGo/internal/parser/rules"
-	"github.com/radding/ArborGo/internal/tokens"
 	"os"
 	"testing"
+
+	"github.com/arborlang/ArborGo/internal/lexer"
+	"github.com/arborlang/ArborGo/internal/parser/rules"
+	"github.com/arborlang/ArborGo/internal/tokens"
 )
 
 var testProgram = `

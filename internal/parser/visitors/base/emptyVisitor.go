@@ -1,7 +1,7 @@
 package base
 
 import (
-	"github.com/radding/ArborGo/internal/parser/ast"
+	"github.com/arborlang/ArborGo/internal/parser/ast"
 )
 
 // VisitorHider is a simple way to set and hide the visitor

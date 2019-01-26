@@ -2,8 +2,9 @@ package functions
 
 import (
 	"fmt"
-	"github.com/radding/ArborGo/internal/parser/ast"
-	"github.com/radding/ArborGo/internal/parser/visitors/base"
+
+	"github.com/arborlang/ArborGo/internal/parser/ast"
+	"github.com/arborlang/ArborGo/internal/parser/visitors/base"
 )
 
 // Argument defines the arguments for a function

@@ -7,7 +7,7 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"github.com/radding/ArborGo/internal/tokens"
+	"github.com/arborlang/ArborGo/internal/tokens"
 )
 
 //Lexer is the lexer data implementation

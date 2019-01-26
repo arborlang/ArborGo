@@ -2,8 +2,9 @@ package wast
 
 import (
 	"fmt"
-	"github.com/radding/ArborGo/internal/parser/ast"
 	"strings"
+
+	"github.com/arborlang/ArborGo/internal/parser/ast"
 )
 
 // VisitDeclNode visits the decl Node

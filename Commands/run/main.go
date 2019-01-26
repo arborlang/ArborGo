@@ -2,10 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/radding/ArborGo/internal/environment"
-	"github.com/urfave/cli"
-	// "log"
 	"os"
+
+	"github.com/arborlang/ArborGo/internal/environment"
+	"github.com/urfave/cli"
 )
 
 // Run is the entrypoint for building

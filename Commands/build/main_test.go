@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/radding/ArborGo/lib/plugins"
+	"github.com/arborlang/ArborGo/lib/plugins"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )

@@ -2,10 +2,11 @@ package rules
 
 import (
 	"fmt"
-	"github.com/radding/ArborGo/internal/lexer"
-	"github.com/radding/ArborGo/internal/parser/ast"
-	"github.com/radding/ArborGo/internal/tokens"
 	"strings"
+
+	"github.com/arborlang/ArborGo/internal/lexer"
+	"github.com/arborlang/ArborGo/internal/parser/ast"
+	"github.com/arborlang/ArborGo/internal/tokens"
 )
 
 func isAType(tok tokens.Token) bool {

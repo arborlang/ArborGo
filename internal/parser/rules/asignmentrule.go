@@ -1,7 +1,7 @@
 package rules
 
 import (
-	"github.com/radding/ArborGo/internal/parser/ast"
+	"github.com/arborlang/ArborGo/internal/parser/ast"
 )
 
 func assignmentOperator(varname *ast.VarName, p *Parser) (ast.Node, error) {

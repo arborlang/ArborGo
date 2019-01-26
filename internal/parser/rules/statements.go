@@ -2,8 +2,9 @@ package rules
 
 import (
 	"fmt"
-	"github.com/radding/ArborGo/internal/parser/ast"
-	"github.com/radding/ArborGo/internal/tokens"
+
+	"github.com/arborlang/ArborGo/internal/parser/ast"
+	"github.com/arborlang/ArborGo/internal/tokens"
 )
 
 // gaurdParserRule gaurds a parser function from an unexpected keyworld after they run into the rules and pops the semicolon off if it encounters it.

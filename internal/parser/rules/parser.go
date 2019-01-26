@@ -4,8 +4,8 @@ Package rules are the parser rules for arbor
 package rules
 
 import (
-	"github.com/radding/ArborGo/internal/lexer"
-	"github.com/radding/ArborGo/internal/parser/ast"
+	"github.com/arborlang/ArborGo/internal/lexer"
+	"github.com/arborlang/ArborGo/internal/parser/ast"
 )
 
 // Parser Represents a parser Object

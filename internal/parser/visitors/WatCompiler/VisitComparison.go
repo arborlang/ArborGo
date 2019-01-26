@@ -2,7 +2,8 @@ package wast
 
 import (
 	"fmt"
-	"github.com/radding/ArborGo/internal/parser/ast"
+
+	"github.com/arborlang/ArborGo/internal/parser/ast"
 )
 
 // VisitComparison Visits a comparison node

@@ -1,7 +1,7 @@
 package state
 
 import (
-	"github.com/radding/ArborGo/internal/lexer/internal"
+	"github.com/arborlang/ArborGo/internal/lexer/internal"
 )
 
 //State is a representation of the Lexer state, the Lexer returns the next State function

@@ -1,8 +1,8 @@
 package rules
 
 import (
-	"github.com/radding/ArborGo/internal/parser/ast"
-	"github.com/radding/ArborGo/internal/tokens"
+	"github.com/arborlang/ArborGo/internal/parser/ast"
+	"github.com/arborlang/ArborGo/internal/tokens"
 )
 
 // ConstantsRule is a rule that corresponds with a number or a string

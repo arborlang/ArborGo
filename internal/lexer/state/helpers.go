@@ -1,6 +1,6 @@
 package state
 
-import "github.com/radding/ArborGo/internal/tokens"
+import "github.com/arborlang/ArborGo/internal/tokens"
 
 //isReserved checks if the value is a reserved key word
 func isReserved(test string) tokens.Token {

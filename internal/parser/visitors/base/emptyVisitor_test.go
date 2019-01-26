@@ -1,9 +1,10 @@
 package base
 
 import (
-	"github.com/radding/ArborGo/internal/parser/ast"
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/arborlang/ArborGo/internal/parser/ast"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestImplementsVisitor(t *testing.T) {

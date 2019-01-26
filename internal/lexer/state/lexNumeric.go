@@ -3,8 +3,8 @@ package state
 import (
 	"fmt"
 
-	"github.com/radding/ArborGo/internal/lexer/internal"
-	"github.com/radding/ArborGo/internal/tokens"
+	"github.com/arborlang/ArborGo/internal/lexer/internal"
+	"github.com/arborlang/ArborGo/internal/tokens"
 )
 
 func lexNumeric(lex *internal.Lexer) State {

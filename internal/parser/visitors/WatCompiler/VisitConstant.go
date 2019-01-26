@@ -3,8 +3,9 @@ package wast
 import (
 	// "encoding/binary"
 	"fmt"
-	"github.com/radding/ArborGo/internal/parser/ast"
 	"strconv"
+
+	"github.com/arborlang/ArborGo/internal/parser/ast"
 )
 
 // VisitConstant visits the constant object

@@ -6,5 +6,5 @@ go:
 before_install:
 install:
   - GO111MODULE=on go mod vendor
-go_import_path: github.com/radding/ArborGo
+go_import_path: github.com/arborlang/ArborGo
 script: go test -v ./...

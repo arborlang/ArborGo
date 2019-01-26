@@ -1,8 +1,8 @@
 package rules
 
 import (
-	"github.com/radding/ArborGo/internal/parser/ast"
-	"github.com/radding/ArborGo/internal/tokens"
+	"github.com/arborlang/ArborGo/internal/parser/ast"
+	"github.com/arborlang/ArborGo/internal/tokens"
 	"github.com/stretchr/testify/assert"
 	"reflect"
 	"testing"

@@ -2,10 +2,11 @@ package rules
 
 import (
 	"bytes"
-	"github.com/radding/ArborGo/internal/lexer"
-	"github.com/radding/ArborGo/internal/parser/ast"
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/arborlang/ArborGo/internal/lexer"
+	"github.com/arborlang/ArborGo/internal/parser/ast"
+	"github.com/stretchr/testify/assert"
 )
 
 var numberConst = `12;`

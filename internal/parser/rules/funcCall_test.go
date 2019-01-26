@@ -1,10 +1,11 @@
 package rules
 
 import (
-	"github.com/radding/ArborGo/internal/parser/ast"
-	// "github.com/radding/ArborGo/internal/tokens"
-	"github.com/stretchr/testify/assert"
+	"github.com/arborlang/ArborGo/internal/parser/ast"
+	// "github.com/arborlang/ArborGo/internal/tokens"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 var simpleCall = "(1 + 2, b, c * 12, x())"

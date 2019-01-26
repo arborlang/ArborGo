@@ -3,13 +3,13 @@ package lexer
 
 import (
 	"fmt"
-	"github.com/radding/ArborGo/internal/tokens"
+	"github.com/arborlang/ArborGo/internal/tokens"
 	"io"
 	"log"
 	"runtime/debug"
 
-	"github.com/radding/ArborGo/internal/lexer/internal"
-	"github.com/radding/ArborGo/internal/lexer/state"
+	"github.com/arborlang/ArborGo/internal/lexer/internal"
+	"github.com/arborlang/ArborGo/internal/lexer/state"
 )
 
 //Lexeme is the public lexeme for everyone

@@ -1,8 +1,9 @@
 package visitors
 
 import (
-	"github.com/radding/ArborGo/internal/parser/visitors/WatCompiler"
 	"io"
+
+	"github.com/arborlang/ArborGo/internal/parser/visitors/WatCompiler"
 )
 
 // NewWastCompiler instantiates a brand new compiler

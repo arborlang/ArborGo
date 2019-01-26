@@ -3,9 +3,9 @@ package state
 import (
 	"fmt"
 
-	"github.com/radding/ArborGo/internal/tokens"
+	"github.com/arborlang/ArborGo/internal/tokens"
 
-	"github.com/radding/ArborGo/internal/lexer/internal"
+	"github.com/arborlang/ArborGo/internal/lexer/internal"
 )
 
 func encodeChar(tok tokens.Token, value string) []byte {

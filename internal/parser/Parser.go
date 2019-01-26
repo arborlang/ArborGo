@@ -1,10 +1,10 @@
 package parser
 
 import (
-	"github.com/radding/ArborGo/internal/lexer"
-	"github.com/radding/ArborGo/internal/parser/ast"
-	"github.com/radding/ArborGo/internal/parser/rules"
-	"github.com/radding/ArborGo/internal/tokens"
+	"github.com/arborlang/ArborGo/internal/lexer"
+	"github.com/arborlang/ArborGo/internal/parser/ast"
+	"github.com/arborlang/ArborGo/internal/parser/rules"
+	"github.com/arborlang/ArborGo/internal/tokens"
 	"io"
 )
 

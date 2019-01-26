@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/radding/ArborGo/internal/lexer/internal"
-	"github.com/radding/ArborGo/internal/tokens"
+	"github.com/arborlang/ArborGo/internal/lexer/internal"
+	"github.com/arborlang/ArborGo/internal/tokens"
 )
 
 var test = `

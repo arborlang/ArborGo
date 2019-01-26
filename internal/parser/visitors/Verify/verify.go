@@ -1,9 +1,9 @@
 package verify
 
 import (
-	"github.com/radding/ArborGo/internal/parser/ast"
-	"github.com/radding/ArborGo/internal/parser/visitors/WatCompiler"
-	"github.com/radding/ArborGo/internal/parser/visitors/base"
+	"github.com/arborlang/ArborGo/internal/parser/ast"
+	"github.com/arborlang/ArborGo/internal/parser/visitors/WatCompiler"
+	"github.com/arborlang/ArborGo/internal/parser/visitors/base"
 )
 
 // Visitor verifies the AST
