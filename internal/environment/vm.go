@@ -2,26 +2,24 @@ package environment
 
 import (
 	"fmt"
-	"github.com/perlin-network/life/exec"
+	"github.com/radding/arbor-dev"
 )
 
 // RunWasm runs a Wasm file
-func RunWasm(wasmCode []byte, entrypoint string, resolver *ResolverManager) (int64, error) {
-	vm, err := exec.NewVirtualMachine(wasmCode, exec.VMConfig{}, resolver, nil)
+func RunWasm(wasmCode []byte, entrypoint string, paths ...string) (int64, error) {
+	vm, err := arbor.NewVirtualMachine(wasmCode, entrypoint, paths...)
 	if err != nil {
 		return int64(-1), err
 	}
-	entryID, ok := vm.GetFunctionExport(entrypoint) // can be changed to your own exported function
-	if !ok {
-		return int64(-1), fmt.Errorf("entry function not found")
+	if err != nil {
+		return int64(-1), err
 	}
-	ret, err := vm.Run(entryID)
+	ret, err := vm.Run()
 	if err != nil {
 		vm.PrintStackTrace()
 		return int64(-1), err
 	}
 	return ret, nil
-	// return int64(-1), fmt.Errorf("not implemented")
 }
 
 // RunWat runs a Wat file

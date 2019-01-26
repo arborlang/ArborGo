@@ -71,6 +71,10 @@ func (c *Compiler) StartModule() {
 	c.EmitFirst(`(import "env" "__putch__" (func $__putch__ (param i32)))`)
 	c.EmitFirst(`(import "env" "__alloc__" (func $__alloc__ (param i64) (param i32) (result i64)))`)
 	c.EmitFirst(`(import "env" "__break__" (func $__break__ (result i64)))`)
+	c.EmitFirst(`(import "env" "__pushstack__" (func $__pushstack__ (result i64)))`)
+	c.EmitFirst(`(import "env" "__popstack__" (func $__popstack__ (result i64)))`)
+	c.EmitFirst(`(import "env" "STACKTOP" (global $__STACKTOP_IMPORT__ i64))`)
+	c.EmitFirst(`(global  $__STACKTOP__ (mut i64) (get_global $__STACKTOP_IMPORT__))`)
 	c.EmitFirst("(memory 1)")
 	c.EmitFirst(`(func $__len__ (param $pointer i32) (result i64)
 		get_local $pointer

@@ -52,7 +52,6 @@ func (s *SymbolTable) PopScope() error {
 
 // AddToScope adds a symbol to the current scope
 func (s *SymbolTable) AddToScope(sy *Symbol) error {
-	fmt.Println("Pushing to scope:", sy)
 	// if s.useGlobal {
 	// 	s.GlobalScope[sy.Name] = sy
 	// } else {

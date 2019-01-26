@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"github.com/radding/ArborGo/internal/environment"
 	"github.com/urfave/cli"
-	"log"
+	// "log"
 	"os"
 )
 
@@ -19,16 +19,6 @@ func (b Run) Category() string { return "Run" }
 
 // Action builds the project
 func (b Run) Action(c *cli.Context) {
-	manager := environment.NewResolver()
-	err := manager.Load("stdlib.so")
-	if err != nil {
-		log.Println("Failed to find standard lib:", err)
-		os.Exit(-1)
-	}
-	if len(c.Args()) != 1 {
-		log.Println("Failed to get file: ", c.Args())
-		os.Exit(-1)
-	}
 	file := c.Args()[0]
 	var content []byte
 	entryPoint := c.String("entrypoint")
@@ -38,7 +28,7 @@ func (b Run) Action(c *cli.Context) {
 		os.Exit(-1)
 	}
 	if isWasm {
-		ret, err := environment.RunWasm(content, entryPoint, manager)
+		ret, err := environment.RunWasm(content, entryPoint, "stdlib.so")
 		if err != nil {
 			fmt.Println(err)
 			ret = -1
