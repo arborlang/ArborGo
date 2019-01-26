@@ -2,7 +2,8 @@ package environment
 
 import (
 	"fmt"
-	"github.com/radding/arbor-dev"
+
+	"github.com/arborlang/arbor-dev"
 )
 
 // RunWasm runs a Wasm file
