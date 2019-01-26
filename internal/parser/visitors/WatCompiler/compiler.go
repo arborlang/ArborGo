@@ -73,7 +73,7 @@ func (c *Compiler) StartModule() {
 	c.EmitFirst(`(import "env" "__break__" (func $__break__ (result i64)))`)
 	c.EmitFirst(`(import "env" "__pushstack__" (func $__pushstack__ (result i64)))`)
 	c.EmitFirst(`(import "env" "__popstack__" (func $__popstack__ (result i64)))`)
-	c.EmitFirst(`(import "env" "STACKTOP" (global $__STACKTOP_IMPORT__ i64))`)
+	c.EmitFirst(`(import "env" "STACKTOP_ASM" (global $__STACKTOP_IMPORT__ i64))`)
 	c.EmitFirst(`(global  $__STACKTOP__ (mut i64) (get_global $__STACKTOP_IMPORT__))`)
 	c.EmitFirst("(memory 1)")
 	c.EmitFirst(`(func $__len__ (param $pointer i32) (result i64)
@@ -103,7 +103,9 @@ func (c *Compiler) CloseModule() {
 	for _, fun := range c.functions {
 		fun.writeTo(c.Writer)
 	}
-	c.currentFunc.writeTo(c.Writer)
+	if c.currentFunc != nil {
+		c.currentFunc.writeTo(c.Writer)
+	}
 	c.EmitFirst(")")
 	c.Flush()
 }

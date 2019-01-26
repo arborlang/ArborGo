@@ -12,6 +12,9 @@ func (c *Compiler) VisitAssignment(assignment *ast.AssignmentNode) (ast.VisitorM
 		return visitFunctionDefinitionNode(c, assignment)
 	}
 	location, err := assignment.AssignTo.Accept(c)
+	if err != nil {
+		return ast.VisitorMetaData{}, err
+	}
 	if location.SymbolData == nil {
 		return ast.VisitorMetaData{}, fmt.Errorf("Didn't get symbol data from the assign to")
 	}
