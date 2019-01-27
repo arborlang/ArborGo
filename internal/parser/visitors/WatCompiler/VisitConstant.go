@@ -53,21 +53,23 @@ func littleEndian(number int32) uint32 {
 }
 
 func visitString(c *Compiler, node *ast.Constant) (ast.VisitorMetaData, error) {
+	c.EmitFunc(";; Compiling a string baby!")
 	place := c.getUniqueID("string", "begin")
 	val := node.Value[1 : len(node.Value)-1]
 	c.AddLocal(place, "i32")
-	c.EmitFunc("i32.const %d", c.stackPointer)
+	c.EmitFunc("call $__stacktop__")
 	c.EmitFunc("set_local %s", place)
-	c.EmitFunc("i32.const %d", c.stackPointer)
+	c.EmitFunc("call $__stacktop__")
 	c.EmitFunc("i32.const %d", littleEndian(int32(len(val))))
 	c.EmitFunc("i32.store")
 	for _, char := range val {
-		c.stackPointer += 4
-		c.EmitFunc("i32.const %d", c.stackPointer)
+		c.EmitFunc("i64.const 4")
+		c.EmitFunc("call $__allocstack__")
 		c.EmitFunc("i32.const %d", littleEndian(int32(char)))
 
 		c.EmitFunc("i32.store")
 	}
+	c.EmitFunc(";; Done with that string")
 	return ast.VisitorMetaData{
 		Location: strconv.Itoa(c.dataSize),
 		Types:    "string",

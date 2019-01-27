@@ -9,6 +9,8 @@ import (
 func (c *Compiler) VisitReturnNode(node *ast.ReturnNode) (ast.VisitorMetaData, error) {
 	metadata, err := node.Expression.Accept(c)
 	metadata.Returns = []string{metadata.Types}
+	c.EmitFunc("call $__popstack__")
+	c.EmitFunc("drop")
 	c.EmitFunc("return")
 	// fmt.Println(metadata.Types)
 	if err != nil {
