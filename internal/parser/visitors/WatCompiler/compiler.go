@@ -27,18 +27,18 @@ func (d data) writeTo(w io.Writer) {
 
 // Compiler traverses the AST and converts it to WASM
 type Compiler struct {
-	Writer            io.Writer
-	SymbolTable       SymbolTable
-	DeclLocation      int
-	level             int
-	buffer            bytes.Buffer
-	funcCount         int
-	functions         []function
-	nameToFunction    map[string]function
-	data              []data
-	currentFunc       *function
-	dataSize          int
-	stackPointer      int
+	Writer         io.Writer
+	SymbolTable    SymbolTable
+	DeclLocation   int
+	level          int
+	buffer         bytes.Buffer
+	funcCount      int
+	functions      []function
+	nameToFunction map[string]function
+	data           []data
+	currentFunc    *function
+	dataSize       int
+	// stackPointer      int
 	currentAssignment string
 }
 
@@ -71,16 +71,18 @@ func (c *Compiler) StartModule() {
 	c.EmitFirst(`(import "env" "__putch__" (func $__putch__ (param i32)))`)
 	c.EmitFirst(`(import "env" "__alloc__" (func $__alloc__ (param i64) (param i32) (result i64)))`)
 	c.EmitFirst(`(import "env" "__break__" (func $__break__ (result i64)))`)
-	c.EmitFirst(`(import "env" "__pushstack__" (func $__pushstack__ (result i64)))`)
-	c.EmitFirst(`(import "env" "__popstack__" (func $__popstack__ (result i64)))`)
-	c.EmitFirst(`(import "env" "STACKTOP_ASM" (global $__STACKTOP_IMPORT__ i64))`)
-	c.EmitFirst(`(global  $__STACKTOP__ (mut i64) (get_global $__STACKTOP_IMPORT__))`)
+	c.EmitFirst(`(import "env" "__pushstack__" (func $__pushstack__ (result i32)))`)
+	c.EmitFirst(`(import "env" "__popstack__" (func $__popstack__ (result i32)))`)
+	c.EmitFirst(`(import "env" "__incrementstack__" (func $__allocstack__ (param i64) (result i32)))`)
+	c.EmitFirst(`(import "env" "__stacktop__" (func $__stacktop__ (result i32)))`)
+	c.EmitFirst(`(import "env" "STACKTOP_ASM" (global $__STACKTOP_IMPORT__ i32))`)
+	c.EmitFirst(`(global  $__STACKTOP__ (mut i32) (get_global $__STACKTOP_IMPORT__))`)
 	c.EmitFirst("(memory 1)")
 	c.EmitFirst(`(func $__len__ (param $pointer i32) (result i64)
 		get_local $pointer
-		i32.load
-		i64.extend_u/i32
+		i64.load
 	)`)
+	// c.EmitFirst("(func $__stackPush__")
 	c.SymbolTable.PushScope()
 	c.SymbolTable.AddToScope(&Symbol{
 		Name:     "len",

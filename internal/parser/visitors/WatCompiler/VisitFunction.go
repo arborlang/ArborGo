@@ -11,6 +11,8 @@ import (
 // VisitFunctionDefinitionNode visits a function definition ndde
 func (c *Compiler) VisitFunctionDefinitionNode(node *ast.FunctionDefinitionNode) (ast.VisitorMetaData, error) {
 	c.StartFunc()
+	c.EmitFunc("call $__pushstack__")
+	c.EmitFunc("drop")
 	tempName := []string{}
 	for _, varName := range node.Arguments {
 		tempName = append(
@@ -65,6 +67,8 @@ func (c *Compiler) VisitFunctionDefinitionNode(node *ast.FunctionDefinitionNode)
 		}
 	}
 
+	c.EmitFunc("call $__popstack__")
+	c.EmitFunc("drop")
 	return ast.VisitorMetaData{
 		Location:   name,
 		Exportable: fmt.Sprintf("(func %s)", name),
