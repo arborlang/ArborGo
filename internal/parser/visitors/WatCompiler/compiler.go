@@ -69,6 +69,7 @@ func (c *Compiler) StartModule() {
 	c.level = 0
 	c.EmitFirst("(module")
 	c.EmitFirst(`(import "env" "__putch__" (func $__putch__ (param i32)))`)
+	c.EmitFirst(`(import "env" "__putnum__" (func $__putnum__ (param i32) (result i32)))`)
 	c.EmitFirst(`(import "env" "__alloc__" (func $__alloc__ (param i64) (param i32) (result i64)))`)
 	c.EmitFirst(`(import "env" "__break__" (func $__break__ (result i64)))`)
 	c.EmitFirst(`(import "env" "__pushstack__" (func $__pushstack__ (result i32)))`)
