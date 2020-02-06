@@ -21,3 +21,6 @@ wast_test:
 	./arbor run --wasm --entrypoint main test.wasm
 
 test_run: test_file wast_test
+
+test:
+	go test -v ./...

@@ -26,7 +26,7 @@ func ExpressionRule(p *Parser) (ast.Node, error) {
 	case tokens.NUMBER, tokens.STRINGVAL, tokens.CHARVAL, tokens.FLOAT:
 		return ConstantsRule(p)
 	case tokens.VARNAME:
-		return varNameRule(false, p)
+		return varNameRule(false, p, false)
 	case tokens.RPAREN:
 		return functionDefinitionRule(p)
 	default:

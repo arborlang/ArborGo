@@ -5,12 +5,18 @@ import (
 )
 
 // VisitBlock visits a compiler block
-func (v *Visitor) VisitBlock(block *ast.Program) (ast.VisitorMetaData, error) {
+func (v *Visitor) VisitBlock(block *ast.Program) (md ast.VisitorMetaData, e error) {
 	v.level++
-	defer func() { v.level-- }()
-	v.symbols.PushScope()
-	defer v.symbols.PopScope()
+	v.symbols.PushNewScope()
+	defer func() {
+		v.level--
+		e = v.symbols.PopScope()
+	}()
+	// v.symbols.PushScope()
+	// defer v.symbols.PopScope()
 	v.visitor.ShouldCallVisitor = false
 	v.visitor.VisitBlock(block)
-	return ast.VisitorMetaData{}, nil
+	md = ast.VisitorMetaData{}
+	e = nil
+	return
 }

@@ -47,7 +47,7 @@ func TestCanParseAFunctionCall(t *testing.T) {
 func TestParseFullCall(t *testing.T) {
 	assert := assert.New(t)
 	p := createParser(fullCall)
-	fun, err := varNameRule(false, p)
+	fun, err := varNameRule(false, p, false)
 	if !assert.NoError(err) {
 		t.Fatal()
 	}

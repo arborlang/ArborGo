@@ -15,7 +15,7 @@ func DeclRule(p *Parser) (ast.Node, error) {
 	if name.Token != tokens.VARNAME {
 		return nil, fmt.Errorf("expected token VARNAME, got %s: %s", name.Token.String(), name.Value)
 	}
-	nameNode, err := varNameRule(true, p)
+	nameNode, err := varNameRule(false, p, true)
 	if err != nil {
 		return nil, err
 	}
@@ -25,7 +25,10 @@ func DeclRule(p *Parser) (ast.Node, error) {
 		if tp.Token == tokens.CONST {
 			d.IsConstant = true
 		}
-		d.AddChild(node.AssignTo)
+		// d.AddChild(node.AssignTo)
+		// if d.Varname.Type == nil {
+		// 	d.Var
+		// }
 		node.AssignTo = d
 
 		return node, nil

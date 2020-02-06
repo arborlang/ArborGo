@@ -25,7 +25,7 @@ func (c *Compiler) VisitFunctionCallNode(node *ast.FunctionCallNode) (ast.Visito
 			c.EmitFunc("call $__len__")
 			return ast.VisitorMetaData{
 				Location: "$__len__",
-				Types:    "number",
+				Types:    &ast.TypeNode{Types: []string{"number"}},
 			}, nil
 		case "pause":
 			c.EmitFunc("call $__break__")

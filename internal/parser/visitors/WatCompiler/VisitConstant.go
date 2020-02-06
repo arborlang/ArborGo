@@ -37,7 +37,7 @@ func (c *Compiler) VisitConstant(node *ast.Constant) (ast.VisitorMetaData, error
 	}
 	return ast.VisitorMetaData{
 		Location: "STACK",
-		Types:    tp,
+		Types:    &ast.TypeNode{Types: []string{tp}},
 	}, nil
 }
 
@@ -72,6 +72,6 @@ func visitString(c *Compiler, node *ast.Constant) (ast.VisitorMetaData, error) {
 	c.EmitFunc(";; Done with that string")
 	return ast.VisitorMetaData{
 		Location: strconv.Itoa(c.dataSize),
-		Types:    "string",
+		Types:    &ast.TypeNode{Types: []string{"string"}},
 	}, nil
 }

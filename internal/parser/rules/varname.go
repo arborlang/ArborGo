@@ -8,7 +8,7 @@ import (
 )
 
 //varNameRule parses a varname
-func varNameRule(shouldEnforceTypes bool, p *Parser) (ast.Node, error) {
+func varNameRule(shouldEnforceTypes bool, p *Parser, couldReceiveTypes bool) (ast.Node, error) {
 	node := p.Next()
 	if node.Token != tokens.VARNAME {
 		return nil, fmt.Errorf("expected a name, got %s", node)
@@ -18,6 +18,9 @@ func varNameRule(shouldEnforceTypes bool, p *Parser) (ast.Node, error) {
 	tok := p.Peek()
 	didSeeColon := false
 	if tok.Token == tokens.COLON {
+		if !couldReceiveTypes {
+			return nil, fmt.Errorf("received unexpected colon")
+		}
 		didSeeColon = true
 		p.Next()
 		tp, err := typeRules(p)

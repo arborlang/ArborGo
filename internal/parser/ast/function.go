@@ -1,10 +1,13 @@
 package ast
 
+import "github.com/arborlang/ArborGo/internal/lexer"
+
 // FunctionDefinitionNode represents a function definition
 type FunctionDefinitionNode struct {
 	Arguments []*VarName
 	Body      Node
 	Returns   *TypeNode
+	Lexeme    lexer.Lexeme
 }
 
 // FunctionCallNode represents a function call

@@ -19,7 +19,7 @@ func (c *Compiler) VisitMathOpNode(node *ast.MathOpNode) (ast.VisitorMetaData, e
 	if lsMetadata.Types != rsMetadata.Types {
 		return lsMetadata, fmt.Errorf("can't %s two different types", node.Operation)
 	}
-	tp := c.getType(lsMetadata.Types)
+	tp := c.getType(lsMetadata.Types.Types[0])
 	c.EmitFunc("%s.%s", tp, node.Operation)
 	return lsMetadata, nil
 

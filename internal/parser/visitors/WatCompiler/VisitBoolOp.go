@@ -21,7 +21,7 @@ func (c *Compiler) VisitBoolOp(node *ast.BoolOp) (ast.VisitorMetaData, error) {
 	// 	return ast.VisitorMetaData{}, fmt.Errorf("can't compare two different types %s %s %s", leftSide.Types, node.Condition, rightSide.Types)
 	// }
 	tp := ""
-	switch leftSide.Types {
+	switch leftSide.Types.Types[0] {
 	case "char", "bool":
 		tp = "i32"
 	case "float":
@@ -48,6 +48,6 @@ func (c *Compiler) VisitBoolOp(node *ast.BoolOp) (ast.VisitorMetaData, error) {
 		c.EmitFunc("i32.or")
 	}
 	return ast.VisitorMetaData{
-		Types: "bool",
+		Types: &ast.TypeNode{Types: []string{"bool"}},
 	}, nil
 }

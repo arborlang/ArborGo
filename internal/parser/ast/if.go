@@ -1,5 +1,7 @@
 package ast
 
+import "github.com/arborlang/ArborGo/internal/lexer"
+
 // IfNode represens an if statemet
 type IfNode struct {
 	Condition Node
@@ -7,6 +9,7 @@ type IfNode struct {
 	ElseIfs   []*IfNode
 	Else      Node
 	ReturnTo  string
+	Lexeme    lexer.Lexeme
 }
 
 // Accept implements a node

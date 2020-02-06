@@ -25,7 +25,7 @@ func (c *Compiler) VisitDeclNode(node *ast.DeclNode) (ast.VisitorMetaData, error
 	})
 	return ast.VisitorMetaData{
 		Location: "",
-		Types:    tp,
+		Types:    &ast.TypeNode{Types: []string{tp}},
 		SymbolData: &ast.SymbolData{
 			Name:       node.Varname.Name,
 			Type:       node.Varname.Type,

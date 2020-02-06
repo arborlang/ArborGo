@@ -23,7 +23,7 @@ func (c *Compiler) VisitVarName(node *ast.VarName) (ast.VisitorMetaData, error) 
 	c.EmitFunc("get_local %s", sym.Location)
 	return ast.VisitorMetaData{
 		Location: sym.Location,
-		Types:    sym.Type,
+		Types:    &ast.TypeNode{Types: []string{sym.Type}},
 		SymbolData: &ast.SymbolData{
 			Name:       node.Name,
 			IsNew:      false,

@@ -24,7 +24,7 @@ func visitIf(node *ast.IfNode, c *Compiler, breakTo string) (ast.VisitorMetaData
 	if err != nil {
 		return metadata, err
 	}
-	tp := c.getType(metadata.Types)
+	tp := c.getType(metadata.Types.Types[0])
 	c.EmitFunc("%s.eqz", tp)
 	c.EmitFunc("br_if %s", label1)
 	// c.Emit("(block")
@@ -46,7 +46,7 @@ func visitIfElse(node *ast.IfNode, c *Compiler) (ast.VisitorMetaData, error) {
 	if err != nil {
 		return metadata, err
 	}
-	tp := c.getType(metadata.Types)
+	tp := c.getType(metadata.Types.Types[0])
 	c.EmitFunc("%s.eqz", tp)
 	c.EmitFunc("br_if %s", label2)
 	// c.Emit("(block")

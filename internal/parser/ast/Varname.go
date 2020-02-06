@@ -1,9 +1,12 @@
 package ast
 
+import "github.com/arborlang/ArborGo/internal/lexer"
+
 //VarName Represents a name for a variable
 type VarName struct {
-	Name string
-	Type *TypeNode
+	Name   string
+	Type   *TypeNode
+	Lexeme lexer.Lexeme
 }
 
 // Accept does nothing

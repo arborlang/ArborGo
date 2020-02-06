@@ -4,7 +4,7 @@ replace github.com/go-interpreter/wagon v0.0.0 => github.com/perlin-network/wago
 
 require (
 	github.com/arborlang/arbor-dev v0.0.0-20190126210124-ccaaedf77120
-	github.com/perlin-network/life v0.0.0-20181215083421-28a99a6d79ec
 	github.com/stretchr/testify v1.3.0
-	github.com/urfave/cli v1.20.0
 )
+
+go 1.13

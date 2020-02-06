@@ -8,8 +8,8 @@ import (
 )
 
 var potentialProgram = `
-const foo = (a: number, b: number) -> a + b;
-const xyz = () -> {
+const foo = (a: number, b: number): number -> a + b;
+const xyz = (): number -> {
 	const a = 1;
 	const b = 2;
 	return foo(a, b);

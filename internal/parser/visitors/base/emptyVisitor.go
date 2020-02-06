@@ -176,7 +176,7 @@ func (v *Visitor) VisitIfNode(node *ast.IfNode) (ast.VisitorMetaData, error) {
 		elseIf.Accept(v)
 	}
 	if node.Else != nil {
-		els := *node.Else
+		els := node.Else
 		els.Accept(v)
 	}
 	return ast.VisitorMetaData{}, nil
@@ -195,6 +195,24 @@ func (v *Visitor) VisitImportNode(node *ast.ImportNode) (ast.VisitorMetaData, er
 func (v *Visitor) VisitTypeNode(node *ast.TypeNode) (ast.VisitorMetaData, error) {
 	if visitor, ok := v.visitor.(ast.TypeVisitor); ok && v.ShouldCallVisitor {
 		return visitor.VisitTypeNode(node)
+	}
+	v.ShouldCallVisitor = true
+	return ast.VisitorMetaData{}, nil
+}
+
+// VisitIndexNode visits an index node
+func (v *Visitor) VisitIndexNode(node *ast.IndexNode) (ast.VisitorMetaData, error) {
+	if visitor, ok := v.visitor.(ast.IndexVisitor); ok && v.ShouldCallVisitor {
+		return visitor.VisitIndexNode(node)
+	}
+	v.ShouldCallVisitor = true
+	return ast.VisitorMetaData{}, nil
+}
+
+// VisitSliceNode visits a slice node
+func (v *Visitor) VisitSliceNode(node *ast.SliceNode) (ast.VisitorMetaData, error) {
+	if visitor, ok := v.visitor.(ast.SliceVisitor); ok && v.ShouldCallVisitor {
+		return visitor.VisitSliceNode(node)
 	}
 	v.ShouldCallVisitor = true
 	return ast.VisitorMetaData{}, nil

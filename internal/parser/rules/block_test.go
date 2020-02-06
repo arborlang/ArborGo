@@ -9,7 +9,7 @@ import (
 
 var simpleBlock = `{ a + b;}`
 var complexBlock = `{
-	const x: number = 1;
+	const x = 1;
 	let b: number = 2 + a;
 	x();
 	z + 4;

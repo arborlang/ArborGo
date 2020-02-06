@@ -21,7 +21,7 @@ func (c *Compiler) VisitComparison(node *ast.Comparison) (ast.VisitorMetaData, e
 		return ast.VisitorMetaData{}, fmt.Errorf("can't compare object: types don't match")
 	}
 	tp := ""
-	switch leftSide.Types {
+	switch leftSide.Types.Types[0] {
 	case "char":
 		tp = "i32"
 	case "float":
@@ -46,6 +46,6 @@ func (c *Compiler) VisitComparison(node *ast.Comparison) (ast.VisitorMetaData, e
 	}
 	c.EmitFunc("%s.%s", tp, op)
 	return ast.VisitorMetaData{
-		Types: "bool",
+		Types: &ast.TypeNode{Types: []string{"bool"}},
 	}, nil
 }

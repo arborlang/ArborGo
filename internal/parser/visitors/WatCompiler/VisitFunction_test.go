@@ -31,10 +31,8 @@ func TestCompilerVisitsFunctionCorrectly(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	compiler := &Compiler{
-		Writer: os.Stdout,
-		level:  0,
-	}
+
+	compiler := New(os.Stdout)
 	compiler.StartModule()
 	if _, err := prog.Accept(compiler); err != nil {
 		t.Fatal(err)

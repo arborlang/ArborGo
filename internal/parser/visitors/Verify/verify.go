@@ -2,15 +2,17 @@ package verify
 
 import (
 	"github.com/arborlang/ArborGo/internal/parser/ast"
-	"github.com/arborlang/ArborGo/internal/parser/visitors/WatCompiler"
+	"github.com/arborlang/ArborGo/internal/parser/scope"
+	// "github.com/arborlang/ArborGo/internal/parser/visitors/WatCompiler"
 	"github.com/arborlang/ArborGo/internal/parser/visitors/base"
 )
 
-// Visitor verifies the AST
+// Visitor verifies the correctness of the AST
 type Visitor struct {
 	level   int
 	visitor *base.Visitor
-	symbols compiler.SymbolTable
+	symbols *scope.SymbolTable
+	// symbols compiler.SymbolTable
 }
 
 // SetVisitor sets the visitor
@@ -21,7 +23,8 @@ func (v *Visitor) SetVisitor(b *base.Visitor) {
 // New Returns a new Visitor
 func New() *base.Visitor {
 	return base.New(&Visitor{
-		level: 0,
+		symbols: scope.NewTable(),
+		level:   0,
 	})
 }
 
@@ -29,7 +32,7 @@ func New() *base.Visitor {
 type NoTypeDeclError struct{}
 
 func (n NoTypeDeclError) Error() string {
-	return "no type defined on declatation"
+	return "no type defined on declaration"
 }
 
 // VisitDeclNode verify the decl node
@@ -39,8 +42,3 @@ func (v *Visitor) VisitDeclNode(node *ast.DeclNode) (ast.VisitorMetaData, error)
 	}
 	return ast.VisitorMetaData{}, nil
 }
-
-// VisitAssignment visits an assignment node
-// func (v *Visitor) VisitAssignment(node *ast.AssignmentNode) (ast.VisitorMetaData, error) {
-
-// }

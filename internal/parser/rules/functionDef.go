@@ -15,7 +15,7 @@ func functionDefinitionRule(p *Parser) (ast.Node, error) {
 		return nil, fmt.Errorf("expected '(', got %s instead", lexeme)
 	}
 	for lexeme := p.Peek(); lexeme.Token != tokens.LPAREN; lexeme = p.Peek() {
-		arg, err := varNameRule(true, p)
+		arg, err := varNameRule(true, p, true)
 		if err != nil {
 			return nil, err
 		}
@@ -31,15 +31,16 @@ func functionDefinitionRule(p *Parser) (ast.Node, error) {
 		}
 	}
 	p.Next()
-	if next := p.Next(); next.Token != tokens.COLON {
-		return nil, fmt.Errorf("expected ':' got %s instead", next)
+	next := p.Next()
+	if next.Token == tokens.COLON {
+		node, err := typeRules(p)
+		if err != nil {
+			return nil, err
+		}
+		funcDefNode.Returns = node.(*ast.TypeNode)
+		next = p.Next()
 	}
-	node, err := typeRules(p)
-	if err != nil {
-		return nil, err
-	}
-	funcDefNode.Returns = node.(*ast.TypeNode)
-	if next := p.Next(); next.Token != tokens.ARROW {
+	if next.Token != tokens.ARROW {
 		return nil, fmt.Errorf("expected '->', got %s instead", next)
 	}
 	var body ast.Node
@@ -49,21 +50,6 @@ func functionDefinitionRule(p *Parser) (ast.Node, error) {
 		body, err = ProgramRule(p, tokens.LCURLY)
 		if err != nil {
 			return nil, err
-		}
-		bodyNode := body.(*ast.Program)
-		nodes := []ast.Node{}
-		found := false
-		for _, node := range bodyNode.Nodes {
-			_, ok := node.(*ast.ReturnNode)
-			nodes = append(nodes, node)
-			if ok {
-				found = true
-				break
-			}
-		}
-		bodyNode.Nodes = nodes
-		if !found {
-			return nil, fmt.Errorf("expected a return for all paths on line: %d", topLexeme.Line)
 		}
 		if err != nil {
 			return nil, err

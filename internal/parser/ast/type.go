@@ -1,8 +1,11 @@
 package ast
 
+import "github.com/arborlang/ArborGo/internal/lexer"
+
 // TypeNode represents a type node
 type TypeNode struct {
-	Types []string
+	Types  []string
+	Lexeme lexer.Lexeme
 }
 
 // Accept a type visitor

@@ -9,16 +9,16 @@ import (
 )
 
 var funcStr1 = `
-(a: number, b: number) -> {
+(a: number, b: number): number -> {
 	a + b;	
 };`
 
 var funcStrFull = `
-let x = (a: number, b: number) -> {
-	a + b;
+let x = (a: number, b: number): number -> {
+	return a + b;
 };`
 
-var funcStr2 = `(a: number, b: number) -> a + b;`
+var funcStr2 = `(a: number, b: number): number -> a + b;`
 
 func TestCanParseFunctionDef(t *testing.T) {
 	assert := assert.New(t)

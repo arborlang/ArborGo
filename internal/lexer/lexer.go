@@ -16,7 +16,8 @@ import (
 type Lexeme internal.Lexeme
 
 func (lexeme Lexeme) String() string {
-	return fmt.Sprintf("{ Token: %s, Value: %q, Line: %d, Column: %d }", lexeme.Token, lexeme.Value, lexeme.Line, lexeme.Column)
+	return fmt.Sprintf("%q (Line: %d, Column: %d)", lexeme.Value, lexeme.Line, lexeme.Column)
+	// return fmt.Sprintf("{ Token: %s, Value: %q, Line: %d, Column: %d }", lexeme.Token, lexeme.Value, lexeme.Line, lexeme.Column)
 }
 
 //NewLexer creates and returns a new lexer instance

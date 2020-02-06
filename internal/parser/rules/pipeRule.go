@@ -13,7 +13,7 @@ func pipeRule(left ast.Node, p *Parser) (ast.Node, error) {
 	if next := p.Next(); next.Token != tokens.PIPE {
 		return nil, fmt.Errorf("unexpected token %s, expected '|>'", next)
 	}
-	next, err := varNameRule(false, p)
+	next, err := varNameRule(false, p, false)
 	if err != nil {
 		return nil, err
 	}

@@ -2,7 +2,6 @@ package verify
 
 import (
 	"bytes"
-	"fmt"
 	"testing"
 
 	"github.com/arborlang/ArborGo/internal/lexer"
@@ -17,7 +16,7 @@ var TestCases = []struct {
 	IsValid  bool
 }{
 	{`const bap = 1;`, true},
-	{`const bap:number;`, false},
+	{`const bap:number;`, true},
 	{`let bap = 1;`, true},
 	{`let bap: number;`, true},
 }
@@ -33,8 +32,7 @@ func TestIsValid(t *testing.T) {
 			}
 			verify := New()
 			_, err = prog.Accept(verify)
-			assert.Equal(testCase.IsValid, err == nil)
-			fmt.Println(err)
+			assert.Equal(testCase.IsValid, err == nil, err)
 		})
 	}
 }

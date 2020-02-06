@@ -19,7 +19,7 @@ type VisitorMetaData struct {
 	Body       string
 	Location   string
 	Exportable string
-	Types      string
+	Types      *TypeNode
 	SymbolData *SymbolData
 	Returns    []string
 }

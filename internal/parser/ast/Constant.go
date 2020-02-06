@@ -1,10 +1,13 @@
 package ast
 
+import "github.com/arborlang/ArborGo/internal/lexer"
+
 // Constant represents a constant definition
 type Constant struct {
-	Value string
-	Type  string
-	Raw   []byte
+	Value  string
+	Type   string
+	Raw    []byte
+	Lexeme lexer.Lexeme
 }
 
 // Accept visits the node

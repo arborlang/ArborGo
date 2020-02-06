@@ -29,16 +29,16 @@ func (c *Compiler) VisitAssignment(assignment *ast.AssignmentNode) (ast.VisitorM
 	if err != nil {
 		return ast.VisitorMetaData{}, err
 	}
-	if location.SymbolData.Type != nil && !location.SymbolData.Type.IsValidType(result.Types) {
+	if location.SymbolData.Type != nil && !location.SymbolData.Type.IsValidType(result.Types.Types[0]) {
 		return ast.VisitorMetaData{}, fmt.Errorf("can't assign %s to %s", result.Types, location.Types)
 	}
 	if location.SymbolData.IsNew {
-		sym.Location = c.getUniqueID(location.Types, location.SymbolData.Name)
-		c.AddLocal(sym.Location, c.getType(result.Types))
+		sym.Location = c.getUniqueID(location.Types.Types[0], location.SymbolData.Name)
+		c.AddLocal(sym.Location, c.getType(result.Types.Types[0]))
 		// c.locals = append(c.locals, locals{sym.Location, c.getType(result.Types)})
 		location.Location = sym.Location
 		if sym.Type == "" {
-			sym.Type = result.Types
+			sym.Type = result.Types.Types[0]
 		}
 		// c.SymbolTable.AddToScope(sym)
 	}
@@ -70,17 +70,17 @@ func visitFunctionDefinitionNode(c *Compiler, assignment *ast.AssignmentNode) (a
 	}
 	if sym == nil {
 		tp := location.Types
-		if location.Types == "" {
+		if location.Types.Types[0] == "" {
 			tp = result.Types
 		}
 		sym = &Symbol{
 			Name:       location.Location,
 			Location:   result.Location,
-			Type:       tp,
+			Type:       tp.Types[0],
 			IsConstant: declNode.IsConstant,
 		}
 		c.SymbolTable.AddToScope(sym)
-	} else if sym.Type != result.Types {
+	} else if sym.Type != result.Types.Types[0] {
 		return ast.VisitorMetaData{}, fmt.Errorf("can not assign type %s to %s: %s", result.Types, sym.Name, sym.Type)
 	} else if sym.IsConstant && !location.SymbolData.IsNew {
 		return ast.VisitorMetaData{}, fmt.Errorf("reassigning constant symbol %s", sym.Name)
