@@ -1,6 +1,9 @@
 package ast
 
-import "github.com/arborlang/ArborGo/internal/lexer"
+import (
+	"github.com/arborlang/ArborGo/internal/lexer"
+	"github.com/arborlang/ArborGo/internal/parser/ast/types"
+)
 
 // Constant represents a constant definition
 type Constant struct {
@@ -8,6 +11,7 @@ type Constant struct {
 	Type   string
 	Raw    []byte
 	Lexeme lexer.Lexeme
+	Type   types.TypeNode
 }
 
 // Accept visits the node
