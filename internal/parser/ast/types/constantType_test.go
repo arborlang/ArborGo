@@ -31,6 +31,9 @@ type NonConstant struct {
 func (nc *NonConstant) IsSatisfiedBy(n TypeNode) bool {
 	return false
 }
+func (nc *NonConstant) String() string {
+	return "narp"
+}
 
 func TestNonConstantNodeFailsImmediately(t *testing.T) {
 	assert := assert.New(t)

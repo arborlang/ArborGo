@@ -37,7 +37,7 @@ func lexNumeric(lex *internal.Lexer) State {
 		}
 		return lexText
 	}
-	if !isWhitespace(lex.Peek()) && !isArithmetic(lex.Peek()) && lex.Peek() != ';' && lex.Peek() != ',' && lex.Peek() != ')' && lex.Peek() != ']' && lex.Peek() != ':' {
+	if lex.Peek() != '}' && !isWhitespace(lex.Peek()) && !isArithmetic(lex.Peek()) && lex.Peek() != ';' && lex.Peek() != ',' && lex.Peek() != ')' && lex.Peek() != ']' && lex.Peek() != ':' {
 		return lexError(fmt.Sprintf("number mismatch: %s", lex.CurrentGroup()+string(lex.Peek())))
 	}
 	lex.Emit(tokens.NUMBER, nil)

@@ -1,19 +1,83 @@
-let add = (a: int, b: int) -> {
-    return a + b;
-}
+import stdlib as foobar from "github.com/arborlang/stdlib";
 
-let sum = (a: []int) -> 
-    : len(a) > 0 -> a[0] + sum(a[1:]);
-    : -> 0;
+type Test {
+	Example: fn () -> bool;
+	Name: string;
+};
 
-const minus = (a: int, b: int): int -> a - b;
+fn Test::__Construct() {
+};
 
-const mult = (a: int, b: int): int -> a * b;
 
-const div = (a: int, b: int): int -> 
-    : b != 0 -> a / b
-    : -> NaN
+fn Bazzer (val: foobar) -> number {
+	match val {
+		|> {foobar: 1, bazBar: 2} {
+			return;
+		}
+		|> val.foobar == 10 || val.bazBar == 2 {
+			return 0;
+		}
+	}
+	return 1;
+};
 
-const someOperation = (a: int) -> a |> sum(a+1) |> minus(2) |> div(4) |> mult(4)
+fn Test::Decorator<TCall> (val: TCall) -> TCall {
+	if val == "something" {
+		return help;
+	} else if val.value > 1 {
+		return narp;
+	} else {
+		hello;
+	}
+	const val = fatal new SomeRandomError();
+	return val[33];
+};
 
-someOperation(10) |> print
+Decorator(fn (values: number) -> number {
+   / /
+	value.toString().someOtherAccess;
+	value.toString() == "buttt"[0:2];
+	try {
+		signal new SomeRandomSignal();
+		const warnResponse = warn new SomeRandomWarning();
+		fatal new SomeRandomFatal();
+	} handle (e: SomeRandomSignal) {
+		continue;
+	}
+    handle (w: SomeRandomWarning) {
+		continue with "RetryWarning";
+	};
+	return 2 + 1;
+})
+
+@Decorator
+fn DecoratedVal (value: number) -> number{
+	value.toString().someOtherAccess;
+	value.toString() == "buttt"[0:2];
+	try {
+		signal new SomeRandomSignal();
+		const warnResponse = warn new SomeRandomWarning();
+		fatal new SomeRandomFatal();
+	} handle (e: SomeRandomSignal) {
+		continue;
+	}
+    handle (w: SomeRandomWarning) {
+		continue with "RetryWarning";
+	};
+	return 2 + 1;
+};
+
+let test = new Test();
+test |> DecoratedVal;
+
+type Stringer extends iface1 {
+	Thing: fn (xyz: String) -> String;
+};
+
+fn Stringer::Thing(xyz: String) -> String {
+	return xyz;
+};
+
+type Find implements ABC, XYZ, ZZZ Boop;
+
+type Thing String

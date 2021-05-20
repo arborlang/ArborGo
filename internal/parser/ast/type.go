@@ -1,29 +1,29 @@
 package ast
 
-import "github.com/arborlang/ArborGo/internal/lexer"
+import (
+	"github.com/arborlang/ArborGo/internal/lexer"
+	"github.com/arborlang/ArborGo/internal/parser/ast/types"
+)
 
 // TypeNode represents a type node
 type TypeNode struct {
-	Types  []string
-	Lexeme lexer.Lexeme
+	Types   types.TypeNode
+	Lexeme  lexer.Lexeme
+	VarName *VarName
+	Extends bool
 }
 
 // Accept a type visitor
-func (t *TypeNode) Accept(v Visitor) (VisitorMetaData, error) {
+func (t *TypeNode) Accept(v Visitor) (Node, error) {
 	return v.VisitTypeNode(t)
 }
 
 // IsValidType Makes sure that a given type stisifies the gaurd
-func (t *TypeNode) IsValidType(tp string) bool {
-	for _, typ := range t.Types {
-		if typ == tp {
-			return true
-		}
-	}
-	return false
+func (t *TypeNode) IsValidType(tp types.TypeNode) bool {
+	return t.Types.IsSatisfiedBy(tp)
 }
 
 // IsPointer denotes whether a type is a pointer or not
 func (t *TypeNode) IsPointer() bool {
-	return t.IsValidType("string") || t.IsValidType("array")
+	return t.IsValidType(&types.ConstantTypeNode{Name: "String"}) || t.IsValidType(&types.ConstantTypeNode{Name: "Array"})
 }

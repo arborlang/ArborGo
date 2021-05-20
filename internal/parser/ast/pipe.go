@@ -10,6 +10,6 @@ type PipeNode struct {
 }
 
 // Accept accepts the visitor
-func (p *PipeNode) Accept(v Visitor) (VisitorMetaData, error) {
+func (p *PipeNode) Accept(v Visitor) (Node, error) {
 	return v.VisitPipeNode(p)
 }

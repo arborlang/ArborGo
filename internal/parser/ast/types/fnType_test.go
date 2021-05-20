@@ -132,7 +132,6 @@ func TestRejectsIfReturnDoesntMatch(t *testing.T) {
 }
 
 func TestAnyotherTypeBreaks(t *testing.T) {
-
 	assert := assert.New(t)
 
 	fn1 := &FnType{
@@ -148,6 +147,55 @@ func TestAnyotherTypeBreaks(t *testing.T) {
 		ReturnVal: &ConstantTypeNode{Name: "Flop"},
 	}
 	fn2 := &ConstantTypeNode{Name: "Blarp"}
+
+	assert.False(fn1.IsSatisfiedBy(fn2))
+}
+
+func TestFunctionsWorkWithNoReturnTypes(t *testing.T) {
+	assert := assert.New(t)
+
+	fn1 := &FnType{
+		Parameters: []TypeNode{
+			&ConstantTypeNode{Name: "Bloop"},
+			&TypeGuard{
+				Types: []TypeNode{
+					&ConstantTypeNode{Name: "Bloop"},
+					&ConstantTypeNode{Name: "Blarp"},
+				},
+			},
+		},
+		ReturnVal: nil,
+	}
+
+	fn2 := &FnType{
+		Parameters: []TypeNode{
+			&ConstantTypeNode{Name: "Bloop"},
+			&ConstantTypeNode{Name: "Blarp"},
+		},
+		ReturnVal: &ConstantTypeNode{Name: "FlopNope"},
+	}
+
+	assert.True(fn1.IsSatisfiedBy(fn2))
+	fn1 = &FnType{
+		Parameters: []TypeNode{
+			&ConstantTypeNode{Name: "Bloop"},
+			&TypeGuard{
+				Types: []TypeNode{
+					&ConstantTypeNode{Name: "Bloop"},
+					&ConstantTypeNode{Name: "Blarp"},
+				},
+			},
+		},
+		ReturnVal: &ConstantTypeNode{Name: "FooBar"},
+	}
+
+	fn2 = &FnType{
+		Parameters: []TypeNode{
+			&ConstantTypeNode{Name: "Bloop"},
+			&ConstantTypeNode{Name: "Blarp"},
+		},
+		ReturnVal: nil,
+	}
 
 	assert.False(fn1.IsSatisfiedBy(fn2))
 }

@@ -9,6 +9,6 @@ type Program struct {
 }
 
 // Accept Accepts a vistor
-func (s *Program) Accept(v Visitor) (VisitorMetaData, error) {
-	return v.VisitBlock(s)
+func (s *Program) Accept(v Visitor) (Node, error) {
+	return v.VisitProgram(s)
 }

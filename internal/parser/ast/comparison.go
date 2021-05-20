@@ -11,6 +11,6 @@ type Comparison struct {
 }
 
 // Accept visits the node
-func (a *Comparison) Accept(v Visitor) (VisitorMetaData, error) {
+func (a *Comparison) Accept(v Visitor) (Node, error) {
 	return v.VisitComparison(a)
 }

@@ -12,6 +12,6 @@ type MathOpNode struct {
 }
 
 // Accept accepts the Visitor
-func (m *MathOpNode) Accept(v Visitor) (VisitorMetaData, error) {
+func (m *MathOpNode) Accept(v Visitor) (Node, error) {
 	return v.VisitMathOpNode(m)
 }

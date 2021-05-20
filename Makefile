@@ -2,6 +2,15 @@ ARBOR_VERSION?=0.0.0-rc0
 all: toolchain
 	go build -o arbor ./cmd/arbor/main.go
 
+test: 
+	go test -v ./...
+
+utils:
+	go build -o gen_visitors ./utils/generate.go
+
+generate: utils
+	go generate ./...
+
 toolchain: build run
 
 build:
@@ -21,6 +30,3 @@ wast_test:
 	./arbor run --wasm --entrypoint main test.wasm
 
 test_run: test_file wast_test
-
-test:
-	go test -v ./...

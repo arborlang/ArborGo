@@ -11,6 +11,6 @@ type BoolOp struct {
 }
 
 // Accept visits the node
-func (a *BoolOp) Accept(v Visitor) (VisitorMetaData, error) {
+func (a *BoolOp) Accept(v Visitor) (Node, error) {
 	return v.VisitBoolOp(a)
 }

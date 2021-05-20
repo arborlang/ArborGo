@@ -13,6 +13,6 @@ type IfNode struct {
 }
 
 // Accept implements a node
-func (i *IfNode) Accept(v Visitor) (VisitorMetaData, error) {
+func (i *IfNode) Accept(v Visitor) (Node, error) {
 	return v.VisitIfNode(i)
 }

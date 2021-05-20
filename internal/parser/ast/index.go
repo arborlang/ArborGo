@@ -1,15 +1,17 @@
 package ast
 
-import "github.com/arborlang/ArborGo/internal/lexer"
+import (
+	"github.com/arborlang/ArborGo/internal/lexer"
+)
 
 // IndexNode is the index node
 type IndexNode struct {
-	Varname *VarName
-	Index   int
+	Varname Node
+	Index   Node
 	Lexeme  lexer.Lexeme
 }
 
 // Accept a visitor
-func (i *IndexNode) Accept(v Visitor) (VisitorMetaData, error) {
+func (i *IndexNode) Accept(v Visitor) (Node, error) {
 	return v.VisitIndexNode(i)
 }

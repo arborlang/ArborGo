@@ -129,3 +129,45 @@ or
     person = instantiate(Person, name="yoseph", age="22", favorites);
 
 Functions are also first order citizens so that you can pass them as functions or in new types. Types can also refer to themselves, making the type composable and building complex structures like a tree.
+
+## Error Handling
+
+Arbor handles error handling differently than other languages. Instead of the try/catch of other languages, Arbor uses a concept called signals in order to enter recoverable states. This enables errors to be handled via Algebraic Effects, making more resilient software. For example, handling a null value using signals:
+
+```arbor
+fn SaveUserName (user: User, newUserName: String) -> User {
+    if (newUserName == null) {
+        newUserName = fatal new UserNameIsNullError();
+    }
+    user.userName = newUserName;
+    return user;
+}
+
+fn SaveUser(user: User, newValues: User) -> User {
+    try {
+        SaveUserName(user, newValues.userName);
+    } handle (UserNameIsNullError) {
+        continue with "Oh snap, I forgot their name";
+    }
+}
+```
+
+This will raise a fatal signal, giving the call chain the opportunity to recover from the signal. If somewhere up the chain, the signal handle has a `continue` statement, then it will return from the point where the signal was raised and continue.
+
+There are three levels of signals: `fatal`, `warn`, and `signal`. The difference between them is how they are handled in the un-handle case.
+
+### `fatal` Signals
+
+Fatal signals are closest to exceptions in other languages. When a fatal signal is emitted, Arbor will look up the call chain for the closest handle block that can handle the signal. If no handlers are found, then Arbor will crash the process and dump out its traceback, just like exceptions
+
+### `warn` Signals
+
+Warns are a level down from `fatal`s. Instead of crashing if no handler is found, Arbor will simply log the warning to the application logger but then continue its operation with a null value.
+
+### `signal` Signals
+
+This is the lowest level of signals. Nothing happens if there is no handler, and if there is no `continue` then it will continue with a null value.
+
+### Resuming operation
+
+After a signal is raised, then the programmer has the ability to resume the execution by calling `continue`. Continuing will tell arbor to go back to where the signal was raised and resume. You can pass values back by calling `continue with <value>`

@@ -1,3 +1,4 @@
+//go:generate stringer -type=Token
 package tokens
 
 //Token is the token for the lexem
@@ -16,6 +17,8 @@ const (
 	ARROW
 	//COLON is :
 	COLON
+	//DCOLON is ::
+	DCOLON
 	//NUMBER is [0-9]+
 	NUMBER
 	//FLOAT is [0-9]+\.[0-9]+
@@ -58,6 +61,10 @@ const (
 	LSQUARE
 	//RSQUARE is the ']' character
 	RSQUARE
+	//DOT is the '.' character
+	DOT
+	//AT is the '@' character
+	AT
 
 	//LET is the 'let' key word
 	LET
@@ -85,90 +92,45 @@ const (
 	IMPORT
 	// AS is the 'as' keyword
 	AS
+	// SHAPE is the 'shape' keyword
+	SHAPE
+	//TYPE is the 'type' keyword
+	TYPE
+	// FROM is the 'from' keyword
+	FROM
+	// INTERNAL is the 'internal' keyword
+	INTERNAL
+	//PACKAGE is the package keyword
+	PACKAGE
+	//NEW is the new keyword
+	NEW
+	//MATCH is the 'match' keyword
+	MATCH
+	// WHEN is the 'when' keyword
+	WHEN
+	// EXTENDS is the 'extends' keyword
+	EXTENDS
+	// IMPLEMENTS is the 'implements'
+	IMPLEMENTS
+	//CONTINUE is the 'continue' keyword
+	CONTINUE
+	//WITH is the 'with' keyword
+	WITH
+	// SIGNAL is the 'signal' keyword;
+	SIGNAL
+	// WARN is the 'warn' keyword;
+	WARN
+	// FATAL is the fatal keyword;
+	FATAL
+	// TRY is the try keyword
+	TRY
+	// HANDLE is the handle keyword
+	HANDLE
+	//SELF is the self keyword
+	SELF
 	//NOTFOUND if the symbol is not found
 	NOTFOUND = -1
 )
-
-func (tok Token) String() string {
-	switch tok {
-	case IF:
-		return "IF"
-	case ELSE:
-		return "ELSE"
-	case EOF:
-		return "EOF"
-	case RPAREN:
-		return "RPAREN"
-	case LPAREN:
-		return "LPAREN"
-	case VARNAME:
-		return "VARNAME"
-	case ARROW:
-		return "ARROW"
-	case COLON:
-		return "COLON"
-	case NUMBER:
-		return "NUMBER"
-	case FLOAT:
-		return "FLOAT"
-	case QUOTE:
-		return "QUOTE"
-	case DQOUTE:
-		return "DQOUTE"
-	case CHARVAL:
-		return "CHARVAL"
-	case STRINGVAL:
-		return "STRINGVAL"
-	case ERROR:
-		return "ERROR"
-	case NEWLINE:
-		return "NEWLINE"
-	case LET:
-		return "LET"
-	case FUNC:
-		return "FUNC"
-	case STRING:
-		return "STRING"
-	case CHAR:
-		return "CHAR"
-	case DONE:
-		return "DONE"
-	case RETURN:
-		return "RETURN"
-	case ARTHOP:
-		return "ARTHOP"
-	case LOGICAL:
-		return "LOGICAL"
-	case NOT:
-		return "NOT"
-	case BOOLEAN:
-		return "BOOLEAN"
-	case EQUAL:
-		return "EQUAL"
-	case COMMA:
-		return "COMMA"
-	case PIPE:
-		return "PIPE"
-	case SEMI:
-		return "SEMI"
-	case CONST:
-		return "CONST"
-	case RCURLY:
-		return "RCURLY"
-	case LCURLY:
-		return "LCURLY"
-	case COMPARISON:
-		return "COMPARISON"
-	case IMPORT:
-		return "IMPORT"
-	case FLOATWORD:
-		return "FLOATWORD"
-	case NUMBERWORD:
-		return "NUMBERWORD"
-	default:
-		return "NOTFOUND"
-	}
-}
 
 //EOFChar The actual Character for the EOF symbol
 var EOFChar = rune(EOF)

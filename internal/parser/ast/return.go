@@ -9,6 +9,6 @@ type ReturnNode struct {
 }
 
 // Accept allows the vistor to visit
-func (r *ReturnNode) Accept(v Visitor) (VisitorMetaData, error) {
+func (r *ReturnNode) Accept(v Visitor) (Node, error) {
 	return v.VisitReturnNode(r)
 }

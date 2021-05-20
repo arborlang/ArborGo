@@ -10,6 +10,6 @@ type AssignmentNode struct {
 }
 
 // Accept visits the node
-func (a *AssignmentNode) Accept(v Visitor) (VisitorMetaData, error) {
-	return v.VisitAssignment(a)
+func (a *AssignmentNode) Accept(v Visitor) (Node, error) {
+	return v.VisitAssignmentNode(a)
 }

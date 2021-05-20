@@ -9,7 +9,7 @@ import (
 )
 
 var test = `
-func name = () ->
+fn name = () ->
 	return butt
 done
 
@@ -17,13 +17,13 @@ x = a + b
 value = 'a'
 str = "abc dea"
 
-func test = (a, b, c) ->
+fn test = (a, b, c) ->
 	return a
 done
 `
 
 var expectedTokenStream = []internal.Lexeme{
-	internal.Lexeme{Token: tokens.FUNC, Value: "func"},
+	internal.Lexeme{Token: tokens.FUNC, Value: "fn"},
 	internal.Lexeme{Token: tokens.VARNAME, Value: "name"},
 	internal.Lexeme{Token: tokens.EQUAL, Value: "="},
 	internal.Lexeme{Token: tokens.RPAREN, Value: "("},
@@ -43,7 +43,7 @@ var expectedTokenStream = []internal.Lexeme{
 	internal.Lexeme{Token: tokens.VARNAME, Value: "str"},
 	internal.Lexeme{Token: tokens.EQUAL, Value: "="},
 	internal.Lexeme{Token: tokens.STRINGVAL, Value: `"abc dea"`},
-	internal.Lexeme{Token: tokens.FUNC, Value: "func"},
+	internal.Lexeme{Token: tokens.FUNC, Value: "fn"},
 	internal.Lexeme{Token: tokens.VARNAME, Value: "test"},
 	internal.Lexeme{Token: tokens.EQUAL, Value: "="},
 	internal.Lexeme{Token: tokens.RPAREN, Value: "("},
@@ -109,4 +109,31 @@ func TestLexSync(t *testing.T) {
 		lexeme = getNext()
 		index++
 	}
+}
+
+func TestDoubleQuote(t *testing.T) {
+	getNext := Lex(bytes.NewReader([]byte("Test::Foo")))
+	expectedToks := []internal.Lexeme{{
+		Value: "Test",
+		Token: tokens.VARNAME,
+	}, {
+		Value: "::",
+		Token: tokens.DCOLON,
+	}, {
+		Value: "Foo",
+		Token: tokens.VARNAME,
+	}}
+	index := 0
+	for lexeme := getNext(); lexeme.Token != tokens.EOF && lexeme.Token != tokens.ERROR; {
+		if index >= len(expectedToks) {
+			t.Fatal("Received token stream is longer than expected")
+		}
+		correctLexeme := expectedToks[index]
+		if correctLexeme.Token != lexeme.Token || correctLexeme.Value != lexeme.Value {
+			t.Errorf("Lexemes don't match at position %v: expected %s, got %s", index, correctLexeme, lexeme)
+		}
+		lexeme = getNext()
+		index++
+	}
+
 }

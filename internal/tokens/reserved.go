@@ -3,7 +3,7 @@ package tokens
 //ReservedWords is the reserved words in arbor
 var ReservedWords = []string{
 	"let",
-	"func",
+	"fn",
 	"string",
 	"char",
 	"done",
@@ -15,6 +15,24 @@ var ReservedWords = []string{
 	"number",
 	"import",
 	"as",
+	"shape",
+	"type",
+	"from",
+	"internal",
+	"package",
+	"new",
+	"match",
+	"when",
+	"extends",
+	"implements",
+	"continue",
+	"with",
+	"signal",
+	"warn",
+	"fatal",
+	"try",
+	"handle",
+	"self",
 }
 
 //FindKeyword finds and returns a token associated with that key word, if that isn't a key word, it returns the NOTFOUND token

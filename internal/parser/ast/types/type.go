@@ -4,4 +4,5 @@ package types
 // false based on if it is satisfied by it.
 type TypeNode interface {
 	IsSatisfiedBy(t TypeNode) bool
+	String() string
 }

@@ -3,10 +3,11 @@ package lexer
 
 import (
 	"fmt"
-	"github.com/arborlang/ArborGo/internal/tokens"
 	"io"
 	"log"
 	"runtime/debug"
+
+	"github.com/arborlang/ArborGo/internal/tokens"
 
 	"github.com/arborlang/ArborGo/internal/lexer/internal"
 	"github.com/arborlang/ArborGo/internal/lexer/state"
@@ -17,7 +18,6 @@ type Lexeme internal.Lexeme
 
 func (lexeme Lexeme) String() string {
 	return fmt.Sprintf("%q (Line: %d, Column: %d)", lexeme.Value, lexeme.Line, lexeme.Column)
-	// return fmt.Sprintf("{ Token: %s, Value: %q, Line: %d, Column: %d }", lexeme.Token, lexeme.Value, lexeme.Line, lexeme.Column)
 }
 
 //NewLexer creates and returns a new lexer instance

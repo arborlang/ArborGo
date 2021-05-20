@@ -22,12 +22,16 @@ func TestPushingAndPoppingScope(t *testing.T) {
 	symTable.PushNewScope()
 	symTable.PushNewScope()
 	assert.Len(symTable.scopeStack, 3)
+	assert.Equal(2, symTable.currentLevel)
 	err = symTable.PopScope()
+	assert.Equal(1, symTable.currentLevel)
 	assert.NoError(err)
-	assert.Len(symTable.scopeStack, 2)
+	assert.Len(symTable.scopeStack, 3)
 	err = symTable.PopScope()
+	assert.Equal(0, symTable.currentLevel)
 	assert.NoError(err)
 	err = symTable.PopScope()
+	assert.Equal(0, symTable.currentLevel)
 	assert.Error(err)
 }
 
@@ -44,14 +48,14 @@ func TestSymbolLookUp(t *testing.T) {
 	sym2, lvl := symTable.LookupSymbol("foo")
 	assert.NotNil(sym2)
 	assert.Equal(sym, sym2)
-	assert.Equal(lvl, 1)
+	assert.Equal(0, lvl)
 
 	sym2, lvl = symTable.LookupSymbol("bar")
 	assert.NotNil(sym2)
 	assert.Equal(sym3, sym2)
-	assert.Equal(lvl, 0)
+	assert.Equal(1, lvl)
 
 	sym2, lvl = symTable.LookupSymbol("barz")
 	assert.Nil(sym2)
-	assert.Equal(lvl, -1)
+	assert.Equal(-1, lvl)
 }

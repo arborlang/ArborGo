@@ -58,6 +58,8 @@ func lexText(lex *internal.Lexer) State {
 					}
 				}
 			}
+		case next == '@':
+			lex.Emit(tokens.AT, nil)
 		case isComparison(lex, next):
 			lex.Emit(tokens.COMPARISON, nil)
 		case next == '|' && lex.Peek() == '>':
@@ -92,7 +94,12 @@ func lexText(lex *internal.Lexer) State {
 		case next == '"':
 			return lexString
 		case next == ':':
-			lex.Emit(tokens.COLON, nil)
+			if lex.Peek() == ':' {
+				lex.Next()
+				lex.Emit(tokens.DCOLON, nil)
+			} else {
+				lex.Emit(tokens.COLON, nil)
+			}
 		case next == ',':
 			lex.Emit(tokens.COMMA, nil)
 		case next == ';':
@@ -105,7 +112,8 @@ func lexText(lex *internal.Lexer) State {
 			lex.Emit(tokens.LSQUARE, nil)
 		case next == ']':
 			lex.Emit(tokens.RSQUARE, nil)
-
+		case next == '.':
+			lex.Emit(tokens.DOT, nil)
 		}
 	}
 	lex.EmitEOF()
