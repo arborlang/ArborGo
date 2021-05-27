@@ -43,46 +43,70 @@ func (s *SymbolData) IsSatisfiedBy(t types.TypeNode) bool {
 type Scope map[string]*SymbolData
 type TypeScope map[string]*TypeData
 
+type levelStack struct {
+	values [][]int
+}
+
+func (l *levelStack) push(value int) {
+	vals := []int{value}
+	if len(l.values)-1 >= 0 {
+		vals = append(l.values[len(l.values)-1], value)
+	}
+	l.values = append(l.values, vals)
+}
+
+func (l *levelStack) pop() {
+	l.values = l.values[:len(l.values)-1]
+}
+
+func (l *levelStack) top() []int {
+	return l.values[len(l.values)-1]
+}
+
 // SymbolTable is a comprehensive list of symbols currently in scope
 type SymbolTable struct {
-	scopeStack   []Scope
-	typeStack    []TypeScope
-	currentLevel int
+	scopeStack    []Scope
+	typeStack     []TypeScope
+	lvlStack      levelStack
+	pushOperation int
+	scopesCanGrow bool
 }
 
 // PushNewScope Pushes a new scope on to the ScopeStack
 func (s *SymbolTable) PushNewScope() {
-	if s.currentLevel == len(s.scopeStack)-1 {
+	if s.scopesCanGrow == true {
 		s.scopeStack = append(s.scopeStack, Scope{})
 		s.typeStack = append(s.typeStack, TypeScope{})
-		s.currentLevel++
-		return
 	}
-	s.currentLevel++
+	s.lvlStack.push(s.pushOperation)
+	s.pushOperation++
 }
 
 // PopScope pops the global state
 func (s *SymbolTable) PopScope() error {
-	if s.currentLevel == 0 {
+	if len(s.lvlStack.values) == 1 {
 		return fmt.Errorf("Invalid operation: about to pop global stack")
 	}
-	s.currentLevel--
+	s.lvlStack.pop()
 	return nil
 }
 
 // AddToScope adds the variable to the scope
 func (s *SymbolTable) AddToScope(name string, sym *SymbolData) {
-	s.scopeStack[s.currentLevel][name] = sym
+	currentLevel := s.lvlStack.top()[len(s.lvlStack.top())-1]
+	s.scopeStack[currentLevel][name] = sym
 }
 
 func (s *SymbolTable) AddType(name string, sym *TypeData) {
-	s.typeStack[s.currentLevel][name] = sym
+	currentLevel := s.lvlStack.top()[len(s.lvlStack.top())-1]
+	s.typeStack[currentLevel][name] = sym
 }
 
 // LookupSymbol looks up the symbol in our table. returns the symboldata and the scope level (0 is the current scope).
 // if symbol is not found, returns nil and -1
 func (s *SymbolTable) LookupSymbol(name string) (*SymbolData, int) {
-	for lvl := s.currentLevel; lvl >= 0; lvl-- {
+	for i := len(s.lvlStack.top()) - 1; i >= 0; i-- {
+		lvl := s.lvlStack.top()[i]
 		fmt.Println(s.scopeStack[lvl])
 		if sym, ok := s.scopeStack[lvl][name]; ok {
 			return sym, lvl
@@ -94,7 +118,8 @@ func (s *SymbolTable) LookupSymbol(name string) (*SymbolData, int) {
 // LookupType looks up the symbol in our table. returns the symboldata and the scope level (0 is the current scope).
 // if symbol is not found, returns nil and -1
 func (s *SymbolTable) LookupType(name string) (*TypeData, int) {
-	for lvl := s.currentLevel; lvl >= 0; lvl-- {
+	for i := len(s.lvlStack.top()) - 1; i >= 0; i-- {
+		lvl := s.lvlStack.top()[i]
 		if sym, ok := s.typeStack[lvl][name]; ok {
 			return sym, lvl
 		}
@@ -102,12 +127,26 @@ func (s *SymbolTable) LookupType(name string) (*TypeData, int) {
 	return nil, -1
 }
 
+func (s *SymbolTable) getCurrentLevel() int {
+	return s.lvlStack.top()[len(s.lvlStack.top())-1]
+}
+
+func (s *SymbolTable) ResetStackAndLockScope() {
+	s.lvlStack.values = [][]int{{0}}
+	s.pushOperation = 0
+	s.scopesCanGrow = false
+}
+
 // NewTable generates and returns a new symbole table
 func NewTable() *SymbolTable {
 	scope := &SymbolTable{}
-	scope.currentLevel = -1
 	scope.scopeStack = []Scope{}
 	scope.typeStack = []TypeScope{}
+	scope.pushOperation = 0
+	scope.scopesCanGrow = true
+	scope.lvlStack = levelStack{
+		values: [][]int{},
+	}
 	scope.PushNewScope()
 	return scope
 }
