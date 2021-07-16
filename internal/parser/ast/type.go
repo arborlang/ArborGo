@@ -18,6 +18,10 @@ func (t *TypeNode) Accept(v Visitor) (Node, error) {
 	return v.VisitTypeNode(t)
 }
 
+func (t *TypeNode) GetType() types.TypeNode {
+	return t.Types
+}
+
 // IsValidType Makes sure that a given type stisifies the gaurd
 func (t *TypeNode) IsValidType(tp types.TypeNode) bool {
 	return t.Types.IsSatisfiedBy(tp)

@@ -50,10 +50,14 @@ func functionDefinitionRule(p *Parser) (ast.Node, error) {
 	if varName.Token == tokens.VARNAME {
 		p.Next()
 		retVal := &ast.VarName{
-			Name: varName.Value,
+			Name:   varName.Value,
+			Lexeme: varName,
 		}
 		asignNode = &ast.AssignmentNode{}
-		asignNode.AssignTo = retVal
+		asignNode.AssignTo = &ast.DeclNode{
+			Varname:    retVal,
+			IsConstant: true,
+		}
 	}
 
 	funcNode := &ast.FunctionDefinitionNode{}
@@ -61,7 +65,7 @@ func functionDefinitionRule(p *Parser) (ast.Node, error) {
 	if peek.Token == tokens.DCOLON {
 		p.Next()
 		methodDef = &ast.MethodDefinition{}
-		methodDef.TypeName = asignNode.AssignTo.(*ast.VarName)
+		methodDef.TypeName = asignNode.AssignTo.(*ast.DeclNode).Varname
 		methodName := p.Next()
 		if methodName.Token != tokens.VARNAME {
 			return nil, fmt.Errorf("expected var name, got %s instead", methodName)

@@ -1,6 +1,9 @@
 package ast
 
-import "github.com/arborlang/ArborGo/internal/lexer"
+import (
+	"github.com/arborlang/ArborGo/internal/lexer"
+	"github.com/arborlang/ArborGo/internal/parser/ast/types"
+)
 
 // SliceNode Represnets the  slice node
 type SliceNode struct {
@@ -14,4 +17,8 @@ type SliceNode struct {
 // Accept allows the vistor to visit
 func (r *SliceNode) Accept(v Visitor) (Node, error) {
 	return v.VisitSliceNode(r)
+}
+
+func (r *SliceNode) GetType() types.TypeNode {
+	return r.Varname.GetType()
 }

@@ -1,32 +1,29 @@
 ARBOR_VERSION?=0.0.0-rc0
-all: toolchain
+export ARBOR_VERSION := $(ARBOR_VERSION)
+
+export PATH := $(HOME)/go/bin/:$(PWD)/utils:$(PATH)
+.PHONY: utils
+
+all: build publish
+
+build: test generate
 	go build -o arbor ./cmd/arbor/main.go
 
 test: 
 	go test -v ./...
 
-utils:
-	go build -o gen_visitors ./utils/generate.go
+utils: 
+	go build -o ./utils/gen_visitors ./utils/
 
 generate: utils
 	go generate ./...
 
-toolchain: build run
+ldflags: utils
+	./utils/gen_visitors -ldFlags
 
-build:
-	go build -o plugins/build -buildmode=plugin ./Commands/build/
+debug: test generate ldflags
+	go build -tags debug -ldflags '$(shell ARBOR_VERSION=$(ARBOR_VERSION) ./utils/gen_visitors -ldFlags)' -o arbor ./cmd/arbor/main.go
 
-run:
-	go build -o plugins/run -buildmode=plugin ./Commands/run/
 
-publish: toolchain
-	go build -ldflags "-X main.Version=$(ARBOR_VERSION)" -o arbor ./cmd/arbor/main.go
-
-test_file: all
-	./arbor build -wast -o test.wast test.ab
-	
-wast_test:
-	wat2wasm -o test.wasm test.wast
-	./arbor run --wasm --entrypoint main test.wasm
-
-test_run: test_file wast_test
+publish: test generate ldflags
+	go build -ldflags '$(shell ARBOR_VERSION=$(ARBOR_VERSION) ./utils/gen_visitors -ldFlags)' -o arbor ./cmd/arbor/main.go

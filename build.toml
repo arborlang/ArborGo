@@ -1,0 +1,9 @@
+[configs]
+	[configs."github.com/arborlang/ArborGo/internal/config.Version"]
+	exec = "git describe --tags --abbrev=0"
+	
+	[configs."github.com/arborlang/ArborGo/internal/config.BuildNumber"]
+	exec = "git rev-parse HEAD"
+
+	[configs."github.com/arborlang/ArborGo/internal/config.BuildTime"]
+	exec = "date --iso-8601=minutes"

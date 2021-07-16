@@ -1,6 +1,9 @@
 package ast
 
-import "github.com/arborlang/ArborGo/internal/lexer"
+import (
+	"github.com/arborlang/ArborGo/internal/lexer"
+	"github.com/arborlang/ArborGo/internal/parser/ast/types"
+)
 
 // BoolOp represents a boolean operation ('||' and '&&')
 type BoolOp struct {
@@ -13,4 +16,10 @@ type BoolOp struct {
 // Accept visits the node
 func (a *BoolOp) Accept(v Visitor) (Node, error) {
 	return v.VisitBoolOp(a)
+}
+
+func (a *BoolOp) GetType() types.TypeNode {
+	return &types.ConstantTypeNode{
+		Name: "Boolean",
+	}
 }

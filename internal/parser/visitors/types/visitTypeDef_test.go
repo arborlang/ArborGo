@@ -8,11 +8,12 @@ import (
 	"github.com/arborlang/ArborGo/internal/parser/ast/types"
 	"github.com/arborlang/ArborGo/internal/parser/rulesv2"
 	"github.com/arborlang/ArborGo/internal/parser/visitors/base"
-	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestVisitsTypeDefCorrectly(t *testing.T) {
-	assert := assert.New(t)
+	assert := require.New(t)
+
 	tpDefs := `type Thing String;
 	type Thing2 {
 		Method: fn () -> String;
@@ -37,10 +38,37 @@ func TestVisitsTypeDefCorrectly(t *testing.T) {
 	assert.True(ok)
 
 	realVisitor := tVisit.(*base.VisitorAdapter).Visitor.(*typeVisitor)
-	scopedType, _ := realVisitor.scope.LookupType("Thing")
+	scopedType, _ := realVisitor.scope.LookupSymbol("Thing")
 	assert.NotNil(scopedType)
-	assert.IsType(&types.ExtendedType{}, scopedType.Type)
-	scopedType, _ = realVisitor.scope.LookupType("Thing2")
+	assert.IsType(&types.ExtendedType{}, scopedType.Type.Type)
+	scopedType, _ = realVisitor.scope.LookupSymbol("Thing2")
 	assert.NotNil(scopedType)
-	assert.IsType(&types.ShapeType{}, scopedType.Type)
+	assert.IsType(&types.ShapeType{}, scopedType.Type.Type)
+	shp := scopedType.Type.Type.(*types.ShapeType)
+	assert.Contains(shp.Fields, "Method")
+	// assert.IsType(&types.FnType{}, shp.Fields["Method"])
+}
+
+func TestExplicitExtends(t *testing.T) {
+	assert := require.New(t)
+	tpDefs := `
+	type Thing extends String{
+		Method: fn () -> String;
+		SomeProp: String;
+	};
+	`
+
+	node, err := rulesv2.Parse(strings.NewReader(tpDefs))
+	assert.NoError(err)
+	assert.NotNil(node)
+
+	tVisit := New()
+	node, err = node.Accept(tVisit)
+	assert.NoError(err)
+
+	realVisitor := tVisit.(*base.VisitorAdapter).Visitor.(*typeVisitor)
+	scopedType, _ := realVisitor.scope.LookupSymbolInAllScopes("Thing")
+
+	assert.NotNil(scopedType)
+	assert.IsType(&types.ExtendedType{}, scopedType.Type.Type)
 }

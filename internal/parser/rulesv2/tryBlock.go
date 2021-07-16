@@ -6,7 +6,7 @@ import (
 )
 
 func parseHandleBlock(p *Parser) (*ast.HandleCaseNode, bool, error) {
-	p.PrintNextLexemes(10)
+	// p.PrintNextLexemes(10)
 	nxt := p.Next()
 	if nxt.Token != tokens.HANDLE {
 		return nil, false, nil

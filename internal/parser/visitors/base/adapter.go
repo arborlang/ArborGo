@@ -42,6 +42,7 @@ func (v *VisitorAdapter) VisitAnyNode(node ast.Node) (ast.Node, error) {
 }
 
 func (v *VisitorAdapter) VisitExtendsNode(extends *ast.ExtendsNode) (ast.Node, error) {
+	v.VisitAnyNode(extends)
 	if visitor, ok := v.Visitor.(ast.ExtendsNodeVisitor); ok && v.ShouldCallVisitor {
 		return visitor.VisitExtendsNode(extends)
 	}
@@ -49,7 +50,9 @@ func (v *VisitorAdapter) VisitExtendsNode(extends *ast.ExtendsNode) (ast.Node, e
 }
 
 func (v *VisitorAdapter) VisitAnnotatedNode(node *ast.AnnotatedNode) (ast.Node, error) {
+	v.VisitAnyNode(node)
 	if vi, ok := v.Visitor.(ast.AnnotatedNodeVisitor); ok {
+
 		return vi.VisitAnnotatedNode(node)
 	}
 	return node, nil
@@ -57,6 +60,7 @@ func (v *VisitorAdapter) VisitAnnotatedNode(node *ast.AnnotatedNode) (ast.Node, 
 
 // VisitProgram visits a compiler block
 func (v *VisitorAdapter) VisitProgram(block *ast.Program) (ast.Node, error) {
+	v.VisitAnyNode(block)
 	node, err := v.VisitAnyNode(block)
 	if node != nil || err != nil {
 		return node, err
@@ -78,6 +82,7 @@ func (v *VisitorAdapter) VisitProgram(block *ast.Program) (ast.Node, error) {
 }
 
 func (v *VisitorAdapter) VisitImplementsNode(implementsNode *ast.ImplementsNode) (ast.Node, error) {
+	v.VisitAnyNode(implementsNode)
 	if visitor, ok := v.Visitor.(ast.ImplementsNodeVisitor); ok && v.ShouldCallVisitor {
 		return visitor.VisitImplementsNode(implementsNode)
 	}
@@ -86,6 +91,7 @@ func (v *VisitorAdapter) VisitImplementsNode(implementsNode *ast.ImplementsNode)
 
 // VisitAssignment visits an assignment node
 func (v *VisitorAdapter) VisitAssignmentNode(assignment *ast.AssignmentNode) (ast.Node, error) {
+	v.VisitAnyNode(assignment)
 	if visitor, ok := v.Visitor.(ast.AssignmentNodeVisitor); ok && v.ShouldCallVisitor {
 		return visitor.VisitAssignmentNode(assignment)
 	}
@@ -105,6 +111,7 @@ func (v *VisitorAdapter) VisitAssignmentNode(assignment *ast.AssignmentNode) (as
 
 // VisitBoolOp visits a boolean node
 func (v *VisitorAdapter) VisitBoolOp(node *ast.BoolOp) (ast.Node, error) {
+	v.VisitAnyNode(node)
 	if visitor, ok := v.Visitor.(ast.BoolOpVisitor); ok && v.ShouldCallVisitor {
 		return visitor.VisitBoolOp(node)
 	}
@@ -124,6 +131,7 @@ func (v *VisitorAdapter) VisitBoolOp(node *ast.BoolOp) (ast.Node, error) {
 
 // VisitComparison Visits a comparison node
 func (v *VisitorAdapter) VisitComparison(node *ast.Comparison) (ast.Node, error) {
+	v.VisitAnyNode(node)
 	if visitor, ok := v.Visitor.(ast.ComparisonVisitor); ok && v.ShouldCallVisitor {
 		return visitor.VisitComparison(node)
 	}
@@ -143,6 +151,7 @@ func (v *VisitorAdapter) VisitComparison(node *ast.Comparison) (ast.Node, error)
 
 // VisitConstant visits the constant object
 func (v *VisitorAdapter) VisitConstant(node *ast.Constant) (ast.Node, error) {
+	v.VisitAnyNode(node)
 	if visitor, ok := v.Visitor.(ast.ConstantVisitor); ok && v.ShouldCallVisitor {
 		return visitor.VisitConstant(node)
 	}
@@ -152,6 +161,7 @@ func (v *VisitorAdapter) VisitConstant(node *ast.Constant) (ast.Node, error) {
 
 // VisitFunctionDefinitionNode visits a function definition ndde
 func (v *VisitorAdapter) VisitFunctionDefinitionNode(node *ast.FunctionDefinitionNode) (ast.Node, error) {
+	v.VisitAnyNode(node)
 	if visitor, ok := v.Visitor.(ast.FunctionDefinitionNodeVisitor); ok && v.ShouldCallVisitor {
 		return visitor.VisitFunctionDefinitionNode(node)
 	}
@@ -172,6 +182,7 @@ func (v *VisitorAdapter) VisitFunctionDefinitionNode(node *ast.FunctionDefinitio
 
 // VisitFunctionCallNode visits a function call node
 func (v *VisitorAdapter) VisitFunctionCallNode(node *ast.FunctionCallNode) (ast.Node, error) {
+	v.VisitAnyNode(node)
 	if visitor, ok := v.Visitor.(ast.FunctionCallNodeVisitor); ok && v.ShouldCallVisitor {
 		return visitor.VisitFunctionCallNode(node)
 	}
@@ -195,6 +206,7 @@ func (v *VisitorAdapter) VisitFunctionCallNode(node *ast.FunctionCallNode) (ast.
 
 // VisitMathOpNode Visits a math op node
 func (v *VisitorAdapter) VisitMathOpNode(node *ast.MathOpNode) (ast.Node, error) {
+	v.VisitAnyNode(node)
 	if visitor, ok := v.Visitor.(ast.MathOpNodeVisitor); ok && v.ShouldCallVisitor {
 		return visitor.VisitMathOpNode(node)
 	}
@@ -214,20 +226,25 @@ func (v *VisitorAdapter) VisitMathOpNode(node *ast.MathOpNode) (ast.Node, error)
 
 // VisitReturnNode visits a return node
 func (v *VisitorAdapter) VisitReturnNode(node *ast.ReturnNode) (ast.Node, error) {
+	v.VisitAnyNode(node)
 	if visitor, ok := v.Visitor.(ast.ReturnNodeVisitor); ok && v.ShouldCallVisitor {
 		return visitor.VisitReturnNode(node)
 	}
 	v.ShouldCallVisitor = true
-	expr, err := node.Expression.Accept(v)
-	if err != nil {
-		return nil, err
+	if node.Expression != nil {
+		expr, err := node.Expression.Accept(v)
+		if err != nil {
+			return nil, err
+		}
+		node.Expression = expr
 	}
-	node.Expression = expr
+
 	return node, nil
 }
 
 // VisitVarName visits a varname node
 func (v *VisitorAdapter) VisitVarName(node *ast.VarName) (ast.Node, error) {
+	v.VisitAnyNode(node)
 	if visitor, ok := v.Visitor.(ast.VarNameVisitor); ok && v.ShouldCallVisitor {
 		return visitor.VisitVarName(node)
 	}
@@ -237,6 +254,7 @@ func (v *VisitorAdapter) VisitVarName(node *ast.VarName) (ast.Node, error) {
 
 // VisitDeclNode visits the decl Node
 func (v *VisitorAdapter) VisitDeclNode(node *ast.DeclNode) (ast.Node, error) {
+	v.VisitAnyNode(node)
 	if visitor, ok := v.Visitor.(ast.DeclNodeVisitor); ok && v.ShouldCallVisitor {
 		return visitor.VisitDeclNode(node)
 	}
@@ -248,6 +266,7 @@ func (v *VisitorAdapter) VisitDeclNode(node *ast.DeclNode) (ast.Node, error) {
 
 // VisitPipeNode visits the pipe node
 func (v *VisitorAdapter) VisitPipeNode(node *ast.PipeNode) (ast.Node, error) {
+	v.VisitAnyNode(node)
 	if visitor, ok := v.Visitor.(ast.PipeNodeVisitor); ok && v.ShouldCallVisitor {
 		return visitor.VisitPipeNode(node)
 	}
@@ -267,6 +286,7 @@ func (v *VisitorAdapter) VisitPipeNode(node *ast.PipeNode) (ast.Node, error) {
 
 // VisitIfNode visits an if node
 func (v *VisitorAdapter) VisitIfNode(node *ast.IfNode) (ast.Node, error) {
+	v.VisitAnyNode(node)
 	if visitor, ok := v.Visitor.(ast.IfNodeVisitor); ok && v.ShouldCallVisitor {
 		return visitor.VisitIfNode(node)
 	}
@@ -303,6 +323,7 @@ func (v *VisitorAdapter) VisitIfNode(node *ast.IfNode) (ast.Node, error) {
 
 // VisitImportNode visits an import node
 func (v *VisitorAdapter) VisitImportNode(node *ast.ImportNode) (ast.Node, error) {
+	v.VisitAnyNode(node)
 	if visitor, ok := v.Visitor.(ast.ImportNodeVisitor); ok && v.ShouldCallVisitor {
 		return visitor.VisitImportNode(node)
 	}
@@ -312,6 +333,7 @@ func (v *VisitorAdapter) VisitImportNode(node *ast.ImportNode) (ast.Node, error)
 
 // VisitTypeNode visits a type node
 func (v *VisitorAdapter) VisitTypeNode(node *ast.TypeNode) (ast.Node, error) {
+	v.VisitAnyNode(node)
 	if visitor, ok := v.Visitor.(ast.TypeNodeVisitor); ok && v.ShouldCallVisitor {
 		return visitor.VisitTypeNode(node)
 	}
@@ -321,6 +343,7 @@ func (v *VisitorAdapter) VisitTypeNode(node *ast.TypeNode) (ast.Node, error) {
 
 // VisitIndexNode visits an index node
 func (v *VisitorAdapter) VisitIndexNode(node *ast.IndexNode) (ast.Node, error) {
+	v.VisitAnyNode(node)
 	if visitor, ok := v.Visitor.(ast.IndexNodeVisitor); ok && v.ShouldCallVisitor {
 		return visitor.VisitIndexNode(node)
 	}
@@ -330,6 +353,7 @@ func (v *VisitorAdapter) VisitIndexNode(node *ast.IndexNode) (ast.Node, error) {
 
 // VisitSliceNode visits a slice node
 func (v *VisitorAdapter) VisitSliceNode(node *ast.SliceNode) (ast.Node, error) {
+	v.VisitAnyNode(node)
 	if visitor, ok := v.Visitor.(ast.SliceNodeVisitor); ok && v.ShouldCallVisitor {
 		return visitor.VisitSliceNode(node)
 	}
@@ -339,6 +363,7 @@ func (v *VisitorAdapter) VisitSliceNode(node *ast.SliceNode) (ast.Node, error) {
 
 // VisitSliceNode visits a slice node
 func (v *VisitorAdapter) VisitDecoratorNode(node *ast.DecoratorNode) (ast.Node, error) {
+	v.VisitAnyNode(node)
 	if visitor, ok := v.Visitor.(ast.DecoratorNodeVisitor); ok && v.ShouldCallVisitor {
 		return visitor.VisitDecoratorNode(node)
 	}
@@ -357,6 +382,7 @@ func (v *VisitorAdapter) VisitDecoratorNode(node *ast.DecoratorNode) (ast.Node, 
 }
 
 func (v *VisitorAdapter) VisitDotNode(node *ast.DotNode) (ast.Node, error) {
+	v.VisitAnyNode(node)
 	if visitor, ok := v.Visitor.(ast.DotNodeVisitor); ok && v.ShouldCallVisitor {
 		return visitor.VisitDotNode(node)
 	}
@@ -376,6 +402,7 @@ func (v *VisitorAdapter) VisitDotNode(node *ast.DotNode) (ast.Node, error) {
 }
 
 func (v *VisitorAdapter) VisitInstantiateNode(node *ast.InstantiateNode) (ast.Node, error) {
+	v.VisitAnyNode(node)
 	if visitor, ok := v.Visitor.(ast.InstantiateNodeVisitor); ok && v.ShouldCallVisitor {
 		return visitor.VisitInstantiateNode(node)
 	}
@@ -386,6 +413,7 @@ func (v *VisitorAdapter) VisitInstantiateNode(node *ast.InstantiateNode) (ast.No
 }
 
 func (v *VisitorAdapter) VisitInternalNode(node *ast.InternalNode) (ast.Node, error) {
+	v.VisitAnyNode(node)
 	if visitor, ok := v.Visitor.(ast.InternalNodeVisitor); ok && v.ShouldCallVisitor {
 		return visitor.VisitInternalNode(node)
 	}
@@ -396,6 +424,7 @@ func (v *VisitorAdapter) VisitInternalNode(node *ast.InternalNode) (ast.Node, er
 }
 
 func (v *VisitorAdapter) VisitMatchNode(node *ast.MatchNode) (ast.Node, error) {
+	v.VisitAnyNode(node)
 	if visitor, ok := v.Visitor.(ast.MatchNodeVisitor); ok && v.ShouldCallVisitor {
 		return visitor.VisitMatchNode(node)
 	}
@@ -418,6 +447,7 @@ func (v *VisitorAdapter) VisitMatchNode(node *ast.MatchNode) (ast.Node, error) {
 }
 
 func (v *VisitorAdapter) VisitMethodDefinition(node *ast.MethodDefinition) (ast.Node, error) {
+	v.VisitAnyNode(node)
 	if visitor, ok := v.Visitor.(ast.MethodDefinitionVisitor); ok && v.ShouldCallVisitor {
 		return visitor.VisitMethodDefinition(node)
 	}
@@ -441,6 +471,7 @@ func (v *VisitorAdapter) VisitMethodDefinition(node *ast.MethodDefinition) (ast.
 }
 
 func (v *VisitorAdapter) VisitPackage(node *ast.Package) (ast.Node, error) {
+	v.VisitAnyNode(node)
 	if visitor, ok := v.Visitor.(ast.PackageVisitor); ok && v.ShouldCallVisitor {
 		return visitor.VisitPackage(node)
 	}
@@ -449,6 +480,7 @@ func (v *VisitorAdapter) VisitPackage(node *ast.Package) (ast.Node, error) {
 }
 
 func (v *VisitorAdapter) VisitShapeNode(node *ast.ShapeNode) (ast.Node, error) {
+	v.VisitAnyNode(node)
 	if visitor, ok := v.Visitor.(ast.ShapeNodeVisitor); ok && v.ShouldCallVisitor {
 		return visitor.VisitShapeNode(node)
 	}
@@ -466,6 +498,7 @@ func (v *VisitorAdapter) VisitShapeNode(node *ast.ShapeNode) (ast.Node, error) {
 }
 
 func (v *VisitorAdapter) VisitWhenNode(node *ast.WhenNode) (ast.Node, error) {
+	v.VisitAnyNode(node)
 	if visitor, ok := v.Visitor.(ast.WhenNodeVisitor); ok && v.ShouldCallVisitor {
 		return visitor.VisitWhenNode(node)
 	}
@@ -483,6 +516,7 @@ func (v *VisitorAdapter) VisitWhenNode(node *ast.WhenNode) (ast.Node, error) {
 }
 
 func (v *VisitorAdapter) VisitContinueNode(node *ast.ContinueNode) (ast.Node, error) {
+	v.VisitAnyNode(node)
 	if visitor, ok := v.Visitor.(ast.ContinueNodeVisitor); ok && v.ShouldCallVisitor {
 		return visitor.VisitContinueNode(node)
 	}
@@ -498,6 +532,7 @@ func (v *VisitorAdapter) VisitContinueNode(node *ast.ContinueNode) (ast.Node, er
 }
 
 func (v *VisitorAdapter) VisitSignalNode(node *ast.SignalNode) (ast.Node, error) {
+	v.VisitAnyNode(node)
 	if visitor, ok := v.Visitor.(ast.SignalNodeVisitor); ok && v.ShouldCallVisitor {
 		return visitor.VisitSignalNode(node)
 	}
@@ -507,6 +542,7 @@ func (v *VisitorAdapter) VisitSignalNode(node *ast.SignalNode) (ast.Node, error)
 }
 
 func (v *VisitorAdapter) VisitTryNode(node *ast.TryNode) (ast.Node, error) {
+	v.VisitAnyNode(node)
 	if visitor, ok := v.Visitor.(ast.TryNodeVisitor); ok && v.ShouldCallVisitor {
 		return visitor.VisitTryNode(node)
 	}
@@ -532,6 +568,7 @@ func (v *VisitorAdapter) VisitTryNode(node *ast.TryNode) (ast.Node, error) {
 }
 
 func (v *VisitorAdapter) VisitHandleCaseNode(node *ast.HandleCaseNode) (ast.Node, error) {
+	v.VisitAnyNode(node)
 	if visitor, ok := v.Visitor.(ast.HandleCaseNodeVisitor); ok && v.ShouldCallVisitor {
 		return visitor.VisitHandleCaseNode(node)
 	}

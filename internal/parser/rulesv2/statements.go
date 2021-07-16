@@ -165,6 +165,7 @@ func typeDefRule(p *Parser) (ast.Node, error) {
 			return nil, UnexpectedError(nxt, "a type name")
 		}
 		extends = &ast.VarName{
+
 			Name:   nxt.Value,
 			Lexeme: nxt,
 		}
@@ -214,6 +215,7 @@ func typeDefRule(p *Parser) (ast.Node, error) {
 	}
 	if extends != nil {
 		return &ast.ExtendsNode{
+			Name:   varName,
 			Extend: extends,
 			Adds:   tp,
 		}, nil

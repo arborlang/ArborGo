@@ -1,8 +1,8 @@
 import stdlib as foobar from "github.com/arborlang/stdlib";
 
 type Test {
-	Example: fn () -> bool;
-	Name: string;
+	Example: fn () -> Boolean;
+	Name: String;
 };
 
 fn Test::__Construct() {
@@ -12,7 +12,7 @@ fn Test::__Construct() {
 fn Bazzer (val: foobar) -> number {
 	match val {
 		|> {foobar: 1, bazBar: 2} {
-			return;
+			return 23;
 		}
 		|> val.foobar == 10 || val.bazBar == 2 {
 			return 0;
@@ -34,7 +34,6 @@ fn Test::Decorator<TCall> (val: TCall) -> TCall {
 };
 
 Decorator(fn (values: number) -> number {
-   / /
 	value.toString().someOtherAccess;
 	value.toString() == "buttt"[0:2];
 	try {
@@ -48,7 +47,7 @@ Decorator(fn (values: number) -> number {
 		continue with "RetryWarning";
 	};
 	return 2 + 1;
-})
+});
 
 @Decorator
 fn DecoratedVal (value: number) -> number{
@@ -80,4 +79,4 @@ fn Stringer::Thing(xyz: String) -> String {
 
 type Find implements ABC, XYZ, ZZZ Boop;
 
-type Thing String
+type Thing String;

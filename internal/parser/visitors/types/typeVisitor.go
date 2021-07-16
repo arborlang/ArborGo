@@ -24,46 +24,33 @@ type typeVisitor struct {
 	scope *scope.SymbolTable
 }
 
+func addAllBase(scopetable *scope.SymbolTable, bases ...string) {
+	for _, i := range bases {
+		scopetable.AddToScope(i, &scope.SymbolData{
+			Type: scope.TypeData{
+				IsSealed: true,
+				Type: &types.ConstantTypeNode{
+					Name: i,
+				},
+			},
+			IsConstant: true,
+			Location:   "noop",
+		})
+
+	}
+}
+
 func New() ast.Visitor {
 	tVisitor := &typeVisitor{}
 	tVisitor.scope = scope.NewTable()
 	b := base.New(tVisitor)
-	tVisitor.scope.AddType("String", &scope.TypeData{
-		IsSealed: true,
-		Type: &types.ConstantTypeNode{
-			Name: "String",
-		},
-	})
-	tVisitor.scope.AddType("Boolean", &scope.TypeData{
-		IsSealed: true,
-		Type: &types.ConstantTypeNode{
-			Name: "Boolean",
-		},
-	})
-	tVisitor.scope.AddType("Integer", &scope.TypeData{
-		IsSealed: true,
-		Type: &types.ConstantTypeNode{
-			Name: "Integer",
-		},
-	})
-	tVisitor.scope.AddType("Number", &scope.TypeData{
-		IsSealed: true,
-		Type: &types.ConstantTypeNode{
-			Name: "Number",
-		},
-	})
-	tVisitor.scope.AddType("Float", &scope.TypeData{
-		IsSealed: true,
-		Type: &types.ConstantTypeNode{
-			Name: "Float",
-		},
-	})
-	tVisitor.scope.AddType("Char", &scope.TypeData{
-		IsSealed: true,
-		Type: &types.ConstantTypeNode{
-			Name: "Char",
-		},
-	})
+	addAllBase(tVisitor.scope,
+		"String",
+		"Boolean",
+		"Number",
+		"Float",
+		"Char",
+	)
 	return b
 }
 

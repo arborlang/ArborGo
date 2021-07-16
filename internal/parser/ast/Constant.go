@@ -17,3 +17,7 @@ type Constant struct {
 func (a *Constant) Accept(v Visitor) (Node, error) {
 	return v.VisitConstant(a)
 }
+
+func (a *Constant) GetType() types.TypeNode {
+	return a.Type
+}

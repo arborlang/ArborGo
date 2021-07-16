@@ -27,15 +27,15 @@ func TestCanFunc(t *testing.T) {
 	if !assert.IsType(&ast.FunctionDefinitionNode{}, assignmentNode.Value) {
 		return
 	}
-	if !assert.IsType(&ast.VarName{}, assignmentNode.AssignTo) {
+	if !assert.IsType(&ast.DeclNode{}, assignmentNode.AssignTo) {
 		return
 	}
 	funcDef := assignmentNode.Value.(*ast.FunctionDefinitionNode)
 	assert.NotNil(funcDef.Body)
 	assert.Len(funcDef.Arguments, 1)
 	assert.NotNil(funcDef.Returns)
-	varName := assignmentNode.AssignTo.(*ast.VarName)
-	assert.Equal("fooBar", varName.Name)
+	varName := assignmentNode.AssignTo.(*ast.DeclNode)
+	assert.Equal("fooBar", varName.Varname.Name)
 }
 
 func TestCanParseMultipleArguments(t *testing.T) {

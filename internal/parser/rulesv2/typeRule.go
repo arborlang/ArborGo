@@ -24,7 +24,6 @@ func parseFnType(p *Parser) (types.TypeNode, error) {
 		p.Next()
 	} else {
 		for nxt.Token != tokens.LPAREN {
-			fmt.Printf("Next Token: %s\n", nxt)
 			varName := p.Next()
 			if varName.Token != tokens.VARNAME {
 				return nil, fmt.Errorf("unexpected token %s, expected \"VARNAME\"", varName)
@@ -39,7 +38,6 @@ func parseFnType(p *Parser) (types.TypeNode, error) {
 			}
 			params = append(params, tp)
 			nxt = p.Next()
-			fmt.Printf("Next Token: %s\n", nxt)
 			if !(nxt.Token == tokens.COMMA || nxt.Token == tokens.LPAREN) {
 				return nil, fmt.Errorf("unexpected token %s, expected %q or %q", nxt, ",", ")")
 			}

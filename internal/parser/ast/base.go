@@ -13,6 +13,7 @@ import (
 type Node interface {
 	// Accept allows a visitor to traverse the tree
 	Accept(Visitor) (Node, error)
+	GetType() types.TypeNode
 }
 
 //SymbolData is some data for the symbol in our symbol table
@@ -38,4 +39,8 @@ func (a AnnotatedNode) Accept(v Visitor) (Node, error) {
 		return AnnotatedNode{}, fmt.Errorf("annotated node has no node")
 	}
 	return a.Node.Accept(v)
+}
+
+func (a AnnotatedNode) GetType() types.TypeNode {
+	return a.Node.GetType()
 }

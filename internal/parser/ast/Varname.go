@@ -19,6 +19,10 @@ func (vn *VarName) Accept(v Visitor) (Node, error) {
 	return v.VisitVarName(vn)
 }
 
+func (vn *VarName) GetType() types.TypeNode {
+	return vn.Type
+}
+
 //DeclNode is a node that
 type DeclNode struct {
 	Varname    *VarName
@@ -28,6 +32,10 @@ type DeclNode struct {
 // Accept does nothing
 func (d *DeclNode) Accept(v Visitor) (Node, error) {
 	return v.VisitDeclNode(d)
+}
+
+func (d *DeclNode) GetType() types.TypeNode {
+	return d.Varname.Type
 }
 
 // AddChild just sets the

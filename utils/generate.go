@@ -16,6 +16,7 @@ import (
 var (
 	typeNames    = flag.String("type", "", "comma-separated list of type names; must be set")
 	templatePath = flag.String("template", "default.tmpl", "the template to generate")
+	ldFlags      = flag.Bool("ldFlags", false, "should generate the ldflags")
 )
 
 func Usage() {
@@ -46,6 +47,10 @@ type Visitor interface {
 func main() {
 	flag.Usage = Usage
 	flag.Parse()
+	if *ldFlags == true {
+		generateLD()
+		return
+	}
 
 	cfg := &packages.Config{Mode: packages.NeedFiles | packages.NeedSyntax | packages.NeedTypes | packages.NeedTypesInfo, Tests: false}
 	pkgs, err := packages.Load(cfg, flag.Args()...)

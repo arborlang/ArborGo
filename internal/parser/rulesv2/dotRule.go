@@ -10,7 +10,9 @@ func dotVarNameRule(p *Parser) (ast.Node, error) {
 	if node.Token != tokens.VARNAME {
 		return nil, UnexpectedError(node, "Variable Name")
 	}
-	varname := &ast.VarName{}
+	varname := &ast.VarName{
+		Lexeme: node,
+	}
 	varname.Name = node.Value
 	switch p.Peek().Token {
 	case tokens.RPAREN:

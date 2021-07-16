@@ -94,6 +94,53 @@ func TestPopAndPushScopeDoesntFallover(t *testing.T) {
 	assert.Len(symTable.scopeStack, 3)
 }
 
+func TestResetAndLock(t *testing.T) {
+	assert := assert.New(t)
+
+	symTable := NewTable()
+	sym := &SymbolData{Location: "xyz"}
+	symTable.AddToScope("foo", sym)
+	symTable.PushNewScope()
+	sym3 := &SymbolData{Location: "abc"}
+	symTable.AddToScope("bar", sym3)
+	symTable.PopScope()
+	symTable.PushNewScope()
+	sym4 := &SymbolData{Location: "abc1"}
+	symTable.AddToScope("bar2", sym4)
+
+	assert.Len(symTable.scopeStack, 3)
+	symTable.ResetStackAndLockScope()
+	assert.False(symTable.scopesCanGrow)
+	assert.Equal(1, symTable.pushOperation)
+
+	sym2, lvl := symTable.LookupSymbol("foo")
+	assert.NotNil(sym2)
+	assert.Equal(sym, sym2)
+	assert.Equal(0, lvl)
+	sym2, lvl = symTable.LookupSymbol("bar")
+	assert.Nil(sym2)
+	sym2, lvl = symTable.LookupSymbol("bar2")
+	assert.Nil(sym2)
+
+	symTable.PushNewScope()
+	assert.Len(symTable.scopeStack, 3)
+	sym2, lvl = symTable.LookupSymbol("foo")
+	assert.NotNil(sym2)
+	assert.Equal(sym, sym2)
+	sym2, lvl = symTable.LookupSymbol("bar")
+	assert.NotNil(sym2)
+	sym2, lvl = symTable.LookupSymbol("bar2")
+	assert.Nil(sym2)
+
+	symTable.PopScope()
+	symTable.PushNewScope()
+
+	sym2, lvl = symTable.LookupSymbol("bar")
+	assert.Nil(sym2)
+	sym2, lvl = symTable.LookupSymbol("bar2")
+	assert.NotNil(sym2)
+}
+
 func TestStack(t *testing.T) {
 	assert := assert.New(t)
 

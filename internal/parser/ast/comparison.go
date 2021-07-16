@@ -1,6 +1,9 @@
 package ast
 
-import "github.com/arborlang/ArborGo/internal/lexer"
+import (
+	"github.com/arborlang/ArborGo/internal/lexer"
+	"github.com/arborlang/ArborGo/internal/parser/ast/types"
+)
 
 // Comparison represents a comparison operator
 type Comparison struct {
@@ -13,4 +16,8 @@ type Comparison struct {
 // Accept visits the node
 func (a *Comparison) Accept(v Visitor) (Node, error) {
 	return v.VisitComparison(a)
+}
+
+func (a *Comparison) GetType() types.TypeNode {
+	return a.LeftSide.GetType()
 }

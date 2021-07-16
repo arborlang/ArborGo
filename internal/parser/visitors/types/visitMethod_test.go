@@ -4,7 +4,9 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/arborlang/ArborGo/internal/parser/ast/types"
 	"github.com/arborlang/ArborGo/internal/parser/rulesv2"
+	"github.com/arborlang/ArborGo/internal/parser/visitors/base"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -22,4 +24,11 @@ func TestCanVisitMethodDefinitionProperly(t *testing.T) {
 	n, e := node.Accept(tVisit)
 	assert.NoError(e)
 	assert.NotNil(n)
+
+	real := tVisit.(*base.VisitorAdapter).Visitor.(*typeVisitor)
+	data, _ := real.scope.LookupSymbolInAllScopes("Thing")
+	assert.True(data.IsType)
+	assert.IsType(&types.ExtendedType{}, data.Type.Type)
+	dataTP := data.Type.Type.(*types.ExtendedType)
+	assert.NotNil(dataTP.Shape.Fields["value"])
 }

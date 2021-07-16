@@ -114,7 +114,6 @@ type WhenNodeFolder interface {
 	FoldWhenNode(n *WhenNode) (Node, error)
 }
 
-
 type Folder interface {
 	AnnotatedNodeFolder
 	AssignmentNodeFolder
@@ -144,5 +143,4 @@ type Folder interface {
 	TypeNodeFolder
 	VarNameFolder
 	WhenNodeFolder
-
 }

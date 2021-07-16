@@ -20,6 +20,8 @@ type FunctionDefinitionNode struct {
 type FunctionCallNode struct {
 	Arguments  []Node
 	Definition Node
+	Type       types.TypeNode
+	Lexeme     lexer.Lexeme
 }
 
 // Accept visits the node
@@ -28,7 +30,7 @@ func (f *FunctionDefinitionNode) Accept(v Visitor) (Node, error) {
 }
 
 // GetType returns the function type
-func (f *FunctionDefinitionNode) GetType() (*types.FnType, error) {
+func (f *FunctionDefinitionNode) GetFnType() (*types.FnType, error) {
 	paramTypes := []types.TypeNode{}
 	for _, arg := range f.Arguments {
 		if arg.Type == nil {
@@ -42,7 +44,16 @@ func (f *FunctionDefinitionNode) GetType() (*types.FnType, error) {
 	}, nil
 }
 
+func (f *FunctionDefinitionNode) GetType() types.TypeNode {
+	tp, _ := f.GetFnType()
+	return tp
+}
+
 // Accept visits the node
 func (f *FunctionCallNode) Accept(v Visitor) (Node, error) {
 	return v.VisitFunctionCallNode(f)
+}
+
+func (f *FunctionCallNode) GetType() types.TypeNode {
+	return f.Type
 }
