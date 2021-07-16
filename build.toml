@@ -1,6 +1,7 @@
 [configs]
 	[configs."github.com/arborlang/ArborGo/internal/config.Version"]
-	exec = "git describe --tags --abbrev=0"
+	exec = "git describe --tags"
+	nonFatal = true
 	
 	[configs."github.com/arborlang/ArborGo/internal/config.BuildNumber"]
 	exec = "git rev-parse HEAD"

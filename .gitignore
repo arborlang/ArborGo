@@ -15,10 +15,11 @@
 
 vendor/
 
-arbor
+/arbor
 *.ab
 *.wast
 *.wasm
+gen_visitors
 
 /plugins
-go.sum
+
