@@ -15,10 +15,11 @@ type buidConfig struct {
 }
 
 type value struct {
-	Exec    *string
-	Value   *string
-	Env     *string
-	IsDebug *string
+	Exec     *string
+	Value    *string
+	Env      *string
+	IsDebug  *string
+	NonFatal bool
 }
 
 func generateLD() {
@@ -37,8 +38,8 @@ func generateLD() {
 			cmd := exec.Command("/bin/sh", "-c", *values.Exec)
 			cmd.Stderr = os.Stderr
 			out, err := cmd.Output()
-			if err != nil {
-				panic(err)
+			if err != nil && !values.NonFatal {
+				panic(fmt.Sprintf("running %s: %s", *values.Exec, err))
 			}
 			value = strings.TrimSpace(string(out))
 		} else if values.Env != nil {

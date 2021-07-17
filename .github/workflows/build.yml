@@ -18,8 +18,14 @@ jobs:
       with:
         go-version: 1.16
 
-    - name: Build
-      run: make
+    - name: Install
+      run: go get -u -a golang.org/x/tools/cmd/stringer
+    
+    - name: List dir
+      run: ls -lal
 
     - name: Test
       run: make test
+
+    - name: Build
+      run: make
