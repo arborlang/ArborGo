@@ -8,15 +8,18 @@ import (
 )
 
 func pipeRule(left ast.Node, p *Parser) (ast.Node, error) {
-	pipe := &ast.PipeNode{}
+	next := p.Next()
+	pipe := &ast.PipeNode{
+		Lexeme: next,
+	}
 	pipe.LeftSide = left
-	if next := p.Next(); next.Token != tokens.PIPE {
+	if next.Token != tokens.PIPE {
 		return nil, fmt.Errorf("unexpected token %s, expected '|>'", next)
 	}
-	next, err := varNameRule(p, false)
+	nextNode, err := varNameRule(p, false)
 	if err != nil {
 		return nil, err
 	}
-	pipe.RightSide = next
+	pipe.RightSide = nextNode
 	return pipe, nil
 }

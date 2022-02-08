@@ -74,8 +74,10 @@ func (lexer *Lexer) Emit(tok tokens.Token, encode func(tokens.Token, string) []b
 //EmitEOF emits the EOF lexeme
 func (lexer *Lexer) EmitEOF() {
 	lexer.Lexemes <- Lexeme{
-		Token: tokens.EOF,
-		Value: string(tokens.EOFChar),
+		Token:  tokens.EOF,
+		Value:  string(tokens.EOFChar),
+		Line:   lexer.line,
+		Column: lexer.col,
 	}
 	lexer.start = lexer.position
 }

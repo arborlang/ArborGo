@@ -1,9 +1,13 @@
 package ast
 
-import "github.com/arborlang/ArborGo/internal/parser/ast/types"
+import (
+	"github.com/arborlang/ArborGo/internal/lexer"
+	"github.com/arborlang/ArborGo/internal/parser/ast/types"
+)
 
 // ExportNode represents an export statement
 type InternalNode struct {
+	Lexeme     lexer.Lexeme
 	Expression Node
 }
 

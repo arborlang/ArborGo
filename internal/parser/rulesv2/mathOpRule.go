@@ -9,9 +9,11 @@ import (
 
 // MathOpRule parses a mathematical operation
 func MathOpRule(left ast.Node, p *Parser) (ast.Node, error) {
-	mathNode := &ast.MathOpNode{}
-	mathNode.LeftSide = left
 	opCodeLexeme := p.Next()
+	mathNode := &ast.MathOpNode{
+		Lexeme: opCodeLexeme,
+	}
+	mathNode.LeftSide = left
 	if opCodeLexeme.Token != tokens.ARTHOP {
 		return nil, fmt.Errorf("Unexpected token, expected math symbol, got %s", opCodeLexeme)
 	}

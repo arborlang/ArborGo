@@ -1,8 +1,12 @@
 package ast
 
-import "github.com/arborlang/ArborGo/internal/parser/ast/types"
+import (
+	"github.com/arborlang/ArborGo/internal/lexer"
+	"github.com/arborlang/ArborGo/internal/parser/ast/types"
+)
 
 type DotNode struct {
+	Lexeme  lexer.Lexeme
 	VarName Node
 	Access  Node
 }

@@ -8,8 +8,11 @@ import (
 )
 
 func ifNodeRule(p *Parser) (ast.Node, error) {
-	ifNode := &ast.IfNode{}
-	if next := p.Next(); next.Token != tokens.IF {
+	next := p.Next()
+	ifNode := &ast.IfNode{
+		Lexeme: next,
+	}
+	if next.Token != tokens.IF {
 		return nil, fmt.Errorf("unexpected token, expected 'if' got %s", next)
 	}
 	condition, err := ExpressionRule(p)

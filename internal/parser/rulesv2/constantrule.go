@@ -14,6 +14,7 @@ func ConstantsRule(p *Parser, canDoComparisons bool) (ast.Node, error) {
 	lexeme := p.Next()
 	constant := &ast.Constant{}
 	constant.Value = lexeme.Value
+	constant.Lexeme = lexeme
 	tp := ""
 	switch lexeme.Token {
 	case tokens.FLOAT:

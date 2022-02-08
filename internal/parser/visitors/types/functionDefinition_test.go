@@ -20,7 +20,7 @@ func TestFunctionDef(t *testing.T) {
 	node, err := rulesv2.Parse(strings.NewReader(program))
 	assert.NoError(err)
 	assert.NotNil(node)
-	tVisit := New()
+	tVisit := New(true)
 	n, e := node.Accept(tVisit)
 	assert.NoError(e)
 	assert.NotNil(n)
@@ -38,7 +38,24 @@ func TestFunctionDefFailsIfTypeNotDefined(t *testing.T) {
 	node, err := rulesv2.Parse(strings.NewReader(program))
 	assert.NoError(err)
 	assert.NotNil(node)
-	tVisit := New()
+	tVisit := New(true)
+	_, e := node.Accept(tVisit)
+	assert.Error(e)
+}
+
+func TestFunctionDefFailsIfReturnTypeNotDefined(t *testing.T) {
+	assert := assert.New(t)
+
+	program := `
+	fn someTest(val: Number) -> number {
+		return val;
+	};
+	`
+
+	node, err := rulesv2.Parse(strings.NewReader(program))
+	assert.NoError(err)
+	assert.NotNil(node)
+	tVisit := New(true)
 	_, e := node.Accept(tVisit)
 	assert.Error(e)
 }

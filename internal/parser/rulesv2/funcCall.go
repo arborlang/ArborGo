@@ -8,10 +8,13 @@ import (
 )
 
 func functionCallRule(varname ast.Node, p *Parser, recurse bool) (ast.Node, error) {
-	if tok := p.Next(); tok.Token != tokens.RPAREN {
+	tok := p.Next()
+	if tok.Token != tokens.RPAREN {
 		return nil, fmt.Errorf("expected '(', got %s", tok)
 	} // Discard the first paren
-	funcCall := &ast.FunctionCallNode{}
+	funcCall := &ast.FunctionCallNode{
+		Lexeme: tok,
+	}
 	for next := p.Peek(); next.Token != tokens.LPAREN; next = p.Peek() {
 		argument, err := ExpressionRule(p)
 		if err != nil {

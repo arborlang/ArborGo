@@ -41,6 +41,7 @@ func dotRule(varName ast.Node, p *Parser) (ast.Node, error) {
 		return nil, err
 	}
 	node := &ast.DotNode{
+		Lexeme:  dot,
 		VarName: varName,
 		Access:  nextNode,
 	}

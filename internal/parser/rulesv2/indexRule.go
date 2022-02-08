@@ -21,6 +21,7 @@ func indexRule(name ast.Node, p *Parser) (ast.Node, error) {
 	ndxNode := &ast.IndexNode{
 		Varname: name,
 		Index:   index,
+		Lexeme:  nxt,
 	}
 	nxt = p.Peek()
 	if nxt.Token == tokens.COLON {

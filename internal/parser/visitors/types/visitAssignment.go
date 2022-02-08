@@ -38,6 +38,7 @@ func (t *typeVisitor) VisitAssignmentNode(n *ast.AssignmentNode) (ast.Node, erro
 		return nil, err
 	}
 	vname = vnameNode.(*ast.VarName)
+
 	if !vname.GetType().IsSatisfiedBy(n.Value.GetType()) {
 		return nil, fmt.Errorf("can't assign %s to %s at %s", n.Value.GetType(), vname.Type, n.Lexeme)
 	}

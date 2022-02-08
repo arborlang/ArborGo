@@ -16,6 +16,7 @@
 vendor/
 
 /arbor
+/main
 *.ab
 *.wast
 *.wasm

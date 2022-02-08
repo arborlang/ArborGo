@@ -24,7 +24,7 @@ func TestOperationsWorks(t *testing.T) {
 	assert.NoError(err)
 	assert.NotNil(node)
 
-	tVisit := New()
+	tVisit := New(true)
 	_, e := node.Accept(tVisit)
 	assert.NoError(e)
 
@@ -48,8 +48,8 @@ func TestMathbetweenTwoTypesFails(t *testing.T) {
 	assert.NoError(err)
 	assert.NotNil(node)
 
-	tVisit := New()
+	tVisit := New(true)
 	_, e := node.Accept(tVisit)
 	assert.Error(e)
-	assert.Equal("can't add Number and String (at \"\" (Line: 0, Column: 0))", e.Error())
+	assert.Equal("can't add Number and String (at \"+\" (Line: 2, Column: 52))", e.Error())
 }

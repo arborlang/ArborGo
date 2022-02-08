@@ -17,6 +17,7 @@ func decoratorRule(p *Parser) (ast.Node, error) {
 		return nil, fmt.Errorf("expected a variable name, got %s", decoratorName)
 	}
 	decoratedNode := &ast.DecoratorNode{
+		Lexeme: at,
 		Name: &ast.VarName{
 			Name:   decoratorName.Value,
 			Lexeme: decoratorName,

@@ -6,10 +6,13 @@ import (
 )
 
 func constantShapeRule(p *Parser) (ast.Node, error) {
-	shapeNode := &ast.ShapeNode{
-		Fields: map[string]ast.Node{},
-	}
 	next := p.Next()
+	shapeNode := &ast.ShapeNode{
+		Lexeme:       next,
+		Fields:       map[string]ast.Node{},
+		GenericNames: []*ast.VarName{},
+	}
+
 	if next.Token != tokens.RCURLY {
 		return nil, UnexpectedError(next, "{")
 	}

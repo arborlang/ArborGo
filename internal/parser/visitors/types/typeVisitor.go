@@ -20,8 +20,9 @@ func (a *annotatedTypeNode) Accept(v ast.Visitor) (ast.Node, error) {
 }
 
 type typeVisitor struct {
-	v     *base.VisitorAdapter
-	scope *scope.SymbolTable
+	v             *base.VisitorAdapter
+	scope         *scope.SymbolTable
+	dumpOnFailure bool
 }
 
 func addAllBase(scopetable *scope.SymbolTable, bases ...string) {
@@ -40,8 +41,10 @@ func addAllBase(scopetable *scope.SymbolTable, bases ...string) {
 	}
 }
 
-func New() ast.Visitor {
-	tVisitor := &typeVisitor{}
+func New(dumpOnFailure bool) ast.Visitor {
+	tVisitor := &typeVisitor{
+		dumpOnFailure: dumpOnFailure,
+	}
 	tVisitor.scope = scope.NewTable()
 	b := base.New(tVisitor)
 	addAllBase(tVisitor.scope,

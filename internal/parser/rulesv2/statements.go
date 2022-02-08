@@ -170,6 +170,10 @@ func typeDefRule(p *Parser) (ast.Node, error) {
 			Lexeme: nxt,
 		}
 	}
+	generics, err := parseGenericDef(p)
+	if err != nil {
+		return nil, err
+	}
 	peek = p.Peek()
 	if !sliceContains(peek.Token, []tokens.Token{tokens.VARNAME, tokens.RCURLY, tokens.IMPLEMENTS}) {
 		return nil, UnexpectedError(peek, "a type", "{", "extends", "implements")
@@ -201,10 +205,11 @@ func typeDefRule(p *Parser) (ast.Node, error) {
 		return nil, err
 	}
 	typeNode := &ast.TypeNode{
-		Types:   tp,
-		VarName: varName,
-		Extends: doesExtend,
-		Lexeme:  nxt,
+		Types:        tp,
+		VarName:      varName,
+		Extends:      doesExtend,
+		Lexeme:       nxt,
+		GenericTypes: generics,
 	}
 	if doesImplement {
 		return &ast.ImplementsNode{

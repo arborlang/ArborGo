@@ -34,5 +34,5 @@ func (s *ShapeType) String() string {
 	for fieldName, fieldType := range s.Fields {
 		fields = append(fields, fmt.Sprintf("%s: %s", fieldName, fieldType))
 	}
-	return fmt.Sprintf("{%s}", fields)
+	return fmt.Sprintf("Shape{%s}", fields)
 }

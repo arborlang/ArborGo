@@ -20,7 +20,7 @@ func TestCanVisitMethodDefinitionProperly(t *testing.T) {
 	node, err := rulesv2.Parse(strings.NewReader(tpDefs))
 	assert.NoError(err)
 	assert.NotNil(node)
-	tVisit := New()
+	tVisit := New(true)
 	n, e := node.Accept(tVisit)
 	assert.NoError(e)
 	assert.NotNil(n)

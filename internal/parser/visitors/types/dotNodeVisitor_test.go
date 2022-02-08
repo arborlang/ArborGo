@@ -23,7 +23,7 @@ func TestCanVisitDotNodeFine(t *testing.T) {
 	node, err := rulesv2.Parse(strings.NewReader(testProg))
 	assert.NoError(err)
 	assert.NotNil(node)
-	tVisit := New()
+	tVisit := New(true)
 	_, e := node.Accept(tVisit)
-	assert.Error(e)
+	assert.NoError(e)
 }

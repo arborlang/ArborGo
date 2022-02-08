@@ -8,6 +8,30 @@ import (
 	"github.com/arborlang/ArborGo/internal/tokens"
 )
 
+func parseGenericDef(p *Parser) ([]*ast.VarName, error) {
+	genericTypeNames := []*ast.VarName{}
+	peek := p.Peek()
+	if p.Peek().Token == tokens.COMPARISON && p.Peek().Value == "<" {
+		p.Next()
+		peek = p.Peek()
+		for peek.Token != tokens.COMPARISON && peek.Value != ">" {
+			typeName := p.Next()
+			if typeName.Token != tokens.VARNAME {
+				return nil, fmt.Errorf("Expected a Type Name, got %s instead", typeName)
+			}
+			genericTypeNames = append(genericTypeNames, &ast.VarName{
+				Name:   typeName.Value,
+				Lexeme: typeName,
+			})
+			peek = p.Next()
+			if !(peek.Token == tokens.COMMA || (peek.Token == tokens.COMPARISON && peek.Value == ">")) {
+				return genericTypeNames, fmt.Errorf("expected %q or %q, got %s instead", ",", ">", peek)
+			}
+		}
+	}
+	return genericTypeNames, nil
+}
+
 // func paramTypeParam(p *)
 
 func paramsParser(p *Parser) ([]*ast.VarName, error) {
@@ -53,18 +77,25 @@ func functionDefinitionRule(p *Parser) (ast.Node, error) {
 			Name:   varName.Value,
 			Lexeme: varName,
 		}
-		asignNode = &ast.AssignmentNode{}
+		asignNode = &ast.AssignmentNode{
+			Lexeme: varName,
+		}
 		asignNode.AssignTo = &ast.DeclNode{
+			Lexeme:     varName,
 			Varname:    retVal,
 			IsConstant: true,
 		}
 	}
 
-	funcNode := &ast.FunctionDefinitionNode{}
+	funcNode := &ast.FunctionDefinitionNode{
+		Lexeme: varName,
+	}
 	peek := p.Peek()
 	if peek.Token == tokens.DCOLON {
 		p.Next()
-		methodDef = &ast.MethodDefinition{}
+		methodDef = &ast.MethodDefinition{
+			Lexeme: peek,
+		}
 		methodDef.TypeName = asignNode.AssignTo.(*ast.DeclNode).Varname
 		methodName := p.Next()
 		if methodName.Token != tokens.VARNAME {
@@ -77,25 +108,31 @@ func functionDefinitionRule(p *Parser) (ast.Node, error) {
 		asignNode = nil
 	}
 	peek = p.Peek()
-	if peek.Token == tokens.COMPARISON && peek.Value == "<" {
-		p.Next()
-		peek = p.Peek()
-		for peek.Token != tokens.COMPARISON && peek.Value != ">" {
-			typeName := p.Next()
-			if typeName.Token != tokens.VARNAME {
-				return nil, fmt.Errorf("Expected a Type Name, got %s instead", typeName)
-			}
-			funcNode.GenericTypeNames = append(funcNode.GenericTypeNames, &ast.VarName{
-				Name:   typeName.Value,
-				Lexeme: typeName,
-			})
-			peek = p.Next()
-			if !(peek.Token == tokens.COMMA || (peek.Token == tokens.COMPARISON && peek.Value == ">")) {
-				return nil, fmt.Errorf("expected %q or %q, got %s instead", ",", ">", peek)
-			}
-		}
-
+	genericTypeNames, err := parseGenericDef(p)
+	funcNode.GenericTypeNames = genericTypeNames
+	if err != nil {
+		return funcNode, err
 	}
+	//Generic parsing
+	// if peek.Token == tokens.COMPARISON && peek.Value == "<" {
+	// 	p.Next()
+	// 	peek = p.Peek()
+	// 	for peek.Token != tokens.COMPARISON && peek.Value != ">" {
+	// 		typeName := p.Next()
+	// 		if typeName.Token != tokens.VARNAME {
+	// 			return nil, fmt.Errorf("Expected a Type Name, got %s instead", typeName)
+	// 		}
+	// 		funcNode.GenericTypeNames = append(funcNode.GenericTypeNames, &ast.VarName{
+	// 			Name:   typeName.Value,
+	// 			Lexeme: typeName,
+	// 		})
+	// 		peek = p.Next()
+	// 		if !(peek.Token == tokens.COMMA || (peek.Token == tokens.COMPARISON && peek.Value == ">")) {
+	// 			return nil, fmt.Errorf("expected %q or %q, got %s instead", ",", ">", peek)
+	// 		}
+	// 	}
+
+	// }
 	params, err := paramsParser(p)
 	if err != nil {
 		return nil, err

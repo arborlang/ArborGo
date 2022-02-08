@@ -7,10 +7,11 @@ import (
 
 // TypeNode represents a type node
 type TypeNode struct {
-	Types   types.TypeNode
-	Lexeme  lexer.Lexeme
-	VarName *VarName
-	Extends bool
+	Types        types.TypeNode
+	Lexeme       lexer.Lexeme
+	VarName      *VarName
+	Extends      bool
+	GenericTypes []*VarName
 }
 
 // Accept a type visitor

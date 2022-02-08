@@ -1,15 +1,20 @@
 package ast
 
-import "github.com/arborlang/ArborGo/internal/parser/ast/types"
+import (
+	"github.com/arborlang/ArborGo/internal/lexer"
+	"github.com/arborlang/ArborGo/internal/parser/ast/types"
+)
 
 type WhenNode struct {
 	Case     Node
 	Evaluate Node
+	Lexeme   lexer.Lexeme
 }
 
 type MatchNode struct {
 	Match     Node
 	WhenCases []*WhenNode
+	Lexeme    lexer.Lexeme
 }
 
 func (m *MatchNode) Accept(v Visitor) (Node, error) {

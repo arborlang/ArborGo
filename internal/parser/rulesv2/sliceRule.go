@@ -14,7 +14,9 @@ func sliceRule(ndxNode *ast.IndexNode, p *Parser) (ast.Node, error) {
 	if col.Token != tokens.COLON {
 		return nil, fmt.Errorf("expected %q, not %s", ":", col)
 	}
-	slice := &ast.SliceNode{}
+	slice := &ast.SliceNode{
+		Lexeme: col,
+	}
 	slice.Varname = ndxNode.Varname
 	slice.Start = ndxNode.Index
 	number := p.Peek()

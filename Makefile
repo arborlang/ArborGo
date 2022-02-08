@@ -27,3 +27,6 @@ debug: test generate ldflags
 
 publish: test generate ldflags
 	go build -ldflags '$(shell ARBOR_VERSION=$(ARBOR_VERSION) ./utils/gen_visitors -ldFlags)' -o arbor ./cmd/arbor/main.go
+
+delve: debug
+	dlv exec ./arbor build docs/example/example.ab

@@ -1,6 +1,8 @@
 package typevisitor
 
 import (
+	"fmt"
+
 	"github.com/arborlang/ArborGo/internal/parser/ast"
 	"github.com/arborlang/ArborGo/internal/parser/scope"
 )
@@ -8,6 +10,19 @@ import (
 func (t *typeVisitor) VisitFunctionDefinitionNode(def *ast.FunctionDefinitionNode) (ast.Node, error) {
 	t.scope.PushNewScope()
 	defer t.scope.PopScope()
+	for _, arg := range def.Arguments {
+		err := t.verifyType(arg.Type, arg.Lexeme)
+		if err != nil {
+			return def, err
+		}
+	}
+	if def.Returns != nil {
+		fmt.Println("Lets find all return nodes and get the types")
+	}
+	err := t.verifyType(def.Returns, def.Lexeme)
+	if err != nil {
+		return def, err
+	}
 	for _, arg := range def.Arguments {
 		t.scope.AddToScope(arg.Name, &scope.SymbolData{
 			Type: scope.TypeData{

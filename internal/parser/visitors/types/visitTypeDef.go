@@ -2,6 +2,7 @@ package typevisitor
 
 import (
 	"fmt"
+	"runtime/debug"
 
 	"github.com/arborlang/ArborGo/internal/lexer"
 	"github.com/arborlang/ArborGo/internal/parser/ast"
@@ -18,12 +19,13 @@ func (t *typeVisitor) verifyType(tp types.TypeNode, lexeme lexer.Lexeme) error {
 				return err
 			}
 		}
+		return nil
 	case *types.ArrayType:
 		return t.verifyType(realType.SubType, lexeme)
 	case *types.ConstantTypeNode:
 		otherType, _ := t.scope.LookupSymbol(realType.Name)
 		if otherType == nil {
-			return fmt.Errorf("%s is not defined at %s", realType.Name, lexeme)
+			return fmt.Errorf("no such type %s at %s", realType.Name, lexeme)
 		}
 		return nil
 	case *types.ShapeType:
@@ -33,6 +35,7 @@ func (t *typeVisitor) verifyType(tp types.TypeNode, lexeme lexer.Lexeme) error {
 				return fmt.Errorf("error %s", err)
 			}
 		}
+		return nil
 	case *types.FnType:
 		for _, params := range realType.Parameters {
 			err := t.verifyType(params, lexeme)
@@ -47,10 +50,18 @@ func (t *typeVisitor) verifyType(tp types.TypeNode, lexeme lexer.Lexeme) error {
 			return err
 		}
 		return t.verifyType(realType.Shape, lexeme)
+	case *types.VoidType:
+		return nil
 	default:
+		if tp == nil {
+			if t.dumpOnFailure {
+				debug.PrintStack()
+				fmt.Println(t.scope)
+			}
+			return fmt.Errorf("Type is nil here: %s. Type: %s", lexeme, realType)
+		}
 		return nil
 	}
-	return nil
 }
 
 func (t *typeVisitor) deriveNewTypeNode(tn *ast.TypeNode) (types.TypeNode, error) {

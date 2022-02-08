@@ -1,6 +1,8 @@
 package types
 
-import "strings"
+import (
+	"strings"
+)
 
 // TypeGuard is a type guard that allows you to pick one type. Looks like: Number | String
 type TypeGuard struct {
@@ -12,7 +14,13 @@ func (t *TypeGuard) IsSatisfiedBy(n TypeNode) bool {
 	g, ok := n.(*TypeGuard)
 	if ok {
 		for _, i := range t.Types {
+			if i == nil {
+				return false
+			}
 			for _, j := range g.Types {
+				if j == nil {
+					return false
+				}
 				if i.IsSatisfiedBy(j) {
 					return true
 				}

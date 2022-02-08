@@ -89,7 +89,7 @@ func TestCanParseAnonFunction(t *testing.T) {
 
 func TestCanParseGenericFunction(t *testing.T) {
 	assert := assert.New(t)
-	msg := `fn <TGeneric>(arg: number, arg1: number) {
+	msg := `fn <TGeneric>(arg: number, arg1: TGeneric) {
 		return 1;
 	}`
 	parser := parseTest(msg)
@@ -101,7 +101,7 @@ func TestCanParseGenericFunction(t *testing.T) {
 	assert.True(ok)
 	assert.Len(funcTree.GenericTypeNames, 1)
 
-	msg = `fn <TGeneric, TGeneric>(arg: number, arg1: number) {
+	msg = `fn <TGeneric, TGeneric2>(arg: TGeneric, arg1: TGeneric2) {
 		return 1;
 	}`
 	parser = parseTest(msg)

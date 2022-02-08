@@ -11,7 +11,9 @@ func parseHandleBlock(p *Parser) (*ast.HandleCaseNode, bool, error) {
 	if nxt.Token != tokens.HANDLE {
 		return nil, false, nil
 	}
-	handleNode := &ast.HandleCaseNode{}
+	handleNode := &ast.HandleCaseNode{
+		Lexeme: nxt,
+	}
 
 	nxt = p.Next()
 	if nxt.Token != tokens.RPAREN {
@@ -60,7 +62,9 @@ func parseTryBlock(p *Parser) (ast.Node, error) {
 	if nxt.Token != tokens.TRY {
 		return nil, UnexpectedError(nxt, "try")
 	}
-	tryNode := &ast.TryNode{}
+	tryNode := &ast.TryNode{
+		Lexeme: nxt,
+	}
 	curly := p.Next()
 	if curly.Token != tokens.RCURLY {
 		return nil, UnexpectedError(curly, "{")

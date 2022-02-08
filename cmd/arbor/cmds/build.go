@@ -10,12 +10,11 @@ import (
 	"github.com/spf13/cobra"
 )
 
-func init() {
-	rootCmd.AddCommand(build)
-}
+var dumpSymbolTable *bool
 
-var visitors []ast.Visitor = []ast.Visitor{
-	typevisitor.New(),
+func init() {
+	dumpSymbolTable = build.Flags().Bool("dump-symbol-table", false, "On a failure, dump the symbol table")
+	rootCmd.AddCommand(build)
 }
 
 var build = &cobra.Command{
@@ -34,6 +33,10 @@ var build = &cobra.Command{
 		if err != nil {
 			log.Fatalln(err)
 			os.Exit(-1)
+		}
+
+		var visitors []ast.Visitor = []ast.Visitor{
+			typevisitor.New(*dumpSymbolTable),
 		}
 		for _, visitor := range visitors {
 			node, err = node.Accept(visitor)

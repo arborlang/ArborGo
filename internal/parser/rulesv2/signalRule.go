@@ -10,7 +10,9 @@ func parseSignal(p *Parser) (ast.Node, error) {
 	if nxt.Token != tokens.FATAL && nxt.Token != tokens.SIGNAL && nxt.Token != tokens.WARN {
 		return nil, UnexpectedError(nxt, "fatal", "warn", "signal")
 	}
-	signalNode := &ast.SignalNode{}
+	signalNode := &ast.SignalNode{
+		Lexeme: nxt,
+	}
 	lvl := "signal"
 	if nxt.Token == tokens.FATAL {
 		lvl = "fatal"

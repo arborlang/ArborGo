@@ -24,7 +24,7 @@ func TestVisitsTypeDefCorrectly(t *testing.T) {
 	assert.NoError(err)
 	assert.NotNil(node)
 
-	tVisit := New()
+	tVisit := New(true)
 	node, err = node.Accept(tVisit)
 	assert.NoError(err)
 	assert.NotNil(node)
@@ -62,7 +62,7 @@ func TestExplicitExtends(t *testing.T) {
 	assert.NoError(err)
 	assert.NotNil(node)
 
-	tVisit := New()
+	tVisit := New(true)
 	node, err = node.Accept(tVisit)
 	assert.NoError(err)
 

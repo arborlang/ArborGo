@@ -24,6 +24,7 @@ func boolOperation(leftSide ast.Node, p *Parser) (ast.Node, error) {
 	if err != nil {
 		return nil, err
 	}
+	boolNode.Lexeme = booleanOperator
 	boolNode.RightSide = next
 	return boolNode, nil
 }

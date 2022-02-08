@@ -11,6 +11,7 @@ func comparisonRule(leftSide ast.Node, p *Parser) (ast.Node, error) {
 	comp := &ast.Comparison{}
 	comp.LeftSide = leftSide
 	next := p.Next()
+	comp.Lexeme = next
 	if next.Token != tokens.COMPARISON {
 		return nil, fmt.Errorf("expected a comparison operator, got %s instead", next)
 	}

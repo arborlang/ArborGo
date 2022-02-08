@@ -7,6 +7,7 @@ import (
 )
 
 func (t *typeVisitor) VisitVarName(n *ast.VarName) (ast.Node, error) {
+	fmt.Println("in varname", n.Lexeme)
 	if n.Type == nil {
 		info, _ := t.scope.LookupSymbol(n.Name)
 		if info == nil {

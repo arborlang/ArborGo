@@ -8,10 +8,12 @@ import (
 )
 
 func importMultiple(importAs *ast.ImportNode, p *Parser) error {
-	newImportModule := &ast.ImportNode{}
+	nxt := p.Next()
+	newImportModule := &ast.ImportNode{
+		Lexeme: nxt,
+	}
 	newImportModule.Source = importAs.Source
 	importAs.NextImport = newImportModule
-	nxt := p.Next()
 	if nxt.Token != tokens.VARNAME {
 		return fmt.Errorf("expected a variable name, not %s", nxt)
 	}

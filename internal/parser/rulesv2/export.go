@@ -36,6 +36,7 @@ func parseExport(p *Parser) (ast.Node, error) {
 		return nil, fmt.Errorf("expected a variable name, declaration or function definition on line %d", nxt.Line)
 	}
 	exp := &ast.InternalNode{
+		Lexeme:     nxt,
 		Expression: node,
 	}
 	return exp, nil

@@ -11,6 +11,7 @@ func continueRule(p *Parser) (ast.Node, error) {
 		return nil, UnexpectedError(nxt, "continue")
 	}
 	contNode := &ast.ContinueNode{}
+	contNode.Lexeme = nxt
 	nxt = p.Peek()
 	if nxt.Token == tokens.WITH {
 		p.Next()

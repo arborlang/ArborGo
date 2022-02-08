@@ -25,9 +25,10 @@ func (t *typeVisitor) VisitDotNode(n *ast.DotNode) (ast.Node, error) {
 		return nil, errorF("did not get varname for value in dot node")
 	}
 	obj, _ := t.scope.LookupSymbol(access.Name)
+	obj = t.scope.ResolveType(obj)
 	shape, ok := obj.Type.Type.(*types.ShapeType)
 	if !ok {
-		return nil, errorF("expected an object got %s instead", obj.Type.Type)
+		return nil, errorF("expected an object got %s instead: %s", obj.Type.Type, obj.Lexeme)
 	}
 	name, ok := n.Access.(*ast.VarName)
 	if !ok {

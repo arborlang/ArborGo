@@ -1,15 +1,20 @@
-import stdlib as foobar from "github.com/arborlang/stdlib";
+import stdlib as Thing from "github.com/arborlang/stdlib";
 
-type Test {
+type foobar {
+	foobar: Number;
+	bazBar: Number;
+};
+
+type Test<TBaz> {
 	Example: fn () -> Boolean;
 	Name: String;
 };
 
 fn Test::__Construct() {
+	
 };
 
-
-fn Bazzer (val: foobar) -> number {
+fn Bazzer (val: foobar) -> Number {
 	match val {
 		|> {foobar: 1, bazBar: 2} {
 			return 23;
@@ -33,7 +38,7 @@ fn Test::Decorator<TCall> (val: TCall) -> TCall {
 	return val[33];
 };
 
-Decorator(fn (values: number) -> number {
+Decorator(fn (values: Number) -> Number {
 	value.toString().someOtherAccess;
 	value.toString() == "buttt"[0:2];
 	try {
@@ -50,7 +55,7 @@ Decorator(fn (values: number) -> number {
 });
 
 @Decorator
-fn DecoratedVal (value: number) -> number{
+fn DecoratedVal (value: Number) -> Number{
 	value.toString().someOtherAccess;
 	value.toString() == "buttt"[0:2];
 	try {

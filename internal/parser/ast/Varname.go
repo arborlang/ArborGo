@@ -25,6 +25,7 @@ func (vn *VarName) GetType() types.TypeNode {
 
 //DeclNode is a node that
 type DeclNode struct {
+	Lexeme     lexer.Lexeme
 	Varname    *VarName
 	IsConstant bool
 }

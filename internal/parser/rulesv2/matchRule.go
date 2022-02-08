@@ -10,7 +10,9 @@ func matchRule(p *Parser) (ast.Node, error) {
 	if match.Token != tokens.MATCH {
 		return nil, UnexpectedError(match, "match")
 	}
-	matchNode := &ast.MatchNode{}
+	matchNode := &ast.MatchNode{
+		Lexeme: match,
+	}
 	expressionNode, err := exprRule(p, true)
 	if err != nil {
 		return nil, err
@@ -43,6 +45,7 @@ func matchRule(p *Parser) (ast.Node, error) {
 		whenNode := &ast.WhenNode{
 			Evaluate: eval,
 			Case:     whenCondition,
+			Lexeme:   next,
 		}
 		whenNodes = append(whenNodes, whenNode)
 	}

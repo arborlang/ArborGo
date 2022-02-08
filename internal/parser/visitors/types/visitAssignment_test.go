@@ -21,7 +21,7 @@ func TestCanDeriveTypes(t *testing.T) {
 	assert.NoError(err)
 	assert.NotNil(node)
 
-	tVisit := New()
+	tVisit := New(true)
 	_, e := node.Accept(tVisit)
 	assert.NoError(e)
 
@@ -49,7 +49,7 @@ func TestFailsIfRedefined(t *testing.T) {
 	assert.NoError(err)
 	assert.NotNil(node)
 
-	tVisit := New()
+	tVisit := New(true)
 	_, e := node.Accept(tVisit)
 	assert.Error(e)
 	assert.Equal("elem is being redefined here: \"elem\" (Line: 3, Column: 24)", e.Error())
@@ -66,7 +66,7 @@ func TestFailsIfAssigningDifferentTypes(t *testing.T) {
 	assert.NoError(err)
 	assert.NotNil(node)
 
-	tVisit := New()
+	tVisit := New(true)
 	_, e := node.Accept(tVisit)
 	assert.Error(e)
 	assert.Equal("can't assign String to Number at \"=\" (Line: 3, Column: 19)", e.Error())
@@ -84,7 +84,7 @@ func TestFailsIfAssigningToConst(t *testing.T) {
 	assert.NoError(err)
 	assert.NotNil(node)
 
-	tVisit := New()
+	tVisit := New(true)
 	_, e := node.Accept(tVisit)
 	assert.Error(e)
 	assert.Equal("elem is constant: defined here: \"elem\" (Line: 2, Column: 24)", e.Error())

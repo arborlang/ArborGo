@@ -10,11 +10,20 @@ import (
 func (t *typeVisitor) VisitMethodDefinition(node *ast.MethodDefinition) (ast.Node, error) {
 	tp, _ := t.scope.LookupSymbol(node.TypeName.Name)
 	if tp == nil {
-		return nil, fmt.Errorf("type %s is not defined here: %s", node.TypeName.Name, node.FuncDef.Lexeme)
+		return nil, fmt.Errorf("type %s is not defined here: %s", node.TypeName.Name, node.Lexeme)
 	}
 	if tp.Type.IsSealed {
-		return nil, fmt.Errorf("type %s is sealed here: %s", node.TypeName.Name, node.FuncDef.Lexeme)
+		return nil, fmt.Errorf("type %s is sealed here: %s", node.TypeName.Name, node.Lexeme)
 	}
+	if node.MethodName.Lexeme.Value == "__Construct" {
+		node.FuncDef.Returns = &types.VoidType{}
+		fnTp, err := node.FuncDef.GetFnType()
+		if err != nil {
+			return node, err
+		}
+		tp.Constructors = append(tp.Constructors, fnTp)
+	}
+	node.FuncDef.Lexeme = node.MethodName.Lexeme
 	funcDef, err := node.FuncDef.Accept(t.v)
 	if err != nil {
 		return nil, err

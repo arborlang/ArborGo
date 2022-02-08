@@ -1,10 +1,15 @@
 package scope
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
+	"log"
+	"strings"
 
 	"github.com/arborlang/ArborGo/internal/lexer"
 	"github.com/arborlang/ArborGo/internal/parser/ast/types"
+	"github.com/olekukonko/tablewriter"
 )
 
 // SymbolData is the data related to the symbol.
@@ -19,8 +24,18 @@ type SymbolData struct {
 	IsConstant bool
 	// Methods are the methods on the type
 	Methods map[string][]*types.FnType
+	// The Constructors of the Type
+	Constructors []*types.FnType
 	// IsType is weather this symbol is a type
 	IsType bool
+}
+
+func (s *SymbolData) String() string {
+	data, err := json.Marshal(s)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return string(data)
 }
 
 // TypeData represents some information about a type
@@ -70,6 +85,61 @@ type SymbolTable struct {
 	lvlStack      levelStack
 	pushOperation int
 	scopesCanGrow bool
+}
+
+func (s *SymbolTable) renderSpecificTable(getLevel func(chan int)) []string {
+	parts := []string{}
+	lvlToRender := make(chan int)
+	topOLvlStack := s.lvlStack.top()
+	go getLevel(lvlToRender)
+	for i := range lvlToRender {
+		table := [][]string{}
+		lvl := topOLvlStack[i]
+		scope := s.scopeStack[lvl]
+		parts = append(parts, fmt.Sprintf("Scope Level: %d", i))
+		for key, val := range scope {
+			table = append(table, []string{key, val.String()})
+		}
+		buf := new(bytes.Buffer)
+		tableWriter := tablewriter.NewWriter(buf)
+		tableWriter.SetHeader([]string{"Name", "Symbol"})
+		tableWriter.AppendBulk(table)
+		tableWriter.Render()
+		parts = append(parts, buf.String())
+	}
+
+	return parts
+}
+
+func (s *SymbolTable) String() string {
+	parts := []string{}
+	parts = append(parts, fmt.Sprintf(
+		"scopeStackTop: %d. Scope Length: %d",
+		s.GetCurrentLevel(),
+		len(s.scopeStack)),
+	)
+	parts = append(parts, "VISIBLE TABLE:")
+
+	visibleParts := s.renderSpecificTable(func(channel chan int) {
+		defer close(channel)
+		topOLvlStack := s.lvlStack.top()
+		fmt.Println("LEVELS", topOLvlStack)
+		for i := topOLvlStack[len(topOLvlStack)-1]; i >= 0; i-- {
+			channel <- topOLvlStack[i]
+		}
+	})
+
+	parts = append(parts, visibleParts...)
+	parts = append(parts, "FULL TABLE:")
+
+	visibleParts = s.renderSpecificTable(func(channel chan int) {
+		defer close(channel)
+		for i := len(s.scopeStack) - 1; i >= 0; i-- {
+			channel <- i
+		}
+	})
+	parts = append(parts, visibleParts...)
+	return strings.Join(parts, "\n")
 }
 
 // PushNewScope Pushes a new scope on to the ScopeStack
@@ -141,4 +211,27 @@ func NewTable() *SymbolTable {
 	}
 	scope.PushNewScope()
 	return scope
+}
+
+func (s *SymbolTable) ResolveType(sym *SymbolData) *SymbolData {
+	if sym == nil {
+		return sym
+	}
+	tp := sym.Type.Type
+	gd, ok := sym.Type.Type.(*types.TypeGuard)
+	if ok {
+		if len(gd.Types) > 1 || len(gd.Types) == 0 {
+			return sym
+		}
+		tp = gd.Types[0]
+	}
+	constTp, ok := tp.(*types.ConstantTypeNode)
+	if ok {
+		if sym.IsType {
+			return sym
+		}
+		otherSym, _ := s.LookupSymbol(constTp.Name)
+		return s.ResolveType(otherSym)
+	}
+	return sym
 }
