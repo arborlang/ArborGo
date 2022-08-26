@@ -7,9 +7,9 @@ import (
 
 // ImportNode represents an import statement
 type ImportNode struct {
-	Source     string
-	ImportAs   string
-	ExportName string
+	ExportName string `IMPORT @VARNAME`
+	ImportAs   string `('as' @VARNAME)?`
+	Source     string `'from' @STRINGVAL`
 	Lexeme     lexer.Lexeme
 	NextImport *ImportNode
 }

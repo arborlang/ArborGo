@@ -135,5 +135,4 @@ func TestDoubleQuote(t *testing.T) {
 		lexeme = getNext()
 		index++
 	}
-
 }

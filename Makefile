@@ -12,6 +12,9 @@ build: test generate
 test: 
 	go test -v ./...
 
+test-lite:
+	go test ./...
+
 utils: 
 	go build -o ./utils/gen_visitors ./utils/
 

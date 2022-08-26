@@ -7,6 +7,7 @@ import (
 	"log"
 	"runtime/debug"
 
+	participle "github.com/alecthomas/participle/lexer"
 	"github.com/arborlang/ArborGo/internal/tokens"
 
 	"github.com/arborlang/ArborGo/internal/lexer/internal"
@@ -65,4 +66,35 @@ func Lex(in io.Reader) func() Lexeme {
 			}
 		}
 	}
+}
+
+type PLexer struct {
+	next     func() Lexeme
+	fileName string
+}
+
+func (p *PLexer) Next() (participle.Token, error) {
+	nxt := p.next()
+	tok := participle.Token{}
+	tok.Type = rune(nxt.Token)
+	tok.Value = nxt.Value
+	tok.Pos = participle.Position{
+		Column:   nxt.Column,
+		Line:     nxt.Line,
+		Filename: p.fileName,
+	}
+	return tok, nil
+}
+
+type Definitions struct {
+}
+
+func (d *Definitions) Symbols() map[string]rune {
+	return tokens.GetDefinitions()
+}
+
+func (d *Definitions) Lex(r io.Reader) (participle.Lexer, error) {
+	lexer := &PLexer{}
+	lexer.next = Lex(r)
+	return lexer, nil
 }

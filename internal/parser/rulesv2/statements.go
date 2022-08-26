@@ -147,9 +147,6 @@ func typeDefRule(p *Parser) (ast.Node, error) {
 	// if
 	peek := p.Peek()
 	// if peek.Token != tokens.VARNAME && peek.Token != tokens.RCURLY && peek.Token != tokens.EXTENDS && peek.Token !=  {
-	if !sliceContains(peek.Token, []tokens.Token{tokens.VARNAME, tokens.RCURLY, tokens.EXTENDS, tokens.IMPLEMENTS}) {
-		return nil, UnexpectedError(peek, "a type", "{", "extends", "implements")
-	}
 	doesExtend := false
 	var extends *ast.VarName = nil
 	doesImplement := false

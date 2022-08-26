@@ -16,6 +16,14 @@ func (t *typeVisitor) VisitFunctionDefinitionNode(def *ast.FunctionDefinitionNod
 			return def, err
 		}
 	}
+	generics := []ast.VarName{}
+	for _, generic := range def.GenericTypeNames {
+		generics = append(generics, *generic)
+	}
+	fmt.Println("Generics", generics)
+	if len(def.GenericTypeNames) > 0 {
+		fmt.Println("GenericS!")
+	}
 	if def.Returns != nil {
 		fmt.Println("Lets find all return nodes and get the types")
 	}

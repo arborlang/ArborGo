@@ -5,7 +5,7 @@ type foobar {
 	bazBar: Number;
 };
 
-type Test<TBaz> {
+type Test <TBaz> {
 	Example: fn () -> Boolean;
 	Name: String;
 };

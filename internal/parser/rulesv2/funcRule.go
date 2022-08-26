@@ -29,6 +29,7 @@ func parseGenericDef(p *Parser) ([]*ast.VarName, error) {
 			}
 		}
 	}
+
 	return genericTypeNames, nil
 }
 
@@ -109,30 +110,9 @@ func functionDefinitionRule(p *Parser) (ast.Node, error) {
 	}
 	peek = p.Peek()
 	genericTypeNames, err := parseGenericDef(p)
-	funcNode.GenericTypeNames = genericTypeNames
 	if err != nil {
 		return funcNode, err
 	}
-	//Generic parsing
-	// if peek.Token == tokens.COMPARISON && peek.Value == "<" {
-	// 	p.Next()
-	// 	peek = p.Peek()
-	// 	for peek.Token != tokens.COMPARISON && peek.Value != ">" {
-	// 		typeName := p.Next()
-	// 		if typeName.Token != tokens.VARNAME {
-	// 			return nil, fmt.Errorf("Expected a Type Name, got %s instead", typeName)
-	// 		}
-	// 		funcNode.GenericTypeNames = append(funcNode.GenericTypeNames, &ast.VarName{
-	// 			Name:   typeName.Value,
-	// 			Lexeme: typeName,
-	// 		})
-	// 		peek = p.Next()
-	// 		if !(peek.Token == tokens.COMMA || (peek.Token == tokens.COMPARISON && peek.Value == ">")) {
-	// 			return nil, fmt.Errorf("expected %q or %q, got %s instead", ",", ">", peek)
-	// 		}
-	// 	}
-
-	// }
 	params, err := paramsParser(p)
 	if err != nil {
 		return nil, err
@@ -165,6 +145,14 @@ func functionDefinitionRule(p *Parser) (ast.Node, error) {
 	if asignNode != nil {
 		asignNode.Value = funcNode
 		return asignNode, nil
+	}
+	funcNode.GenericTypeNames = append(funcNode.GenericTypeNames, genericTypeNames...)
+	if len(genericTypeNames) > 0 {
+		temp := []ast.VarName{}
+		for _, elem := range funcNode.GenericTypeNames {
+			temp = append(temp, *elem)
+		}
+		fmt.Println("Generic:", temp, funcNode.Lexeme)
 	}
 	if methodDef != nil {
 		methodDef.FuncDef = funcNode

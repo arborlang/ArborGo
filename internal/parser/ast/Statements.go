@@ -7,8 +7,9 @@ import (
 
 //Program is the Root node in a file
 type Program struct {
-	Nodes  []Node
-	Lexeme lexer.Lexeme
+	Imports []*ImportNode `@@*`
+	Nodes   []Node
+	Lexeme  lexer.Lexeme
 }
 
 // Accept Accepts a vistor

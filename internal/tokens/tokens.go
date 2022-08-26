@@ -1,6 +1,8 @@
 //go:generate stringer -type=Token
 package tokens
 
+import "fmt"
+
 //Token is the token for the lexem
 type Token int
 
@@ -128,9 +130,21 @@ const (
 	HANDLE
 	//SELF is the self keyword
 	SELF
+	// MAX is an used Token used to get the end of the list
+	MAX
 	//NOTFOUND if the symbol is not found
 	NOTFOUND = -1
 )
 
 //EOFChar The actual Character for the EOF symbol
 var EOFChar = rune(EOF)
+
+func GetDefinitions() map[string]rune {
+	tokenDefinitions := map[string]rune{}
+	for i := 1; i < int(MAX); i++ {
+		name := _Token_name[_Token_index[i]:_Token_index[i+1]]
+		fmt.Println(name)
+		tokenDefinitions[name] = rune(i)
+	}
+	return tokenDefinitions
+}

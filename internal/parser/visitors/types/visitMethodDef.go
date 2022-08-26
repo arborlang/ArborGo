@@ -29,6 +29,7 @@ func (t *typeVisitor) VisitMethodDefinition(node *ast.MethodDefinition) (ast.Nod
 		return nil, err
 	}
 	node.FuncDef = funcDef.(*ast.FunctionDefinitionNode)
+	// node.FuncDef.GenericTypeNames
 	toAdd, err := node.FuncDef.GetFnType()
 	if err != nil {
 		return nil, err
