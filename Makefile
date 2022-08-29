@@ -33,3 +33,6 @@ publish: test generate ldflags
 
 delve: debug
 	dlv exec ./arbor build docs/example/example.ab
+
+skip_test:
+	go build -o arbor ./cmd/arbor/main.go

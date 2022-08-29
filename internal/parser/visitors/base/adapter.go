@@ -172,6 +172,7 @@ func (v *VisitorAdapter) VisitFunctionDefinitionNode(node *ast.FunctionDefinitio
 		if err != nil {
 			return nil, err
 		}
+
 		args = append(args, argRes.(*ast.VarName))
 	}
 	body, err := node.Body.Accept(v)
@@ -260,7 +261,10 @@ func (v *VisitorAdapter) VisitDeclNode(node *ast.DeclNode) (ast.Node, error) {
 	}
 	v.ShouldCallVisitor = true
 	vName, err := node.Varname.Accept(v)
-	node.Varname = vName.(*ast.VarName)
+	varname, ok := vName.(*ast.VarName)
+	if ok {
+		node.Varname = varname
+	}
 	return node, err
 }
 
@@ -372,7 +376,11 @@ func (v *VisitorAdapter) VisitDecoratorNode(node *ast.DecoratorNode) (ast.Node, 
 	if err != nil {
 		return nil, err
 	}
-	node.Name = name.(*ast.VarName)
+	varname, ok := name.(*ast.VarName)
+	if ok {
+		node.Name = varname
+	}
+	// node.Name = name.(*ast.VarName)
 	decorates, err := node.Decorates.Accept(v)
 	if err != nil {
 		return nil, err
@@ -408,7 +416,10 @@ func (v *VisitorAdapter) VisitInstantiateNode(node *ast.InstantiateNode) (ast.No
 	}
 	v.ShouldCallVisitor = true
 	callNode, err := node.FunctionCallNode.Accept(v)
-	node.FunctionCallNode = callNode.(*ast.FunctionCallNode)
+	// node.FunctionCallNode = callNode.(*ast.FunctionCallNode)
+	if funcCallNode, ok := callNode.(*ast.FunctionCallNode); ok {
+		node.FunctionCallNode = funcCallNode
+	}
 	return node, err
 }
 
@@ -461,12 +472,19 @@ func (v *VisitorAdapter) VisitMethodDefinition(node *ast.MethodDefinition) (ast.
 	if err != nil {
 		return nil, err
 	}
-	node.MethodName = name.(*ast.VarName)
+	varname, ok := name.(*ast.VarName)
+	if ok {
+		node.MethodName = varname
+	}
+	// node.MethodName = name.(*ast.VarName)
 	tpName, err := node.TypeName.Accept(v)
 	if err != nil {
 		return nil, err
 	}
-	node.TypeName = tpName.(*ast.VarName)
+	typeName, ok := tpName.(*ast.VarName)
+	if ok {
+		node.TypeName = typeName
+	}
 	return node, nil
 }
 

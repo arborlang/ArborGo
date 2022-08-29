@@ -33,6 +33,7 @@ func TestBuild(t *testing.T) {
 		var visitors []ast.Visitor = []ast.Visitor{
 			typevisitor.New(false),
 		}
+
 		for _, visitor := range visitors {
 			node, err = node.Accept(visitor)
 			assert.NoError(err)

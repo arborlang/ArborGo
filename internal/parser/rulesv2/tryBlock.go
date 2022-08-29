@@ -94,6 +94,6 @@ func parseTryBlock(p *Parser) (ast.Node, error) {
 
 		handles = append(handles, handleNode)
 	}
-
+	tryNode.HandleCases = handles
 	return tryNode, nil
 }

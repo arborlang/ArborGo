@@ -238,6 +238,10 @@ func ProgramRule(p *Parser, until tokens.Token) (ast.Node, error) {
 			return nil, err
 		}
 		// program.AddChild(node)
+		if importNode, ok := node.(*ast.ImportNode); ok {
+			program.Imports = append(program.Imports, importNode)
+			continue
+		}
 		program.Nodes = append(program.Nodes, node)
 	}
 	return program, nil
