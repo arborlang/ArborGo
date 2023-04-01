@@ -7,6 +7,7 @@ import (
 
 	"github.com/arborlang/ArborGo/internal/parser/ast"
 	"github.com/arborlang/ArborGo/internal/parser/ast/types"
+	"github.com/arborlang/ArborGo/internal/parser/scope"
 	"github.com/arborlang/ArborGo/internal/parser/visitors/base"
 )
 
@@ -80,6 +81,10 @@ func Visualize(node ast.Node, w io.Writer) (ast.Node, error) {
 	w.Write([]byte("@startuml\n"))
 	defer w.Write([]byte("@enduml\n"))
 	return node.Accept(v)
+}
+
+func (u *umlVisitor) GetSymbolTable() *scope.SymbolTable {
+	return nil
 }
 
 func New(writer io.Writer) ast.Visitor {

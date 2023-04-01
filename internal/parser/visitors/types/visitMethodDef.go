@@ -22,6 +22,8 @@ func (t *typeVisitor) VisitMethodDefinition(node *ast.MethodDefinition) (ast.Nod
 			return node, err
 		}
 		tp.Constructors = append(tp.Constructors, fnTp)
+		shp := tp.Type.Type.(*types.ShapeType)
+		shp.Constructors = append(shp.Constructors, fnTp)
 	}
 	node.FuncDef.Lexeme = node.MethodName.Lexeme
 	funcDef, err := node.FuncDef.Accept(t.v)

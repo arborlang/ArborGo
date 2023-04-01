@@ -6,7 +6,6 @@ import (
 
 	"github.com/arborlang/ArborGo/internal/parser/ast"
 	"github.com/arborlang/ArborGo/internal/parser/rulesv2"
-	typevisitor "github.com/arborlang/ArborGo/internal/parser/visitors/types"
 	"github.com/spf13/cobra"
 )
 
@@ -35,9 +34,7 @@ var build = &cobra.Command{
 			os.Exit(-1)
 		}
 
-		var visitors []ast.Visitor = []ast.Visitor{
-			typevisitor.New(*dumpSymbolTable),
-		}
+		var visitors []ast.Visitor = GetAllVisitors()
 		for _, visitor := range visitors {
 			node, err = node.Accept(visitor)
 			if err != nil {

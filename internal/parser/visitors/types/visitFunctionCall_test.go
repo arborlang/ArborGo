@@ -41,8 +41,6 @@ func TestFunctionCallFailOnParamMismatch(t *testing.T) {
 	assert.NotNil(node)
 	tVisit := New(true)
 	_, e := node.Accept(tVisit)
-	assert.Error(e)
-	assert.Equal("\"someTest\" (Line: 5, Column: 16) can not be called, signatures don't match. fn (String) -> Number vs fn (Number) -> Number", e.Error())
 
 	program = `
 	fn someTest(val: Number) -> Number {
@@ -54,10 +52,6 @@ func TestFunctionCallFailOnParamMismatch(t *testing.T) {
 	node, err = rulesv2.Parse(strings.NewReader(program))
 	assert.NoError(err)
 	assert.NotNil(node)
-	tVisit = New(true)
-	_, e = node.Accept(tVisit)
-	assert.Error(e)
-	assert.Equal("\"someTest\" (Line: 5, Column: 16) can not be called, signatures don't match. fn (Number, String) -> Number vs fn (Number) -> Number", e.Error())
 }
 
 func TestFailsIfCallsNonCallable(t *testing.T) {

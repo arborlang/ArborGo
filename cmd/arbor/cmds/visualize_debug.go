@@ -2,10 +2,13 @@ package cmd
 
 import (
 	"bufio"
+	"fmt"
 	"log"
 	"os"
 
 	"github.com/arborlang/ArborGo/internal/parser/rulesv2"
+	"github.com/arborlang/ArborGo/internal/parser/scope"
+	typevisitor "github.com/arborlang/ArborGo/internal/parser/visitors/types"
 	umlvisitor "github.com/arborlang/ArborGo/internal/parser/visitors/umlVisitor"
 	"github.com/spf13/cobra"
 )
@@ -44,6 +47,19 @@ var visualize = &cobra.Command{
 			log.Fatalln("Failed to get file:", err)
 			os.Exit(255)
 		}
+		vs := GetAllVisitors()
+		var symTable *scope.SymbolTable
+		for _, v := range vs {
+			var err error
+			node, err = node.Accept(v)
+			symTable, _ = typevisitor.GetScope(v)
+			if err != nil {
+				log.Fatalln("Failed to walk tree", err)
+				os.Exit(255)
+			}
+		}
+		fmt.Println("Here I am")
+		fmt.Println(symTable)
 		node, err = umlvisitor.Visualize(node, w)
 		// umlWriter := umlvisitor.New(w)
 		// node, err = node.Accept(umlWriter)

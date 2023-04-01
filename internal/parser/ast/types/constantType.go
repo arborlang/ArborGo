@@ -4,6 +4,7 @@ package types
 type ConstantTypeNode struct {
 	Name    string
 	IsArray bool
+	IsBase  bool
 }
 
 // NewConstant returns a new Constant

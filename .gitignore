@@ -15,7 +15,7 @@
 
 vendor/
 
-/arbor
+build/**
 /main
 *.ab
 *.wast

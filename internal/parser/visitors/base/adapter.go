@@ -4,11 +4,13 @@ import (
 	"fmt"
 
 	"github.com/arborlang/ArborGo/internal/parser/ast"
+	"github.com/arborlang/ArborGo/internal/parser/scope"
 )
 
 // VisitorHider is a simple way to set and hide the visitor
 type VisitorHider interface {
 	SetVisitor(v *VisitorAdapter)
+	GetSymbolTable() *scope.SymbolTable
 }
 
 // VisitorAdapter represents a top level VisitorAdapter that walks the tree but does nothing. Useful for doing analysis on the AST by other visitors
@@ -590,10 +592,12 @@ func (v *VisitorAdapter) VisitHandleCaseNode(node *ast.HandleCaseNode) (ast.Node
 	if visitor, ok := v.Visitor.(ast.HandleCaseNodeVisitor); ok && v.ShouldCallVisitor {
 		return visitor.VisitHandleCaseNode(node)
 	}
-	cs, err := node.Case.Accept(v)
-	if err != nil {
-		return nil, err
+	if node != nil {
+		cs, err := node.Case.Accept(v)
+		if err != nil {
+			return nil, err
+		}
+		node.Case = cs
 	}
-	node.Case = cs
 	return node, nil
 }

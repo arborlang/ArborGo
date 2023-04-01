@@ -19,11 +19,25 @@ func parseGenericDef(p *Parser) ([]*ast.VarName, error) {
 			if typeName.Token != tokens.VARNAME {
 				return nil, fmt.Errorf("Expected a Type Name, got %s instead", typeName)
 			}
-			genericTypeNames = append(genericTypeNames, &ast.VarName{
+			generic := &ast.VarName{
 				Name:   typeName.Value,
 				Lexeme: typeName,
-			})
+			}
+			// genericTypeNames = append(genericTypeNames, &ast.VarName{
+			// 	Name:   typeName.Value,
+			// 	Lexeme: typeName,
+			// })
 			peek = p.Next()
+			if peek.Token == tokens.IMPLEMENTS {
+				typeTok, err := typeRule(p)
+				if err != nil {
+					return genericTypeNames, err
+				}
+				generic.Type = typeTok
+				peek = p.Next()
+			}
+			genericTypeNames = append(genericTypeNames, generic)
+
 			if !(peek.Token == tokens.COMMA || (peek.Token == tokens.COMPARISON && peek.Value == ">")) {
 				return genericTypeNames, fmt.Errorf("expected %q or %q, got %s instead", ",", ">", peek)
 			}

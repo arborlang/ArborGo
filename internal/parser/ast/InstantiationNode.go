@@ -4,6 +4,7 @@ import "github.com/arborlang/ArborGo/internal/parser/ast/types"
 
 type InstantiateNode struct {
 	FunctionCallNode *FunctionCallNode
+	Type             types.TypeNode
 }
 
 func (i *InstantiateNode) Accept(v Visitor) (Node, error) {
@@ -11,5 +12,5 @@ func (i *InstantiateNode) Accept(v Visitor) (Node, error) {
 }
 
 func (i *InstantiateNode) GetType() types.TypeNode {
-	return i.FunctionCallNode.Definition.GetType()
+	return i.Type
 }

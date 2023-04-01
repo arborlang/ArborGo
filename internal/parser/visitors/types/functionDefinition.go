@@ -4,26 +4,44 @@ import (
 	"fmt"
 
 	"github.com/arborlang/ArborGo/internal/parser/ast"
+	"github.com/arborlang/ArborGo/internal/parser/ast/types"
 	"github.com/arborlang/ArborGo/internal/parser/scope"
 )
 
 func (t *typeVisitor) VisitFunctionDefinitionNode(def *ast.FunctionDefinitionNode) (ast.Node, error) {
 	t.scope.PushNewScope()
 	defer t.scope.PopScope()
+	generics := []ast.VarName{}
+	for _, generic := range def.GenericTypeNames {
+		generics = append(generics, *generic)
+	}
+	if len(def.GenericTypeNames) > 0 {
+		for _, genericName := range def.GenericTypeNames {
+			realType := genericName.Type
+			if realType == nil {
+				realType = &types.ConstantTypeNode{
+					Name: genericName.Name,
+				}
+			}
+			t.scope.AddToScope(genericName.Name, &scope.SymbolData{
+				Type: scope.TypeData{
+					IsSealed: true,
+					Type:     realType,
+					Name:     genericName.Name,
+				},
+				IsType:     true,
+				IsConstant: true,
+				Lexeme:     genericName.Lexeme,
+			})
+		}
+	}
 	for _, arg := range def.Arguments {
 		err := t.verifyType(arg.Type, arg.Lexeme)
 		if err != nil {
 			return def, err
 		}
 	}
-	generics := []ast.VarName{}
-	for _, generic := range def.GenericTypeNames {
-		generics = append(generics, *generic)
-	}
-	fmt.Println("Generics", generics)
-	if len(def.GenericTypeNames) > 0 {
-		fmt.Println("GenericS!")
-	}
+
 	if def.Returns != nil {
 		fmt.Println("Lets find all return nodes and get the types")
 	}

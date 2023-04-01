@@ -4,7 +4,8 @@ import "fmt"
 
 // ShapeType represents a Shape. Which is just a data record
 type ShapeType struct {
-	Fields map[string]TypeNode
+	Fields       map[string]TypeNode
+	Constructors []*FnType
 }
 
 // IsSatisfiedBy Checks to see if this shape is satisfied by n
@@ -34,5 +35,9 @@ func (s *ShapeType) String() string {
 	for fieldName, fieldType := range s.Fields {
 		fields = append(fields, fmt.Sprintf("%s: %s", fieldName, fieldType))
 	}
-	return fmt.Sprintf("Shape{%s}", fields)
+	cnst := []string{}
+	for _, constructor := range s.Constructors {
+		cnst = append(cnst, constructor.String())
+	}
+	return fmt.Sprintf("Shape{%s, Constructors: %s}", fields, cnst)
 }

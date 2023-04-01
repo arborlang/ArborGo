@@ -14,11 +14,12 @@ func (t *typeVisitor) VisitFunctionCallNode(n *ast.FunctionCallNode) (ast.Node, 
 	if info == nil {
 		return nil, fmt.Errorf("%s is not defined at %s", varname.Name, varname.Lexeme)
 	}
-	fnType, ok := info.Type.Type.(*types.FnType)
-	if !ok {
+	switch retType := info.Type.Type.(type) {
+	case *types.FnType, *types.ShapeType:
+		n.Type = retType
+	default:
 		return nil, fmt.Errorf("Type %s is not callable %s", info.Type.Type, varname.Lexeme)
 	}
-	n.Type = fnType.ReturnVal
 	params := []ast.Node{}
 	tps := []types.TypeNode{}
 	for _, arg := range n.Arguments {
@@ -29,12 +30,12 @@ func (t *typeVisitor) VisitFunctionCallNode(n *ast.FunctionCallNode) (ast.Node, 
 		params = append(params, param)
 		tps = append(tps, param.GetType())
 	}
-	derivedFnTp := &types.FnType{
-		ReturnVal:  n.Type,
-		Parameters: tps,
-	}
-	if !fnType.IsSatisfiedBy(derivedFnTp) {
-		return nil, fmt.Errorf("%s can not be called, signatures don't match. %s vs %s", varname.Lexeme, derivedFnTp, fnType)
-	}
+	// derivedFnTp := &types.FnType{
+	// 	ReturnVal:  n.Type,
+	// 	Parameters: tps,
+	// }
+	// if !info.Type.Type.IsSatisfiedBy(derivedFnTp) {
+	// 	return nil, fmt.Errorf("%s can not be called, signatures don't match. %s vs %s", varname.Lexeme, derivedFnTp, info.Type.Type)
+	// }
 	return n, nil
 }

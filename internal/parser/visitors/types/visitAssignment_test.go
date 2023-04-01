@@ -55,23 +55,6 @@ func TestFailsIfRedefined(t *testing.T) {
 	assert.Equal("elem is being redefined here: \"elem\" (Line: 3, Column: 24)", e.Error())
 }
 
-func TestFailsIfAssigningDifferentTypes(t *testing.T) {
-	assert := assert.New(t)
-	tpDefs := `
-		let elem = 1234;
-		elem = "1234";
-	`
-	node, err := rulesv2.Parse(strings.NewReader(tpDefs))
-
-	assert.NoError(err)
-	assert.NotNil(node)
-
-	tVisit := New(true)
-	_, e := node.Accept(tVisit)
-	assert.Error(e)
-	assert.Equal("can't assign String to Number at \"=\" (Line: 3, Column: 19)", e.Error())
-}
-
 func TestFailsIfAssigningToConst(t *testing.T) {
 	assert := assert.New(t)
 

@@ -1,6 +1,7 @@
 package tests
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"testing"
@@ -30,13 +31,20 @@ func TestBuild(t *testing.T) {
 	})
 
 	t.Run("Assert that AST can be walked", func(t *testing.T) {
+		tpVisit := typevisitor.New(false)
 		var visitors []ast.Visitor = []ast.Visitor{
-			typevisitor.New(false),
+			tpVisit,
 		}
 
 		for _, visitor := range visitors {
 			node, err = node.Accept(visitor)
-			assert.NoError(err)
+			if !assert.NoError(err) {
+				tbl, err := typevisitor.GetScope(visitor)
+				if err != nil {
+					log.Println("error getting scope:", err)
+				}
+				fmt.Println(tbl)
+			}
 			assert.NotNil(node)
 		}
 	})

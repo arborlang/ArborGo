@@ -1,5 +1,20 @@
 import stdlib as Thing from "github.com/arborlang/stdlib";
 
+type SomeRandomError {};
+type SomeRandomSignal {};
+type SomeRandomWarning {};
+type SomeRandomFatal {};
+type iface1 {};
+
+type Something {
+	someOtherAccess: String;	
+};
+
+type Value {
+	toString: fn () -> String;
+	getObject: fn () -> Something;
+};
+
 type foobar {
 	foobar: Number;
 	bazBar: Number;
@@ -26,20 +41,25 @@ fn Bazzer (val: foobar) -> Number {
 	return 1;
 };
 
-fn Test::Decorator<TCall> (val: TCall) -> TCall {
+fn Test::Decorator<TCall implements Stringer> (val: TCall) -> TCall {
 	if val == "something" {
-		return help;
-	} else if val.value > 1 {
-		return narp;
+		return val;
+	} else if val > 1 {
+		return val;
 	} else {
-		hello;
+		
 	}
-	const val = fatal new SomeRandomError();
+	val = fatal new SomeRandomError();
 	return val[33];
 };
 
-Decorator(fn (values: Number) -> Number {
-	value.toString().someOtherAccess;
+fn RealDecorator(fnToDec: fn(values: Number) -> Number) -> fn(values: Number) -> Number {
+	return fnToDec;
+};
+
+RealDecorator(fn (values: Number) -> Number {
+	let value = new Value();
+	value.getObject().someOtherAccess;
 	value.toString() == "buttt"[0:2];
 	try {
 		signal new SomeRandomSignal();
@@ -54,7 +74,7 @@ Decorator(fn (values: Number) -> Number {
 	return 2 + 1;
 });
 
-@Decorator
+@RealDecorator
 fn DecoratedVal (value: Number) -> Number{
 	value.toString().someOtherAccess;
 	value.toString() == "buttt"[0:2];
